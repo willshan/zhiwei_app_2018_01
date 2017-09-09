@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <FileRef
+      location = "group:Meal+CoreDataClass.swift">
+   </FileRef>
+   <FileRef
+      location = "group:Meal+CoreDataProperties.swift">
+   </FileRef>
+   <FileRef
+      location = "group:&#x79c1;&#x5bb6;&#x53a8;&#x623f;.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
+   </FileRef>
+</Workspace>
