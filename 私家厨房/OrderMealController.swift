@@ -25,6 +25,7 @@ extension OrderMealController{
         super.viewDidLoad()
 
         print("start viewDidLoad")
+        //test source control
         //受限于服务器的储存量和费用，一般不上传服务器，只保存在本地coredata，只在分享时上传到服务器。
         //let userName : String? = UserDefaults.standard.string(forKey: "user_name")
         //HandleCoreData.clearCoreData(userName!)
