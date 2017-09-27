@@ -12,6 +12,7 @@
 		BE08D8371F22F8A4001A93C7 /* PersonalSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE08D8361F22F8A4001A93C7 /* PersonalSetViewController.swift */; };
 		BE0D55B01F2A266200F482EA /* Meal+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */; };
 		BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */; };
+		BE0D8C1A1F7BED1D0082B7CC /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0D8C191F7BED1D0082B7CC /* CloudKit.framework */; };
 		BE10313C1F2789E800DAA003 /* ImageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE10313B1F2789E800DAA003 /* ImageStore.swift */; };
 		BE3310FD1F2A6D81001E7E3B /* AppImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3310FC1F2A6D81001E7E3B /* AppImageHelper.swift */; };
 		BE3DDF4A1F263F310013AD47 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BE3DDF481F263F310013AD47 /* DataModel.xcdatamodeld */; };
@@ -81,6 +82,7 @@
 		BE08D8361F22F8A4001A93C7 /* PersonalSetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalSetViewController.swift; sourceTree = "<group>"; };
 		BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataClass.swift"; path = "../Meal+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataProperties.swift"; path = "../Meal+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		BE0D8C191F7BED1D0082B7CC /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		BE10313B1F2789E800DAA003 /* ImageStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageStore.swift; sourceTree = "<group>"; };
 		BE3310FC1F2A6D81001E7E3B /* AppImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppImageHelper.swift; sourceTree = "<group>"; };
 		BE3DDF491F263F310013AD47 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				BEB00BAB1F3A01F9009DD2CE /* libiconv.tbd in Frameworks */,
 				BEB00BA91F3A01CC009DD2CE /* libstdc++.6.0.9.tbd in Frameworks */,
 				BEB00BA71F3A01A1009DD2CE /* libz.tbd in Frameworks */,
+				BE0D8C1A1F7BED1D0082B7CC /* CloudKit.framework in Frameworks */,
 				BEB00BA51F3A018F009DD2CE /* libc++.tbd in Frameworks */,
 				BEB00BA11F3A013D009DD2CE /* AVFoundation.framework in Frameworks */,
 				BEB00B9F1F3A0123009DD2CE /* CoreMedia.framework in Frameworks */,
@@ -161,6 +164,7 @@
 		39C71323A89A63A2C85D7608 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				BE0D8C191F7BED1D0082B7CC /* CloudKit.framework */,
 				BEB00BAA1F3A01F9009DD2CE /* libiconv.tbd */,
 				BEB00BA81F3A01CC009DD2CE /* libstdc++.6.0.9.tbd */,
 				BEB00BA61F3A01A1009DD2CE /* libz.tbd */,
@@ -447,6 +451,9 @@
 							com.apple.Push = {
 								enabled = 1;
 							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
 						};
 					};
 				};
@@ -717,7 +724,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Will/Desktop/私家厨房/私家厨房V2.13_环信Lite/私家厨房/私家厨房-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Will/私家厨房V2.14_环信Lite/私家厨房/私家厨房-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
@@ -751,7 +758,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Will/Desktop/私家厨房/私家厨房V2.13_环信Lite/私家厨房/私家厨房-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

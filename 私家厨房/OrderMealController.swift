@@ -9,13 +9,12 @@
 import UIKit
 import os.log
 import CoreData
+import CloudKit
 
 //合并后使用该class
 class OrderMealController: UITableViewController {
     //MARK: -Properties
     var stateController : StateController!
-    //var stateController = StateController(MealStorage())
-    //fileprivate var dataSource: OrderMealDataSource!
     var dataSource: OrderMealDataSource!
 }
 
@@ -24,16 +23,6 @@ extension OrderMealController{
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        print("start viewDidLoad")
-        //test source control
-        //受限于服务器的储存量和费用，一般不上传服务器，只保存在本地coredata，只在分享时上传到服务器。
-        //let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-        //HandleCoreData.clearCoreData(userName!)
-        
-        //loadMealsFromServer()
-        
-        print("end viewDidLoad")
-        
         //添加聊天管理代理
         EMClient.shared().chatManager.add(self, delegateQueue: nil)
         
@@ -48,7 +37,6 @@ extension OrderMealController{
         dataSource = OrderMealDataSource(meals: stateController.meals)
 
         dataSource.orderMealController = self
-        //dataSource.orderedMealCount = stateController.countOrderedMealCount()
         
         if stateController.mealOrderList != nil {
             dataSource.mealOrderList = stateController.mealOrderList
@@ -59,7 +47,7 @@ extension OrderMealController{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
-        //stateController.updateMealOrderList(dataSource.mealOrderList)
+
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -205,11 +193,7 @@ extension OrderMealController {
         if let sourceViewController = sender.source as? DetailMealViewController, let meal = sourceViewController.meal, let photochanged : Bool = sourceViewController.photochanged {
             print("*****DetailMealViewController的meal不为空")
             // Save to Parse server in background
-
             let uploadImage = sourceViewController.photoFromOrderMeal ?? UIImage(named: "defaultPhoto")
-            //只能转化为PNG的格式保存到Parse，PNEG的不行，上传不了
-            //let pictureData = UIImagePNGRepresentation(uploadImage!)
-            //let file = PFFile(name: "photo", data: pictureData!)
 
             //Determine update meal or add new meal
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
@@ -247,43 +231,6 @@ extension OrderMealController {
                     dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row] = meal
                     tableView.reloadRows(at: [selectedIndexPath], with: .none)
                 }
-                
-                //服务器中更新菜
-                /*新规则，受限于服务器空间，不向服务器上传，只在share时上传。
-                guard let query = MealToServer.query() else {
-                    return
-                }
-
-                query.getObjectInBackground(withId: meal.objectIDinServer!) { [unowned self] object, error in
-                    guard let object = object as? MealToServer
-                        else {
-                            self.showErrorView(error)
-                            return
-                    }
-
-                    //let object = try? PFQuery.getObjectOfClass("MealToServerTest", objectId: meal.objectIDinServer!) as! MealToServer //这一步占用了app主线程太长时间
-                object.mealName = meal.mealName
-                object.mealType = meal.mealType
-                object.spicy = Int(meal.spicy)
-                object.comment = meal.comment!
-                    
-                //如果图片变化则重新储存，如果没有则不储存
-                if photochanged == true {
-                    object.photo = file
-                }
-                
-                    object.saveInBackground(){ [unowned self] succeeded, error in
-                        if succeeded {
-                           
-                            print("***updated in server successfully***")
-                    
-                        } else if let error = error {
-                            self.showErrorView(error)
-                            print("***failed to update in server***")
-                        }
-                    }
-                }
-                 */
             }
             else {
                 //Add a new meal
@@ -307,28 +254,45 @@ extension OrderMealController {
                     dataSource.mealListBySections[3].append(meal)
                     tableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
-                
-                //服务器中添加新菜
-                /*
-                let object = MealToServer(mealname: meal.mealName, photo: file, spicy: Int(meal.spicy), comment: meal.comment, mealType: meal.mealType, userName: (PFUser.current()?.username!)!, date: meal.date!, identifier : meal.identifier)
-                
-                object!.saveInBackground { [unowned self] succeeded, error in
-                    if succeeded {
-                        HandleCoreData.updateObjectIDinServer(identifier : object!.identifier, objectIDinServer : object!.objectId!)
-                        print("***save to server successfully***")
-                        print("***objectID is \(object!.objectId!)***")
-                    } else if let error = error {
-                        self.showErrorView(error)
-                        print("***failed to save to server***")
-                    }
-                }*/
             }
-
-            //添加图片到Disk
+            //MARK: Save and update meal to iCloud
+            //save image to local
             ImageStore().setImage(image: uploadImage!, forKey: meal.identifier)
             
-            //添加图片到datasource.photos
-            //self.dataSource.photos[meal.identifier] = uploadImage
+            //Creat CKRecord
+            let mealRecordID = CKRecordID(recordName: meal.identifier)
+            let mealRecord = CKRecord(recordType: "Meal", recordID: mealRecordID)
+            
+            mealRecord["cellSelected"] = Int64(0) as CKRecordValue
+            mealRecord["comment"] = meal.comment! as NSString
+            
+            let URL = ImageStore().imageURLForKey(key: meal.identifier)
+            let imageAsset = CKAsset(fileURL: URL)
+            mealRecord["image"] = imageAsset
+            
+            mealRecord["mealCreatedAt"] = meal.date!
+            mealRecord["mealIdentifier"] = meal.identifier as NSString
+            mealRecord["mealName"] = meal.mealName as NSString
+            mealRecord["mealType"] = meal.mealType as NSString
+            mealRecord["spicy"] = meal.spicy as CKRecordValue
+            
+            //Save CKRecord
+            let myContainer = CKContainer.default()
+            let privateDatebase = myContainer.privateCloudDatabase
+            privateDatebase.save(mealRecord, completionHandler: { (record, error) in
+                
+                if error != nil {
+                    
+                    // Insert error handling
+                    print("failed save in icloud")
+                    return
+                    
+                }
+                
+                // Insert successfully saved record code
+                print("successfully save in icloud")
+                
+            })
             
             // Save the meals to stateControler
             dataSource.updateMeals()

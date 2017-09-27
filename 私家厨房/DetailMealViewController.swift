@@ -236,7 +236,7 @@ extension DetailMealViewController{
             mealToAdd.comment = comment
             mealToAdd.date = date
             mealToAdd.mealType = mealType!
-            mealToAdd.spicy = Int16(spicy)
+            mealToAdd.spicy = Int64(spicy)
             mealToAdd.objectIDinServer = "TBD"
             mealToAdd.userName = user?.username
             mealToAdd.identifier = HandleCoreData.RandomString()
@@ -263,7 +263,7 @@ extension DetailMealViewController{
             self.meal!.mealName = name
             self.meal!.comment = comment
             self.meal!.mealType = mealType!
-            self.meal!.spicy = Int16(spicy)
+            self.meal!.spicy = Int64(spicy)
             
             HandleCoreData.updateData(self.meal!)
         }

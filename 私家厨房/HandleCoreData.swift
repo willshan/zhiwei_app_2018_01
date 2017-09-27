@@ -29,7 +29,7 @@ class HandleCoreData: NSObject {
     class func RandomString()->String {
         let characters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         var ranStr = ""
-        for _ in 0..<8 {
+        for _ in 0..<12 {
             
             let index = Int(arc4random_uniform(UInt32(characters.characters.count)))
             ranStr.append(characters[characters.index(characters.startIndex, offsetBy: index)])
@@ -104,7 +104,7 @@ class HandleCoreData: NSObject {
         let userName : String? = UserDefaults.standard.string(forKey: "user_name")
         if mealToServer != nil {
             mealToAdd.mealName = mealToServer!.mealName
-            mealToAdd.spicy = Int16(mealToServer!.spicy)
+            mealToAdd.spicy = Int64(mealToServer!.spicy)
             mealToAdd.date = mealToServer!.date
             mealToAdd.comment = mealToServer!.comment
             mealToAdd.mealType = mealToServer!.mealType!

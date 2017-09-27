@@ -2,7 +2,7 @@
 //  Meal+CoreDataProperties.swift
 //  
 //
-//  Created by Will.Shan on 07/09/2017.
+//  Created by Will.Shan on 27/09/2017.
 //
 //
 
@@ -23,7 +23,7 @@ extension Meal {
     @NSManaged public var mealName: String
     @NSManaged public var mealType: String
     @NSManaged public var objectIDinServer: String?
-    @NSManaged public var spicy: Int16
+    @NSManaged public var spicy: Int64
     @NSManaged public var userName: String?
 
 }
