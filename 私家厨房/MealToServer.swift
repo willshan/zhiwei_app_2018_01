@@ -14,9 +14,9 @@ final class MealToServer: PFObject {
     @NSManaged var photo: PFFile?
     @NSManaged var userName: String
     @NSManaged var spicy: Int
-    @NSManaged var date : NSDate?
+    @NSManaged var date : NSDate
     @NSManaged var comment : String?
-    @NSManaged var mealType : String?
+    @NSManaged var mealType : String
     @NSManaged var cellSelected : Bool
     @NSManaged var identifier : String
     @NSManaged var invitationCode : String?
@@ -32,7 +32,6 @@ final class MealToServer: PFObject {
         self.mealType = mealType
         self.userName = userName
         self.cellSelected = false
-        self.identifier = identifier
         self.invitationCode = invitationCode
     }
     
@@ -54,6 +53,6 @@ final class MealToServer: PFObject {
 extension MealToServer: PFSubclassing {
     static func parseClassName() -> String {
         //return "MealToServer"
-        return "MealToServer"
+        return "MealToServerTest"
     }
 }

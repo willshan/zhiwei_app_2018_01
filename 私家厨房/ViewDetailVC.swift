@@ -56,7 +56,7 @@ extension ViewDetailVC {
         spicy.spicy = Int(meal.spicy)
         spicy.spicyCount = Int(meal.spicy)
         comment.text = meal.comment
-        date.text = dateFormatter.string(from: meal.date! as Date)
+        date.text = dateFormatter.string(from: meal.date as Date)
         /*
         addToShoppingCart.addTarget(self, action: #selector(addToShoppingCart(_:)), for: .touchUpInside)
         if addToShoppingCartLabel == "加入菜单" {

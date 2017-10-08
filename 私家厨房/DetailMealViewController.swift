@@ -9,6 +9,7 @@
 import UIKit
 import os.log
 import CoreData
+import CloudKit
 
 class DetailMealViewController: UIViewController {
     
@@ -30,7 +31,7 @@ class DetailMealViewController: UIViewController {
     var photochanged : Bool = false
     var mealShouldSaveInServer = false
     //var photoFile : PFFile!
-    let user = PFUser.current()
+    //let user = PFUser.current()
     
     let mealTypeAsset = ["凉菜","热菜","汤","酒水"]
     
@@ -63,7 +64,7 @@ extension DetailMealViewController : UITextFieldDelegate, UITextViewDelegate,UII
             navigationItem.title = meal.mealName
             mealName.text = meal.mealName
             spicy.spicy = Int(meal.spicy)
-            date.text = dateFormatter.string(from: meal.date! as Date)
+            date.text = dateFormatter.string(from: meal.date as Date)
             comment.text = meal.comment
             photo.image = photoFromOrderMeal
             mealType.text = meal.mealType
@@ -155,42 +156,8 @@ extension DetailMealViewController {
         let compressedImage = AppImageHelper.resizeImage(originalImg: selectedImage)
         //let compressedImageData = UIImageJPEGRepresentation(compressedImage, 0.4)
         let compressedImageData = AppImageHelper.compressImageSize(image: compressedImage)
-
-        //0.1 缩小20倍
-        //0.3
-        /*
-        let test1 = UIImageJPEGRepresentation(compressedImage, 1)
-        let test2 = UIImageJPEGRepresentation(compressedImage, 0.9)
-        let test3 = UIImageJPEGRepresentation(compressedImage, 0.8)
-        let test4 = UIImageJPEGRepresentation(compressedImage, 0.7)
-        let test5 = UIImageJPEGRepresentation(compressedImage, 0.6)
-        let test6 = UIImageJPEGRepresentation(compressedImage, 0.5)
-        let test7 = UIImageJPEGRepresentation(compressedImage, 0.4)
-        let test8 = UIImageJPEGRepresentation(compressedImage, 0.3)
-        let test9 = UIImageJPEGRepresentation(compressedImage, 0.2)
-        let test10 = UIImageJPEGRepresentation(compressedImage, 0.1)
-        let test11 = UIImageJPEGRepresentation(compressedImage, 0.01)
-        */
-        
         let finalCompressedImage = UIImage(data: compressedImageData)
 
-        print("photo size is \(compressedImageData)")
-    
-        /*
-        print("原图压缩1后为 \(test1)")
-        print("原图压缩0.9后为 \(test2)")
-        print("原图压缩0.8后为 \(test3)")
-        print("原图压缩0.7后为 \(test4)")
-        print("原图压缩0.6后为 \(test5)")
-        print("原图压缩0.5后为 \(test6)")
-        print("原图压缩0.4后为 \(test7)")
-        print("原图压缩0.3后为 \(test8)")
-        print("原图压缩0.2后为 \(test9)")
-        print("原图压缩0.1后为 \(test10)")
-        print("原图压缩0.01后为 \(test11)")
-         */
-        
-        
         // Set photoImageView to display the selected image.
         photo.image = finalCompressedImage
         photoFromOrderMeal = finalCompressedImage
@@ -237,23 +204,13 @@ extension DetailMealViewController{
             mealToAdd.date = date
             mealToAdd.mealType = mealType!
             mealToAdd.spicy = Int64(spicy)
-            mealToAdd.objectIDinServer = "TBD"
-            mealToAdd.userName = user?.username
-            mealToAdd.identifier = HandleCoreData.RandomString()
+            mealToAdd.userName = CKCurrentUserDefaultName
             
-            /*
-            let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-            
-            let code = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
-            if code != nil {
-                mealToAdd.invitationCode = code
-            }
-            else {
-                mealToAdd.invitationCode = HandleCoreData.RandomString()
-                InvitationCodeStorage().saveInvitaionCode(code: mealToAdd.invitationCode!, forKey: "invitationCode", userName: userName!)
-            }*/
-            
-            print("待保存的meal的识别号为：\(String(describing: mealToAdd.identifier))")
+            //mealToAdd.identifier = HandleCoreData.RandomString()
+            mealToAdd.identifier = "notAssigned"
+            print("the user of the meal is \(mealToAdd.userName)")
+            print("the identifer of the meal is \(mealToAdd.identifier)")
+
             self.meal = mealToAdd
             //测试HandleCoreData不会占用app太长时间
             HandleCoreData.saveContext()

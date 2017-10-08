@@ -10,6 +10,7 @@
 		35553907E41828FE2C321075 /* libPods-私家厨房.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3D31B67E98E2FD98E4719E8 /* libPods-私家厨房.a */; };
 		BE087B351F2F73610005128B /* DetailMealViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE087B341F2F73610005128B /* DetailMealViewController.swift */; };
 		BE08D8371F22F8A4001A93C7 /* PersonalSetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE08D8361F22F8A4001A93C7 /* PersonalSetViewController.swift */; };
+		BE0CB0691F892E2E00EEF54A /* ICloudPropertyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */; };
 		BE0D55B01F2A266200F482EA /* Meal+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */; };
 		BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */; };
 		BE0D8C1A1F7BED1D0082B7CC /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BE0D8C191F7BED1D0082B7CC /* CloudKit.framework */; };
@@ -58,7 +59,6 @@
 		BEB385D21F51C68900328EF3 /* InvitationVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB385D11F51C68900328EF3 /* InvitationVC.swift */; };
 		BEB3F0EC1EED8A7200665F4A /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BEB3F0EB1EED8A7200665F4A /* MobileCoreServices.framework */; };
 		BEDB166D1E9D53C300D9C9E1 /* OrderListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEDB166C1E9D53C300D9C9E1 /* OrderListCell.swift */; };
-		BEDE11EF1F24269E00B4E6DF /* MealToServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEDE11EE1F24269E00B4E6DF /* MealToServer.swift */; };
 		BEE424B91F59CCC700BF81FA /* ContactVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEE424B81F59CCC700BF81FA /* ContactVC.swift */; };
 		BEEDFBBD1EACC9A4001E5E17 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEDFBBC1EACC9A4001E5E17 /* StateController.swift */; };
 /* End PBXBuildFile section */
@@ -80,6 +80,7 @@
 		66F253F41ABB5F447375593B /* Pods-私家厨房.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-私家厨房.debug.xcconfig"; path = "Pods/Target Support Files/Pods-私家厨房/Pods-私家厨房.debug.xcconfig"; sourceTree = "<group>"; };
 		BE087B341F2F73610005128B /* DetailMealViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DetailMealViewController.swift; sourceTree = "<group>"; };
 		BE08D8361F22F8A4001A93C7 /* PersonalSetViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalSetViewController.swift; sourceTree = "<group>"; };
+		BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudPropertyStore.swift; sourceTree = "<group>"; };
 		BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataClass.swift"; path = "../Meal+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataProperties.swift"; path = "../Meal+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		BE0D8C191F7BED1D0082B7CC /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -134,7 +135,6 @@
 		BEB3F0F21EED91F300665F4A /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		BEB3F0F41EED921400665F4A /* libz.1.2.8.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.1.2.8.tbd; path = usr/lib/libz.1.2.8.tbd; sourceTree = SDKROOT; };
 		BEDB166C1E9D53C300D9C9E1 /* OrderListCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderListCell.swift; sourceTree = "<group>"; };
-		BEDE11EE1F24269E00B4E6DF /* MealToServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealToServer.swift; sourceTree = "<group>"; };
 		BEE424B81F59CCC700BF81FA /* ContactVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContactVC.swift; sourceTree = "<group>"; };
 		BEEDFBBC1EACC9A4001E5E17 /* StateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
 		F3D31B67E98E2FD98E4719E8 /* libPods-私家厨房.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-私家厨房.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -220,7 +220,6 @@
 		BE7A98D01EB092F8005AC869 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				BEDE11EE1F24269E00B4E6DF /* MealToServer.swift */,
 				BE7215511F55B9B300067530 /* OrderedMeal.swift */,
 				BE7215531F55B9C500067530 /* OrderListStruct.swift */,
 			);
@@ -232,6 +231,7 @@
 			children = (
 				BE68A1061F5FF445007B7D29 /* InvitationCodeStorage.swift */,
 				BE10313B1F2789E800DAA003 /* ImageStore.swift */,
+				BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */,
 				BEEDFBBC1EACC9A4001E5E17 /* StateController.swift */,
 			);
 			name = "State and Storage";
@@ -556,7 +556,6 @@
 				BE563C181F60BF9E00CC5384 /* LoadFamilyMealListVC.swift in Sources */,
 				BE7215541F55B9C500067530 /* OrderListStruct.swift in Sources */,
 				BEDB166D1E9D53C300D9C9E1 /* OrderListCell.swift in Sources */,
-				BEDE11EF1F24269E00B4E6DF /* MealToServer.swift in Sources */,
 				BEB1C3521EB4E65C00F1D804 /* OrderListCenterDataSource.swift in Sources */,
 				BE72155E1F55BA3100067530 /* OrderListDetailController.swift in Sources */,
 				BE725EB71EE4534400A1665E /* LogOutViewController.swift in Sources */,
@@ -571,6 +570,7 @@
 				BE8F80941F563EEF00D67599 /* ViewDetailVC.swift in Sources */,
 				BE725EB81EE4534400A1665E /* SignUpViewController.swift in Sources */,
 				BE72156E1F55BADB00067530 /* OrderListViewController.swift in Sources */,
+				BE0CB0691F892E2E00EEF54A /* ICloudPropertyStore.swift in Sources */,
 				BE72154E1F55B9A200067530 /* UIViewControllerExtension.swift in Sources */,
 				BE7215661F55BA8700067530 /* OrderListCollectionViewCell.swift in Sources */,
 				BE7215621F55BA5400067530 /* OrderListCenterCell.swift in Sources */,

@@ -26,7 +26,7 @@ class LoadFamilyMealListVC: UIViewController {
         invitationCode.delegate = self
         
         //print(meals.first)
-        loadFamlilyMealList.addTarget(self, action: #selector(loadFamlilyMealList(_:)), for: .touchUpInside)
+        //loadFamlilyMealList.addTarget(self, action: #selector(loadFamlilyMealList(_:)), for: .touchUpInside)
         // Do any additional setup after loading the view.
     }
     
@@ -68,7 +68,7 @@ extension LoadFamilyMealListVC : UITextFieldDelegate{
         let text = invitationCode.text ?? ""
         loadFamlilyMealList.isEnabled = !text.isEmpty
     }
-    
+    /*
     func loadFamlilyMealList(_ sender: UIButton) {
         loadFamlilyMealList.isEnabled = false
         invitationCode.isEnabled = false
@@ -136,5 +136,5 @@ extension LoadFamilyMealListVC : UITextFieldDelegate{
                 }
             }
         }
-    }
+    }*/
 }

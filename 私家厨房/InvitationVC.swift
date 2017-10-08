@@ -22,7 +22,7 @@ class InvitationVC: UIViewController {
         self.navigationController?.tabBarController?.tabBar.isHidden = true
         
         //print(meals.first)
-        generateButton.addTarget(self, action: #selector(generateInvitationCode(_:)), for: .touchUpInside)
+        //generateButton.addTarget(self, action: #selector(generateInvitationCode(_:)), for: .touchUpInside)
         // Do any additional setup after loading the view.
     }
 
@@ -33,6 +33,7 @@ class InvitationVC: UIViewController {
 }
 
 extension InvitationVC {
+    /*
     func generateInvitationCode(_ sender: UIButton) {
         generateButton.isEnabled = false
         
@@ -43,7 +44,7 @@ extension InvitationVC {
             invitationCode.text = code
         }
         else {
-            invitationCode.text = HandleCoreData.RandomString()
+            invitationCode.text = NSUUID().uuidString
             InvitationCodeStorage().saveInvitaionCode(code: invitationCode.text!, forKey: "invitationCode", userName : userName!)
         }
         
@@ -57,10 +58,10 @@ extension InvitationVC {
             let pictureData = UIImagePNGRepresentation(image!)
             let file = PFFile(name: "photo", data: pictureData!)
             
-            let mealToShare = MealToServer(mealname: meal.mealName, photo: file, spicy: Int(meal.spicy), comment: meal.comment, mealType: meal.mealType, userName: userName!, date: meal.date!, identifier : meal.identifier, invitationCode : invitationCode.text)
+            let mealToShare = MealToServer(mealname: meal.mealName, photo: file, spicy: Int(meal.spicy), comment: meal.comment, mealType: meal.mealType, userName: userName!, date: meal.date, identifier : meal.identifier, invitationCode : invitationCode.text)
             
             //先删除可能已经存在的
-            MealToServer.query()?.getObjectInBackground(withId: meal.objectIDinServer!) { [unowned self] object, error in
+            MealToServer.query()?.getObjectInBackground(withId: meal.identifier) { [unowned self] object, error in
                 if error == nil {
                     let mealToServer = object as? MealToServer
                     print("服务器有这道菜\(meal.identifier)")
@@ -98,5 +99,5 @@ extension InvitationVC {
                 }
             }
         }
-    }
+    }*/
 }

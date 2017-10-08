@@ -8,18 +8,20 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 class StateController {
     
     fileprivate(set) var meals : [Meal]?
     fileprivate(set) var orderLists : [OrderListStruct]
     fileprivate(set) var mealOrderList : [IndexPath : OrderedMeal]!
+    private let userName = CKCurrentUserDefaultName
 
     //变量太多，难以维护，因此不用mealListBySections
     //fileprivate(set) var mealListBySections : [[Meal]]
 
     //init(_ mealStorage : MealStorage) {
-    init(userName : String) {
+    init() {
         self.meals = HandleCoreData.queryData(userName)
         self.orderLists = [OrderListStruct]()
         self.mealOrderList = [IndexPath : OrderedMeal]()

@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 
+
 //User对象创建成功之后，接下来就是通过对象来使用CoreData了
 class HandleCoreData: NSObject {
     //Mark: - Core data stack
@@ -24,8 +25,10 @@ class HandleCoreData: NSObject {
     }()
 	//define context
 	static let context = persistentContainer.viewContext
+
     
     //get random string
+    /*
     class func RandomString()->String {
         let characters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         var ranStr = ""
@@ -36,7 +39,7 @@ class HandleCoreData: NSObject {
             //ranStr.append(characters[characters.startIndex.advancedBy(index)])
         }
         return ranStr
-    }
+    }*/
     
     //save to context
     class func saveContext() {
@@ -94,24 +97,24 @@ class HandleCoreData: NSObject {
      * 给实体对象赋值
      * 通过saveContext()保存实体对象
      */
-    class func insertData(mealToServer : MealToServer?, meal : Meal?)-> Meal{
+    class func insertData(meal : Meal?)-> Meal{
         //creat Meal
         let EntityName = "Meal"
         let mealToAdd = NSEntityDescription.insertNewObject(forEntityName: EntityName, into:context) as! Meal
         
         //对象赋值
         //从服务器下载
+        /*
         let userName : String? = UserDefaults.standard.string(forKey: "user_name")
         if mealToServer != nil {
             mealToAdd.mealName = mealToServer!.mealName
             mealToAdd.spicy = Int64(mealToServer!.spicy)
             mealToAdd.date = mealToServer!.date
             mealToAdd.comment = mealToServer!.comment
-            mealToAdd.mealType = mealToServer!.mealType!
+            mealToAdd.mealType = mealToServer!.mealType
             mealToAdd.cellSelected = mealToServer!.cellSelected
-            mealToAdd.objectIDinServer = mealToServer!.objectId
             mealToAdd.userName = userName!
-            mealToAdd.identifier = mealToServer?.identifier ?? RandomString()
+            mealToAdd.identifier = mealToServer?.identifier ?? NSUUID().uuidString
             /*
             let userName : String? = UserDefaults.standard.string(forKey: "user_name")
             let invitationCode = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
@@ -123,7 +126,7 @@ class HandleCoreData: NSObject {
                 mealToAdd.invitationCode = HandleCoreData.RandomString()
                 InvitationCodeStorage().saveInvitaionCode(code: mealToAdd.invitationCode!, forKey: "invitationCode", userName: userName!)
             }*/
-        }
+        }*/
         //本地插入
         if meal != nil {
             mealToAdd.mealName = meal!.mealName
@@ -132,20 +135,9 @@ class HandleCoreData: NSObject {
             mealToAdd.comment = meal!.comment
             mealToAdd.mealType = meal!.mealType
             mealToAdd.cellSelected = meal!.cellSelected
-            mealToAdd.objectIDinServer = meal!.objectIDinServer ?? "TBD"
             mealToAdd.userName = meal!.userName
-            mealToAdd.identifier = meal?.identifier ?? RandomString()
-            /*
-            let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-            let invitationCode = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
-            
-            if invitationCode != nil {
-                mealToAdd.invitationCode = invitationCode
-            }
-            else {
-                mealToAdd.invitationCode = HandleCoreData.RandomString()
-                InvitationCodeStorage().saveInvitaionCode(code: mealToAdd.invitationCode!, forKey: "invitationCode", userName: userName!)
-            }*/
+            mealToAdd.identifier = meal?.identifier ?? NSUUID().uuidString
+
         }
         //保存
         saveContext()
@@ -302,7 +294,6 @@ class HandleCoreData: NSObject {
                 info.comment = meal.comment
                 info.mealType = meal.mealType
                 info.cellSelected = meal.cellSelected
-                info.objectIDinServer = meal.objectIDinServer
                 //info.invitationCode = meal.invitationCode
                 
                 //重新保存
@@ -314,10 +305,10 @@ class HandleCoreData: NSObject {
         }
     }
     
-    class func updateObjectIDinServer(identifier : String, objectIDinServer : String){
+    class func updateMealIdentifer(identifier : String, recordName : String){
         //声明数据的请求
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
-        fetchRequest.fetchLimit = 10  //限制查询结果的数量
+        fetchRequest.fetchLimit = 1  //限制查询结果的数量
         fetchRequest.fetchOffset = 0  //查询的偏移量
         
         //声明一个实体结构
@@ -335,8 +326,8 @@ class HandleCoreData: NSObject {
             
             //遍历查询的结果
             for info in fetchedObjects{
-                //修改邮箱
-                info.objectIDinServer = objectIDinServer
+                //修改identifer
+                info.identifier = recordName
                 //重新保存
                 saveContext()
             }

@@ -8,16 +8,13 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 class OrderMealDataSource : NSObject {
     //MARK: -Properties
     //meals是实际tableview中用到的数据
     var meals : [Meal]?
     var mealListBySections : [[Meal]]
-    //mealsToServe仅用于在服务器中进行删除操作
-    //var mealsToServer : [MealToServer]?
-    //var mealToServerListBySections : [[MealToServer]]
-    //var photos = [String : UIImage]()
     var orderMealController : OrderMealController?
     
     //OrderedMeal是一个struct，用来记录mealName和mealCount
@@ -112,7 +109,7 @@ extension OrderMealDataSource : UITableViewDataSource {
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 
                 //数据都在本地，因此无须在服务器删除
-                //self.deleteMealInServer(meal)
+                self.deleteMealInServer(meal)
                 
                 //Delete meal in stateController
                 self.orderMealController?.stateController.saveMeal(self.meals!) //added
@@ -133,23 +130,19 @@ extension OrderMealDataSource {
     //MARK: -Delete data in server
     func deleteMealInServer(_ meal : Meal) {
         // Delete in Parse server in background
-        guard let query = MealToServer.query() else {
-            return
-        }
-        query.getObjectInBackground(withId: meal.objectIDinServer!) { [unowned self] object, error in
-            guard let mealToServer = object as? MealToServer
-                else {
-                    print(error)
-                    return
+        let mealRecordID = CKRecordID(recordName: meal.identifier)
+        //Delete CKRecord
+        let myContainer = CKContainer.default()
+        let privateDatebase = myContainer.privateCloudDatabase
+        privateDatebase.delete(withRecordID: mealRecordID) { (recordID, error) in
+            if error != nil {
+                // Insert error handling
+                print("failed delete in icloud")
+                return
             }
-            mealToServer.deleteInBackground { [unowned self] succeeded, error in
-                if succeeded {
-                    print("***Deleted in server successfully***")
-                } else if let error = error {
-                    self.orderMealController?.showErrorView(error)
-                    print("***failed to delete in server***")
-                }
-            }
+            
+            // Insert successfully saved record code
+            print("successfully delete in icloud")
         }
     }
 }

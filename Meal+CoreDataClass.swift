@@ -2,7 +2,7 @@
 //  Meal+CoreDataClass.swift
 //  
 //
-//  Created by Will.Shan on 27/09/2017.
+//  Created by Will.Shan on 08/10/2017.
 //
 //
 

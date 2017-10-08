@@ -83,7 +83,7 @@ private extension LoginViewController {
                 self.dismissKeyBoard3()
                 
                 let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-                let stateController = StateController(userName: userName!)
+                let stateController = StateController()
                 
                 let orderMealController = mainStoryboard.instantiateViewController(withIdentifier: "OrderMealController") as! OrderMealController
                 orderMealController.stateController = stateController

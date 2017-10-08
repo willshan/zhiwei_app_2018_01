@@ -16,6 +16,15 @@ class OrderMealController: UITableViewController {
     //MARK: -Properties
     var stateController : StateController!
     var dataSource: OrderMealDataSource!
+    
+    // Define icloudKit
+    // Store these to disk so that they persist across launches
+    var createdCustomZone = ICloudPropertyStore.propertyForKey(key: ICloudPropertyStore.keyForCreatedCustomZone) ?? false
+    var subscribedToPrivateChanges = ICloudPropertyStore.propertyForKey(key: ICloudPropertyStore.keyForSubscribedToPrivateChanges) ?? false
+    var subscribedToSharedChanges = ICloudPropertyStore.propertyForKey(key: ICloudPropertyStore.keyForSubscribedToSharedChanges) ?? false
+    
+    let privateSubscriptionId = "private-changes"
+    let sharedSubscriptionId = "shared-changes"
 }
 
 extension OrderMealController{
@@ -23,6 +32,7 @@ extension OrderMealController{
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        //self.loadMealsFromServer()
         //添加聊天管理代理
         EMClient.shared().chatManager.add(self, delegateQueue: nil)
         
@@ -64,8 +74,87 @@ extension OrderMealController{
 }
 
 extension OrderMealController {
-    //MARK: -Get data from server
-    //func loadMealsFromServer(completion : @escaping () -> Void ) {
+    func saveRecordIniCloud(meal : Meal, uploadImage : UIImage){
+        //define
+        let myContainer = CKContainer.default()
+        let privateDB = myContainer.privateCloudDatabase
+        //let sharedDB = myContainer.sharedCloudDatabase
+        
+        let zoneID = CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
+        
+        //Creat CKRecord
+        //let mealRecordID = CKRecordID(recordName: meal.identifier)
+        //let mealRecord = CKRecord(recordType: "Meal", recordID: mealRecordID)
+        let mealRecord = CKRecord(recordType: "Meal", zoneID: zoneID)
+        
+        //save image to local
+        ImageStore().setImage(image: uploadImage, forKey: mealRecord.recordID.recordName)
+        //update meal identifier in local
+        HandleCoreData.updateMealIdentifer(identifier: meal.identifier, recordName: mealRecord.recordID.recordName)
+        
+        mealRecord["cellSelected"] = Int64(0) as CKRecordValue
+        mealRecord["comment"] = meal.comment! as NSString
+        
+        let URL = ImageStore().imageURLForKey(key: mealRecord.recordID.recordName)
+        let imageAsset = CKAsset(fileURL: URL)
+        mealRecord["image"] = imageAsset
+        
+        mealRecord["mealCreatedAt"] = meal.date
+        mealRecord["mealIdentifier"] = mealRecord.recordID.recordName as NSString
+        mealRecord["mealName"] = meal.mealName as NSString
+        mealRecord["mealType"] = meal.mealType as NSString
+        mealRecord["spicy"] = meal.spicy as CKRecordValue
+        
+        //Creat custom Zone and Save CKRecord
+        let createZoneGroup = DispatchGroup()
+        if !self.createdCustomZone {
+            //start to create custom zone
+            createZoneGroup.enter()
+            let customZone = CKRecordZone(zoneID: zoneID)
+            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [] )
+            
+            createZoneOperation.modifyRecordZonesCompletionBlock = { (saved, deleted, error) in
+                if (error == nil) {
+                    self.createdCustomZone = true
+                    ICloudPropertyStore.setiCloudProperty(property: self.createdCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
+                    
+                    privateDB.save(mealRecord, completionHandler: { (record, error) in
+                        if error != nil {
+                            // Insert error handling
+                            print("failed save in icloud")
+                            return
+                            
+                        }
+                        // Insert successfully saved record code
+                        print("successfully save in icloud")
+
+                    })
+                }
+                // else custom error handling
+                createZoneGroup.leave()
+            }
+            createZoneOperation.qualityOfService = .userInitiated
+            
+            privateDB.add(createZoneOperation)
+        }
+        //Save CKRecord without creating custom zone
+        else {
+            privateDB.save(mealRecord, completionHandler: { (record, error) in
+                if error != nil {
+                    // Insert error handling
+                    print("failed save in icloud")
+                    return
+                    
+                }
+                // Insert successfully saved record code
+                print("successfully save in icloud")
+
+            })
+        }
+    }
+
+    //load data from Parse, no longer used beacuse of using iCloud replacement
+    /*
     func loadMealsFromServer() {
         print("func loadMealsFromServer is loaded")
         
@@ -136,7 +225,7 @@ extension OrderMealController {
             }
         }
         }
-    }
+    }*/
 }
 
 
@@ -194,7 +283,7 @@ extension OrderMealController {
             print("*****DetailMealViewController的meal不为空")
             // Save to Parse server in background
             let uploadImage = sourceViewController.photoFromOrderMeal ?? UIImage(named: "defaultPhoto")
-
+            
             //Determine update meal or add new meal
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
                 //Update an existing meal
@@ -231,6 +320,57 @@ extension OrderMealController {
                     dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row] = meal
                     tableView.reloadRows(at: [selectedIndexPath], with: .none)
                 }
+                
+                //MARK: Save new meal to iCloud
+                //save image to local
+                if photochanged == true {
+                    ImageStore().setImage(image: uploadImage!, forKey: meal.identifier)
+                }
+                
+                //Fetch CKRecord
+                let myContainer = CKContainer.default()
+                let privateDatebase = myContainer.privateCloudDatabase
+                let recordID = CKRecordID.init(recordName: meal.identifier)
+                privateDatebase.fetch(withRecordID: recordID, completionHandler: { (record, error) in
+                    if error != nil {
+                        // Insert error handling
+                        print("Can't fetch record from icloud")
+                    
+                    }
+                    else {
+                        //Update CKRecord
+                        record!["comment"] = meal.comment! as NSString
+                        
+                        if photochanged ==  true {
+                            let URL = ImageStore().imageURLForKey(key: meal.identifier)
+                            let imageAsset = CKAsset(fileURL: URL)
+                            record!["image"] = imageAsset
+                        }
+
+                        record!["mealName"] = meal.mealName as NSString
+                        record!["mealType"] = meal.mealType as NSString
+                        record!["spicy"] = meal.spicy as CKRecordValue
+                        
+                        //Save CKRecord
+                        privateDatebase.save(record!, completionHandler: { (record, error) in
+                            
+                            if error != nil {
+                                // Insert error handling
+                                print("failed save in icloud")
+                                return
+                                
+                            }
+                            
+                            // Insert successfully saved record code
+                            print("successfully save in icloud")
+                            
+                        })
+                        
+                        // Insert successfully saved record code
+                        print("successfully save in icloud")
+                    }
+                    
+                })
             }
             else {
                 //Add a new meal
@@ -254,45 +394,10 @@ extension OrderMealController {
                     dataSource.mealListBySections[3].append(meal)
                     tableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
+                //MARK: Save new meal to iCloud
+                //Save record in icloud
+                self.saveRecordIniCloud(meal: meal, uploadImage: uploadImage!)
             }
-            //MARK: Save and update meal to iCloud
-            //save image to local
-            ImageStore().setImage(image: uploadImage!, forKey: meal.identifier)
-            
-            //Creat CKRecord
-            let mealRecordID = CKRecordID(recordName: meal.identifier)
-            let mealRecord = CKRecord(recordType: "Meal", recordID: mealRecordID)
-            
-            mealRecord["cellSelected"] = Int64(0) as CKRecordValue
-            mealRecord["comment"] = meal.comment! as NSString
-            
-            let URL = ImageStore().imageURLForKey(key: meal.identifier)
-            let imageAsset = CKAsset(fileURL: URL)
-            mealRecord["image"] = imageAsset
-            
-            mealRecord["mealCreatedAt"] = meal.date!
-            mealRecord["mealIdentifier"] = meal.identifier as NSString
-            mealRecord["mealName"] = meal.mealName as NSString
-            mealRecord["mealType"] = meal.mealType as NSString
-            mealRecord["spicy"] = meal.spicy as CKRecordValue
-            
-            //Save CKRecord
-            let myContainer = CKContainer.default()
-            let privateDatebase = myContainer.privateCloudDatabase
-            privateDatebase.save(mealRecord, completionHandler: { (record, error) in
-                
-                if error != nil {
-                    
-                    // Insert error handling
-                    print("failed save in icloud")
-                    return
-                    
-                }
-                
-                // Insert successfully saved record code
-                print("successfully save in icloud")
-                
-            })
             
             // Save the meals to stateControler
             dataSource.updateMeals()

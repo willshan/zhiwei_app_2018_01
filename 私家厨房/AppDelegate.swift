@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if userName != nil {
             let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
             
-            let stateController = StateController(userName: userName!)
+            let stateController = StateController()
             //print("*****************\(stateController.meals)")
             
             //自动登陆环信，已经设置
