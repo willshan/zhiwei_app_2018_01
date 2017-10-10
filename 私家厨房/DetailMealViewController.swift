@@ -160,8 +160,7 @@ extension DetailMealViewController {
 
         // Set photoImageView to display the selected image.
         photo.image = finalCompressedImage
-        photoFromOrderMeal = finalCompressedImage
-        
+
         // Dismiss the picker.
         dismiss(animated: true, completion: nil)
     }
@@ -182,14 +181,6 @@ extension DetailMealViewController{
         let name = mealName.text ?? ""
         let spicy = self.spicy.spicy
         let comment = self.comment.text
-        
-        /*guard let uploadImage = self.photo.image,
-            let pictureData = UIImagePNGRepresentation(uploadImage),
-            let file = PFFile(name: "photo", data: pictureData) else {
-                return
-        }*/
-        photoFromOrderMeal = self.photo.image
-        
         let mealType = self.mealType.text
         let date = self.meal?.date ?? NSDate()
         
@@ -226,6 +217,7 @@ extension DetailMealViewController{
         }
         if self.photoFromOrderMeal != photo.image {
             photochanged = true
+            photoFromOrderMeal = self.photo.image
         }
         print("prepare for segue in DetailMealVC")
     }
