@@ -130,7 +130,8 @@ extension OrderMealDataSource {
     //MARK: -Delete data in server
     func deleteMealInServer(_ meal : Meal) {
         // Delete in Parse server in background
-        let mealRecordID = CKRecordID(recordName: meal.identifier)
+        let zoneID = CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
+        let mealRecordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
         //Delete CKRecord
         let myContainer = CKContainer.default()
         let privateDatebase = myContainer.privateCloudDatabase

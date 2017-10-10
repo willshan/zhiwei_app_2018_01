@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import CloudKit
 
 
 //User对象创建成功之后，接下来就是通过对象来使用CoreData了
@@ -25,21 +26,6 @@ class HandleCoreData: NSObject {
     }()
 	//define context
 	static let context = persistentContainer.viewContext
-
-    
-    //get random string
-    /*
-    class func RandomString()->String {
-        let characters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        var ranStr = ""
-        for _ in 0..<12 {
-            
-            let index = Int(arc4random_uniform(UInt32(characters.characters.count)))
-            ranStr.append(characters[characters.index(characters.startIndex, offsetBy: index)])
-            //ranStr.append(characters[characters.startIndex.advancedBy(index)])
-        }
-        return ranStr
-    }*/
     
     //save to context
     class func saveContext() {
@@ -97,24 +83,32 @@ class HandleCoreData: NSObject {
      * 给实体对象赋值
      * 通过saveContext()保存实体对象
      */
-    class func insertData(meal : Meal?)-> Meal{
+    class func insertData(meal : Meal?, record : CKRecord?)-> Meal{
         //creat Meal
         let EntityName = "Meal"
         let mealToAdd = NSEntityDescription.insertNewObject(forEntityName: EntityName, into:context) as! Meal
         
         //对象赋值
         //从服务器下载
-        /*
-        let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-        if mealToServer != nil {
-            mealToAdd.mealName = mealToServer!.mealName
-            mealToAdd.spicy = Int64(mealToServer!.spicy)
-            mealToAdd.date = mealToServer!.date
-            mealToAdd.comment = mealToServer!.comment
-            mealToAdd.mealType = mealToServer!.mealType
-            mealToAdd.cellSelected = mealToServer!.cellSelected
-            mealToAdd.userName = userName!
-            mealToAdd.identifier = mealToServer?.identifier ?? NSUUID().uuidString
+        if record != nil {
+            let imageAsset = record!["image"] as! CKAsset
+            let imageURL = imageAsset.fileURL
+            let image = UIImage(contentsOfFile: imageURL.path)
+            ImageStore().setImage(image: image!, forKey: record!.recordID.recordName)
+            
+            mealToAdd.mealName = record!["mealName"] as! String
+            mealToAdd.spicy = record!["spicy"] as! Int64
+            mealToAdd.date = record!["mealCreatedAt"] as! NSDate
+            mealToAdd.comment = record!["comment"] as? String
+            mealToAdd.mealType = record!["mealType"] as! String
+            if record!["cellSelected"] as! Int64 == Int64(0) {
+                mealToAdd.cellSelected = false
+            }
+            else {
+                mealToAdd.cellSelected = true
+            }
+            mealToAdd.userName = CKCurrentUserDefaultName
+            mealToAdd.identifier = record!["mealIdentifier"] as! String
             /*
             let userName : String? = UserDefaults.standard.string(forKey: "user_name")
             let invitationCode = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
@@ -126,7 +120,7 @@ class HandleCoreData: NSObject {
                 mealToAdd.invitationCode = HandleCoreData.RandomString()
                 InvitationCodeStorage().saveInvitaionCode(code: mealToAdd.invitationCode!, forKey: "invitationCode", userName: userName!)
             }*/
-        }*/
+        }
         //本地插入
         if meal != nil {
             mealToAdd.mealName = meal!.mealName
@@ -188,8 +182,7 @@ class HandleCoreData: NSObject {
         return meals
     }
     
-    class func queryDataWithIdentifer(_ identifier : String) -> [Meal]? {
-        
+    class func queryDataWithIdentifer(_ identifier : String) -> [Meal] {
         //获取数据上下文对象
         var meals = [Meal]()
         //声明数据的请求
@@ -209,7 +202,6 @@ class HandleCoreData: NSObject {
         //查询操作
         do{
             let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
-            
             //遍历查询的结果
             for info in fetchedObjects{
                 meals.append(info)
@@ -267,7 +259,7 @@ class HandleCoreData: NSObject {
      * 将查询出来的数据进行修改,也即进行赋新值
      * 通过saveContext()保存修改后的实体对象
      */
-    class func updateData(_ meal : Meal){
+    class func updateData(meal : Meal?, record : CKRecord?){
         //声明数据的请求
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchRequest.fetchLimit = 10  //限制查询结果的数量
@@ -279,29 +271,62 @@ class HandleCoreData: NSObject {
         fetchRequest.entity = entity
         
         //设置查询条件
-        let predicate = NSPredicate.init(format: "identifier = '\(meal.identifier)'", "")
-        fetchRequest.predicate = predicate
-        
-        //查询操作
-        do{
-            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
-            
-            //遍历查询的结果
-            for info in fetchedObjects{
-                //修改
-                info.mealName = meal.mealName
-                info.spicy = meal.spicy
-                info.comment = meal.comment
-                info.mealType = meal.mealType
-                info.cellSelected = meal.cellSelected
-                //info.invitationCode = meal.invitationCode
-                
-                //重新保存
-                saveContext()
+        if meal != nil {
+            let predicate = NSPredicate.init(format: "identifier = '\(meal!.identifier)'", "")
+            fetchRequest.predicate = predicate
+            //查询操作
+            do{
+                let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+                //遍历查询的结果
+                for info in fetchedObjects{
+                    //修改
+                    info.mealName = meal!.mealName
+                    info.spicy = meal!.spicy
+                    info.comment = meal!.comment
+                    info.mealType = meal!.mealType
+                    info.cellSelected = meal!.cellSelected
+                    //重新保存
+                    saveContext()
+                }
+            }catch {
+                let nserror = error as NSError
+                fatalError("查询错误： \(nserror), \(nserror.userInfo)")
             }
-        }catch {
-            let nserror = error as NSError
-            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        if record != nil {
+            let predicate = NSPredicate.init(format: "identifier = '\(record!["mealIdentifier"] as! String)'", "")
+            fetchRequest.predicate = predicate
+            //查询操作
+            do{
+                let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+                //遍历查询的结果
+                for mealToAdd in fetchedObjects{
+                    //修改
+                    let imageAsset = record!["image"] as! CKAsset
+                    let imageURL = imageAsset.fileURL
+                    let image = UIImage(contentsOfFile: imageURL.path)
+                    ImageStore().setImage(image: image!, forKey: record!.recordID.recordName)
+                    
+                    mealToAdd.mealName = record!["mealName"] as! String
+                    mealToAdd.spicy = record!["spicy"] as! Int64
+                    mealToAdd.date = record!["mealCreatedAt"] as! NSDate
+                    mealToAdd.comment = record!["comment"] as? String
+                    mealToAdd.mealType = record!["mealType"] as! String
+                    if record!["cellSelected"] as! Int64 == Int64(0) {
+                        mealToAdd.cellSelected = false
+                    }
+                    else {
+                        mealToAdd.cellSelected = true
+                    }
+                    mealToAdd.userName = CKCurrentUserDefaultName
+                    mealToAdd.identifier = record!["mealIdentifier"] as! String
+                    //重新保存
+                    saveContext()
+                }
+            }catch {
+                let nserror = error as NSError
+                fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+            }
         }
     }
     
@@ -366,24 +391,18 @@ class HandleCoreData: NSObject {
         //查询操作
         do{
             let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
-            
-            //只删除一个
-            let info = fetchedObjects.first!
-            
-            //删除对象
-            context.delete(info)
-            
-            //重新保存
-            saveContext()
-            
-            //遍历查询的结果
-            /*for info in fetchedObjects{
+            if fetchedObjects.count > 0 {
+                //只删除一个
+                let info = fetchedObjects.first!
+                print("deleted in core data successfully!")
                 //删除对象
                 context.delete(info)
-                
                 //重新保存
                 saveContext()
-            }*/
+            }
+            else {
+                return
+            }
         }catch {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")

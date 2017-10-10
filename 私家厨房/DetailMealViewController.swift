@@ -222,7 +222,7 @@ extension DetailMealViewController{
             self.meal!.mealType = mealType!
             self.meal!.spicy = Int64(spicy)
             
-            HandleCoreData.updateData(self.meal!)
+            HandleCoreData.updateData(meal: self.meal, record: nil)
         }
         if self.photoFromOrderMeal != photo.image {
             photochanged = true

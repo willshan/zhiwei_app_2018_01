@@ -9,16 +9,14 @@
 import UIKit
 import CoreData
 import os.log
-
+import CloudKit
 
 class PersonalCenterViewController: UIViewController {
     //Mark: -Properties
     var stateController : StateController!
-    let userName : String? = UserDefaults.standard.string(forKey: "user_name")
+    let userName : String = CKCurrentUserDefaultName
     
     @IBOutlet weak var personalPhoto: UIImageView!
-    
-    
     @IBAction func goToContactVC(_ sender: Any) {
 
         let contactVC = ContactVC()
@@ -31,9 +29,8 @@ class PersonalCenterViewController: UIViewController {
         super.viewDidLoad()
         //添加聊天管理代理
         EMClient.shared().chatManager.add(self, delegateQueue: nil)
-        //personalPhoto.image = ImageStore().imageForKey(key: PFUser.current()!.username!) ?? UIImage(named: "defaultPhoto")!
         
-        personalPhoto.image = ImageStore().imageForKey(key: userName!) ?? UIImage(named: "defaultPhoto")!
+        personalPhoto.image = ImageStore().imageForKey(key: userName) ?? UIImage(named: "defaultPhoto")!
         // Do any additional setup after loading the view.
     }
 
@@ -77,7 +74,7 @@ extension PersonalCenterViewController : UIImagePickerControllerDelegate, UINavi
         //photo.image = selectedImage
 
         personalPhoto.image = compressedImage
-        ImageStore().setImage(image: compressedImage!, forKey: userName!)
+        ImageStore().setImage(image: compressedImage!, forKey: userName)
         
         // Dismiss the picker.
         dismiss(animated: true, completion: nil)

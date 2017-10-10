@@ -9,6 +9,7 @@
 import UIKit
 import UserNotifications
 import CoreData
+import CloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -31,37 +32,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         else {
             print("初始化失败")
         }
+        
         //MARK: 注册离线推送
-        //1
+        // Silent push
+        let notificationInfo = CKNotificationInfo()
+        // Set only this property
+        notificationInfo.shouldSendContentAvailable = true
+        
         let userNotificationCenter = UNUserNotificationCenter.current()
         userNotificationCenter.delegate = self
-        
-        //2 获取消息推送权限
-        //ISO系统10.0及以上
-        if UIDevice.current.systemVersion.hashValue >= 10 {
         userNotificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { accepted, error in
             guard accepted == true else {
                 print("User declined remote notifications")
                 return
             }
-            userNotificationCenter.getNotificationSettings(completionHandler: { (settings) in
-                print("\(settings)")
-            })
-            }
-        }
-            //ISO系统8.0及以上
-        else if UIDevice.current.systemVersion.hashValue >= 8{
-            let notificationTypes : UIUserNotificationType = [.alert, .sound, .badge]
-            let settings = UIUserNotificationSettings(types: notificationTypes, categories: nil)
-            application.registerUserNotificationSettings(settings)
-        }
-            //ISO系统8.0以下
-        else if UIDevice.current.systemVersion.hashValue < 8{
-            let notificationTypes : UIRemoteNotificationType = [.badge, .alert, .sound]
-            UIApplication.shared.registerForRemoteNotifications(matching: notificationTypes)
         }
         
-        //3 注册获得device Token
         application.registerForRemoteNotifications()
 
         //设置推送显示形式
@@ -74,81 +60,82 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }else {
             // 更新配置失败
         }
-        
-        Parse.enableLocalDatastore()
-        // Initialize Parse.
-        let configuration = ParseClientConfiguration {
-            $0.applicationId = "nameless-beyond-49193"
-            $0.server = "https://nameless-beyond-49193.herokuapp.com/parse"
-        }
-        Parse.initialize(with: configuration)
-
-        // [Optional] Track statistics around application opens.
-        PFAnalytics.trackAppOpened(launchOptions: launchOptions)
-        
+        //设置环信注册和登陆
         let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-        
-        //print(userName)
-        //print(PFUser.current()?.objectId)
-        
-        if userName != nil {
-            let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        if userName == nil {
+            let userName = NSUUID().uuidString
             
-            let stateController = StateController()
-            //print("*****************\(stateController.meals)")
+            UserDefaults.standard.set(userName, forKey: "user_name")
+            UserDefaults.standard.synchronize()
             
-            //自动登陆环信，已经设置
-            
-            let orderMealController = mainStoryboard.instantiateViewController(withIdentifier: "OrderMealController") as! OrderMealController
-            orderMealController.stateController = stateController
-            let nav0 = UINavigationController(rootViewController: orderMealController)
-            nav0.tabBarItem.image = UIImage(named: "OrderMeal")
-            nav0.title = "有啥吃的"
-            
-            let shoppingCartController = mainStoryboard.instantiateViewController(withIdentifier: "ShoppingCartViewController") as! ShoppingCartViewController
-            shoppingCartController.stateController = stateController
-            let nav1 = UINavigationController(rootViewController: shoppingCartController)
-            nav1.tabBarItem.image = UIImage(named: "Shopping Cart")
-            if stateController.mealOrderList.count != 0 {
-                nav1.tabBarItem.badgeValue = "\(stateController.mealOrderList.count)"
-            }
-            nav1.title = "点了啥"
-            
-            let conversationListVC = ConversationListVC()
-            let nav2 = UINavigationController(rootViewController: conversationListVC)
-            nav2.tabBarItem.image = UIImage(named: "Message")
-            nav2.title = "消息"
-            
-            let conversations = EMClient.shared().chatManager.getAllConversations() as? [EMConversation]
-            var unreadMessageCount = 0
-            if conversations != nil {
-                for conv in conversations! {
-                unreadMessageCount += Int(conv.unreadMessagesCount)
-                }
-            }
-            if unreadMessageCount == 0 {
-                nav2.tabBarItem.badgeValue = nil
+            //注册环信
+            let error = EMClient.shared().register(withUsername: userName, password: "123")
+            if (error==nil) {
+                print("注册成功")
+                UserDefaults.standard.set(userName, forKey: "user_name")
+                UserDefaults.standard.synchronize()
             }
             else {
-                nav2.tabBarItem.badgeValue = "\(unreadMessageCount)"
+                print("注册失败")
+     
             }
-            
-            let personalCenterController = mainStoryboard.instantiateViewController(withIdentifier: "PersonalCenterViewController") as! PersonalCenterViewController
-            personalCenterController.stateController = stateController
-            let nav3 = UINavigationController(rootViewController: personalCenterController)
-            nav3.tabBarItem.image = UIImage(named: "PersonalCenter")
-            nav3.title = "个人中心"
-            
-            let tabNav = UITabBarController()
-            let viewControllerArray = [nav0, nav1, nav2, nav3]
-            //tabNav.addChildViewController(nav0)
-            //tabNav.addChildViewController(nav1)
-            //tabNav.addChildViewController(nav3)
-            tabNav.viewControllers = viewControllerArray
-            
-            self.window?.rootViewController = tabNav
-            self.stateController = stateController
+            /*
+            //登陆环信
+            EMClient.shared().login(withUsername: userName, password: "123", completion: { (userName, emError) in
+                if (emError == nil) {
+                    print("登陆成功")
+                    //set 自动登陆
+                    EMClient.shared().options.isAutoLogin = true
+
+                }else {
+                    print("登陆失败")
+                }
+            })*/
         }
+
+        let rootViewController = self.window!.rootViewController as! UITabBarController
+        let stateController = StateController()
+        //tab0
+        let nav0 = rootViewController.viewControllers?[0] as! UINavigationController
+        let orderMealController = nav0.viewControllers.first as! OrderMealController
+        orderMealController.stateController = stateController
+        nav0.tabBarItem.image = UIImage(named: "OrderMeal")
+        nav0.title = "有啥吃的"
+        //tab1
+        let nav1 = rootViewController.viewControllers?[1] as! UINavigationController
+        let shoppingCartController = nav1.viewControllers.first as! ShoppingCartViewController
+        shoppingCartController.stateController = stateController
+        if stateController.mealOrderList.count != 0 {
+            nav1.tabBarItem.badgeValue = "\(stateController.mealOrderList.count)"
+        }
+        nav1.tabBarItem.image = UIImage(named: "Shopping Cart")
+        nav1.title = "点了啥"
+        //tab2
+        let nav2 = rootViewController.viewControllers?[2] as! UINavigationController
+        //let conversationListVC = nav2.viewControllers.first as! ConversationListVC
+        nav2.tabBarItem.image = UIImage(named: "Message")
+        nav2.title = "消息"
+        /*
+        let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
+        var unreadMessageCount = 0
+        for conv in conversations {
+            unreadMessageCount += Int(conv.unreadMessagesCount)
+        }
+        if unreadMessageCount == 0 {
+            nav2.tabBarItem.badgeValue = nil
+        }
+        else {
+            nav2.tabBarItem.badgeValue = "\(unreadMessageCount)"
+        }*/
+        //tab3
+        let nav3 = rootViewController.viewControllers?[3] as! UINavigationController
+        let personalCenterController = nav3.viewControllers.first as! PersonalCenterViewController
+        personalCenterController.stateController = stateController
+        nav3.tabBarItem.image = UIImage(named: "PersonalCenter")
+        nav3.title = "个人中心"
+
+        self.stateController = stateController
+        
         return true
     }
 
@@ -167,7 +154,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     //监听是否有消息进来
     func messagesDidReceive(_ aMessages: [Any]!) {
-        
         let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
         var unreadMessageCount = 0
         for conv in conversations {
@@ -202,9 +188,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func applicationWillResignActive(_ application: UIApplication) {
-
         print("app will resign active")
- 
         let conversations = EMClient.shared().chatManager.getAllConversations() as? [EMConversation]
         var unreadMessageCount = 0
         if conversations != nil {
@@ -212,9 +196,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 unreadMessageCount += Int(conv.unreadMessagesCount)
             }
         }
-        
         application.applicationIconBadgeNumber = unreadMessageCount
-        
         // Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
         // Use this method to pause ongoing tasks, disable timers, and invalidate graphics rendering callbacks. Games should use this method to pause the game.
     }
@@ -222,7 +204,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         //保存数据到硬盘
         //stateController.saveMealToDisk()
-
         print("app did enter backgroud")
         EMClient.shared().chatManager.add(self, delegateQueue: nil)
         
@@ -234,6 +215,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+        print("app will enter foreground")
         EMClient.shared().chatManager.remove(self)
         
         EMClient.shared().applicationWillEnterForeground(application)
@@ -241,11 +223,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
+        print("app did become active")
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         HandleCoreData.saveContext()
+    }
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        print("Received notification!")
+        let tabVC = self.window?.rootViewController as! UITabBarController
+        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+        guard let viewController = nav0.viewControllers.first as? OrderMealController else { return }
+
+        let dict = userInfo as! [String: NSObject]
+        guard let notification : CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary:dict) as? CKDatabaseNotification else { return }
+        
+        viewController.fetchChanges(in: notification.databaseScope) {
+            completionHandler(UIBackgroundFetchResult.newData)
+        }
     }
 }
 

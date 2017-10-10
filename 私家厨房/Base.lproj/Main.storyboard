@@ -1,14 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="fRY-cS-RZn">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="bsL-5C-x40">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13173"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="AvenirNext.ttc">
+            <string>AvenirNext-DemiBold</string>
+            <string>AvenirNext-Regular</string>
+        </array>
+        <array key="Zapfino.ttf">
+            <string>Zapfino</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--回家吃饭-->
         <scene sceneID="5fQ-Q3-vZS">
@@ -23,7 +32,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="90"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4NT-mi-tDg" id="Vql-31-LUX">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="89.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Y0V-4s-Wfw">
@@ -40,19 +49,19 @@
                                             </userDefinedRuntimeAttributes>
                                         </imageView>
                                         <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="vdH-e5-HCM">
-                                            <rect key="frame" x="95" y="23" width="168.5" height="57"/>
+                                            <rect key="frame" x="95" y="23" width="168.5" height="87"/>
                                             <subviews>
                                                 <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="dsx-XA-BbY">
-                                                    <rect key="frame" x="0.0" y="0.0" width="168.5" height="20"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="168.5" height="50"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="meal name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="id7-fH-pAj">
-                                                            <rect key="frame" x="0.0" y="0.0" width="83.5" height="20"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="83.5" height="50"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <view userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="BO0-Nw-dmr" customClass="Spicy" customModule="私家厨房" customModuleProvider="target">
-                                                            <rect key="frame" x="88.5" y="0.0" width="80" height="20"/>
+                                                            <rect key="frame" x="88.5" y="0.0" width="80" height="50"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                             <userDefinedRuntimeAttributes>
                                                                 <userDefinedRuntimeAttribute type="size" keyPath="spicySize">
@@ -63,7 +72,7 @@
                                                     </subviews>
                                                 </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="PiT-t4-ZzA">
-                                                    <rect key="frame" x="0.0" y="45" width="62.5" height="12"/>
+                                                    <rect key="frame" x="0.0" y="75" width="62.5" height="12"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下单次数：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l0A-aR-h9G">
                                                             <rect key="frame" x="0.0" y="0.0" width="51.5" height="12"/>
@@ -174,7 +183,7 @@
                                         <rect key="frame" x="0.0" y="18" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="23c-8H-vrf" id="B3K-rj-sfh">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9cy-aS-cYa">
@@ -298,7 +307,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="kSP-ur-fNQ" id="fWL-xA-shu">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="index" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IKa-Vk-b2W">
@@ -393,7 +402,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="8GQ-Jg-eiH">
-                                <rect key="frame" x="26" y="72" width="323" height="122"/>
+                                <rect key="frame" x="26" y="72" width="323" height="142"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bnq-IQ-Cm0">
                                         <rect key="frame" x="0.0" y="0.0" width="323" height="30"/>
@@ -419,16 +428,16 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="uPx-Lq-NFX">
-                                        <rect key="frame" x="0.0" y="35" width="180" height="30"/>
+                                        <rect key="frame" x="0.0" y="35" width="180" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 辣度" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FLZ-6m-wBY">
-                                                <rect key="frame" x="0.0" y="0.0" width="60" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="60" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="TOt-gE-Grb" customClass="Spicy" customModule="私家厨房" customModuleProvider="target">
-                                                <rect key="frame" x="60" y="0.0" width="120" height="30"/>
+                                                <rect key="frame" x="60" y="0.0" width="120" height="50"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="size" keyPath="spicySize">
@@ -439,7 +448,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Jcm-sn-b51">
-                                        <rect key="frame" x="0.0" y="70" width="160" height="30"/>
+                                        <rect key="frame" x="0.0" y="90" width="160" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="*菜类" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aso-10-Qcm">
                                                 <rect key="frame" x="0.0" y="0.0" width="60" height="30"/>
@@ -471,7 +480,7 @@
                                         </constraints>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="tss-2O-Y1l">
-                                        <rect key="frame" x="0.0" y="105" width="323" height="17"/>
+                                        <rect key="frame" x="0.0" y="125" width="323" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -487,19 +496,19 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="备注" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lQq-Tn-lNc">
-                                <rect key="frame" x="26" y="444" width="35" height="20.5"/>
+                                <rect key="frame" x="26" y="464" width="35" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="tPo-me-0st">
-                                <rect key="frame" x="16" y="467" width="343" height="198"/>
+                                <rect key="frame" x="16" y="487" width="343" height="178"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="MjI-pb-NaO">
-                                <rect key="frame" x="67.5" y="199" width="240" height="240"/>
+                                <rect key="frame" x="67.5" y="219" width="240" height="240"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="240" id="A4d-LM-pZh"/>
@@ -588,7 +597,7 @@
                     <tabBarItem key="tabBarItem" title="点菜" image="OrderMeal" id="s5q-El-vlV"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="dWH-E0-omt">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -606,7 +615,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="r7v-3F-ngg" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="pc5-ac-SNJ">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -625,7 +634,7 @@
                     <tabBarItem key="tabBarItem" title="购物车" image="Shopping Cart" id="kGz-yp-3vh"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="hhQ-Td-yim">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -828,13 +837,7 @@
                             <constraint firstItem="iK9-pl-f1j" firstAttribute="height" secondItem="u3a-gt-tQb" secondAttribute="height" id="wBb-YL-UVZ"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="个人中心" id="VRY-01-JLl">
-                        <barButtonItem key="rightBarButtonItem" title="LogOut" id="VoH-Ol-wcU">
-                            <connections>
-                                <segue destination="78Z-Pl-da6" kind="show" identifier="LogOut" action="showDetailViewController:sender:" id="9uO-Le-nIX"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="个人中心" id="VRY-01-JLl"/>
                     <connections>
                         <outlet property="personalPhoto" destination="Vbf-DV-V0n" id="dna-wz-bem"/>
                     </connections>
@@ -895,7 +898,7 @@
                     <tabBarItem key="tabBarItem" title="个人中心" image="PersonalCenter" id="lln-W6-dV3"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="ba8-wr-X0Y">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -913,7 +916,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="bhQ-Jf-ofK" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="DRh-RK-zD4">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -938,7 +941,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="100"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Pij-Fr-2Fm" id="4sj-LH-zcs">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="99.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="scaleToFill" scrollEnabled="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="dkd-eW-VMl">
@@ -1114,7 +1117,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="70"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="xfN-dB-gld" id="Y2N-1P-JE6">
-                                            <rect key="frame" x="0.0" y="0.0" width="375" height="69"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="69.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="index" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iIO-Ui-8VQ">
@@ -1200,7 +1203,7 @@
                     <tabBarItem key="tabBarItem" title="消息" image="Message" id="83x-tl-wQm"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="1d6-qv-7zS">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1343,7 +1346,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1628" y="1816"/>
+            <point key="canvasLocation" x="-922" y="5694"/>
         </scene>
         <!--Login View Controller-->
         <scene sceneID="ejY-Qh-59q">
@@ -1505,7 +1508,6 @@
                     <connections>
                         <outlet property="passwordField" destination="epH-em-Cfw" id="WYI-59-Acy"/>
                         <outlet property="usernameField" destination="rlD-Ia-0XL" id="J7J-BI-sy6"/>
-                        <segue destination="bsL-5C-x40" kind="showDetail" identifier="LoginSuccesful" id="bH9-Td-OdF"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CWC-hr-xbm" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1520,7 +1522,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-1628" y="739"/>
+            <point key="canvasLocation" x="-922" y="4954"/>
         </scene>
         <!--Sign Up View Controller-->
         <scene sceneID="f7P-wK-79h">
@@ -1651,7 +1653,6 @@
                         <outlet property="emailField" destination="T4n-HJ-gsY" id="QeH-9o-9v5"/>
                         <outlet property="passwordField" destination="kb7-Mh-eY1" id="Igi-p4-MCb"/>
                         <outlet property="usernameField" destination="UlP-LR-9rL" id="bRc-nn-ElP"/>
-                        <segue destination="bsL-5C-x40" kind="presentation" identifier="SignupSuccesful" id="twC-7g-t1K"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZvN-TS-B5Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -1667,7 +1668,7 @@
                     </connections>
                 </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="-652" y="1107"/>
+            <point key="canvasLocation" x="-41" y="4954"/>
         </scene>
         <!--Log Out View Controller-->
         <scene sceneID="gqz-7V-A2M">
@@ -1749,7 +1750,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SGg-EW-kE5" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="6002.3999999999996" y="3096.7016491754125"/>
+            <point key="canvasLocation" x="2294" y="4953"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="gIB-rx-YB0">
@@ -1757,7 +1758,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="fRY-cS-RZn" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="0mg-Cz-dXx">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -1767,7 +1768,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XCB-Qr-RUF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2567" y="739"/>
+            <point key="canvasLocation" x="-1862" y="4954"/>
         </scene>
         <!--个人设置-->
         <scene sceneID="cMf-4Q-5Ek">
@@ -2002,7 +2003,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="78Z-Pl-da6" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="xqT-Dw-Rhk">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2012,7 +2013,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xhu-ZW-aiv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5063.1999999999998" y="3096.7016491754125"/>
+            <point key="canvasLocation" x="1354" y="4953"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="Jcd-HF-iRr">
@@ -2020,7 +2021,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="R3C-rw-k8l" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="QFX-d6-Rn9">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                        <rect key="frame" x="0.0" y="20" width="375" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -2045,7 +2046,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="47F-ky-43p">
-                                <rect key="frame" x="16" y="72" width="343" height="122"/>
+                                <rect key="frame" x="16" y="72" width="343" height="142"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LoO-Lt-A2H">
                                         <rect key="frame" x="0.0" y="0.0" width="343" height="30"/>
@@ -2071,16 +2072,16 @@
                                         </constraints>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lw4-fM-qvw">
-                                        <rect key="frame" x="0.0" y="35" width="170" height="30"/>
+                                        <rect key="frame" x="0.0" y="35" width="170" height="50"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="辣度" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="342-6R-a61">
-                                                <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <view userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="Ma6-Zo-uhz" customClass="Spicy" customModule="私家厨房" customModuleProvider="target">
-                                                <rect key="frame" x="50" y="0.0" width="120" height="30"/>
+                                                <rect key="frame" x="50" y="0.0" width="120" height="50"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <userDefinedRuntimeAttributes>
                                                     <userDefinedRuntimeAttribute type="size" keyPath="spicySize">
@@ -2091,7 +2092,7 @@
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="hkY-6E-rT7">
-                                        <rect key="frame" x="0.0" y="70" width="343" height="30"/>
+                                        <rect key="frame" x="0.0" y="90" width="343" height="30"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="菜类" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vbS-w1-2Hm">
                                                 <rect key="frame" x="0.0" y="0.0" width="50" height="30"/>
@@ -2117,7 +2118,7 @@
                                         </constraints>
                                     </stackView>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="date" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="z29-xI-Jjd">
-                                        <rect key="frame" x="0.0" y="105" width="343" height="17"/>
+                                        <rect key="frame" x="0.0" y="125" width="343" height="17"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -2133,19 +2134,19 @@
                                 </constraints>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="备注" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sNu-i4-F9y">
-                                <rect key="frame" x="26" y="444" width="35" height="20.5"/>
+                                <rect key="frame" x="26" y="464" width="35" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="hn3-T9-dR9">
-                                <rect key="frame" x="16" y="467" width="343" height="151"/>
+                                <rect key="frame" x="16" y="487" width="343" height="131"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
                             <imageView contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="ByB-uX-m9Z">
-                                <rect key="frame" x="67.5" y="199" width="240" height="240"/>
+                                <rect key="frame" x="67.5" y="219" width="240" height="240"/>
                                 <gestureRecognizers/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="jZW-Is-1fc"/>
@@ -2198,7 +2199,6 @@
         <image name="五星大厨" width="385" height="127"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="twC-7g-t1K"/>
         <segue reference="hFJ-12-ugq"/>
     </inferredMetricsTieBreakers>
 </document>

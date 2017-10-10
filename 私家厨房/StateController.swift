@@ -45,7 +45,6 @@ class StateController {
         return orderLists
     }
     
-	
     func countOrderedMealCount()-> Int {
         var orderedMealCount = 0
         for meal in mealOrderList {
@@ -53,7 +52,6 @@ class StateController {
         }
         return orderedMealCount
 	}
-	
 	
     func saveMealOrderList(_ mealOrderList:[IndexPath : OrderedMeal]) {
         self.mealOrderList = mealOrderList

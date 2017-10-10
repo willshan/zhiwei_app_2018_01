@@ -7,11 +7,25 @@
 //
 
 import UIKit
+import CloudKit
+
 class ICloudPropertyStore : NSObject{
     
     static let keyForCreatedCustomZone = "createdCustomZone"
     static let keyForSubscribedToPrivateChanges = "createdCustomZone"
     static let keyForSubscribedToSharedChanges = "createdCustomZone"
+    /*
+    var changeToken : CKServerChangeToken?
+    
+    func encode(with aCoder: NSCoder) {
+        aCoder.encode(changeToken, forKey: "changeToken")
+    }
+    
+    required init(coder aDecoder : NSCoder) {
+        changeToken = aDecoder.decodeObject(forKey: "changeToken") as CKServerChangeToken
+        super.init()
+    }
+    */
     
     class func iCloudProtpertyForKey(key : String)-> URL {
         let documentsDirectories = FileManager().urls(for: .documentDirectory, in: .userDomainMask)
