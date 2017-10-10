@@ -21,6 +21,55 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var stateController : StateController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+
+        if UserDefaults.standard.string(forKey: "user_ID") == nil {
+            CKContainer.default().fetchUserRecordID { (recordID, error) in
+                if error == nil {
+                    let userID = recordID?.recordName
+                    print("current user's userID is \(String(describing: userID))")
+                    
+                    //注册环信
+                    let error = EMClient.shared().register(withUsername: userID, password: "123")
+                    if (error == nil) {
+                        print("注册成功")
+                        
+                        UserDefaults.standard.set(userID, forKey: "user_ID")
+                        UserDefaults.standard.synchronize()
+                        
+                        //登陆环信
+                        EMClient.shared().login(withUsername: userID, password: "123", completion: { (userID, emError) in
+                            if (emError == nil) {
+                                print("登陆成功")
+                                //set 自动登陆
+                                EMClient.shared().options.isAutoLogin = true
+                                
+                            }else {
+                                print("登陆失败")
+                            }
+                        })
+                    }
+                    else {
+                        print("注册失败，\(error)")
+                        //登陆环信
+                        EMClient.shared().login(withUsername: userID, password: "123", completion: { (userID, emError) in
+                            if (emError == nil) {
+                                print("登陆成功")
+                                //set 自动登陆
+                                EMClient.shared().options.isAutoLogin = true
+                                UserDefaults.standard.set(userID, forKey: "user_ID")
+                                UserDefaults.standard.synchronize()
+                                
+                            }else {
+                                print("登陆失败")
+                            }
+                        })
+                    }
+                }
+                else {
+                    print("\(String(describing: error))")
+                }
+            }
+        }
         
         //环信初始化
         let options = EMOptions.init(appkey: "1113170714178362#nameless-beyond-49193")
@@ -60,38 +109,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }else {
             // 更新配置失败
         }
-        //设置环信注册和登陆
-        let userName : String? = UserDefaults.standard.string(forKey: "user_name")
-        if userName == nil {
-            let userName = NSUUID().uuidString
-            
-            UserDefaults.standard.set(userName, forKey: "user_name")
-            UserDefaults.standard.synchronize()
-            
-            //注册环信
-            let error = EMClient.shared().register(withUsername: userName, password: "123")
-            if (error==nil) {
-                print("注册成功")
-                UserDefaults.standard.set(userName, forKey: "user_name")
-                UserDefaults.standard.synchronize()
-            }
-            else {
-                print("注册失败")
-     
-            }
-            /*
-            //登陆环信
-            EMClient.shared().login(withUsername: userName, password: "123", completion: { (userName, emError) in
-                if (emError == nil) {
-                    print("登陆成功")
-                    //set 自动登陆
-                    EMClient.shared().options.isAutoLogin = true
-
-                }else {
-                    print("登陆失败")
-                }
-            })*/
-        }
 
         let rootViewController = self.window!.rootViewController as! UITabBarController
         let stateController = StateController()
@@ -115,7 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //let conversationListVC = nav2.viewControllers.first as! ConversationListVC
         nav2.tabBarItem.image = UIImage(named: "Message")
         nav2.title = "消息"
-        /*
+        
         let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
         var unreadMessageCount = 0
         for conv in conversations {
@@ -126,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         else {
             nav2.tabBarItem.badgeValue = "\(unreadMessageCount)"
-        }*/
+        }
         //tab3
         let nav3 = rootViewController.viewControllers?[3] as! UINavigationController
         let personalCenterController = nav3.viewControllers.first as! PersonalCenterViewController

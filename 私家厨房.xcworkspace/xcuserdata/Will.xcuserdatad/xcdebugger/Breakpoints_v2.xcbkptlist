@@ -26,29 +26,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/LoginViewController.swift"
-            timestampString = "529173839.084564"
+            timestampString = "529340922.91357"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "19"
             endingLineNumber = "19"
             landmarkName = "LoginViewController"
             landmarkType = "3">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/AppDelegate.swift"
-            timestampString = "529334367.885797"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "43"
-            endingLineNumber = "43"
-            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
-            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -90,7 +74,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/SignUpViewController.swift"
-            timestampString = "529131878.958931"
+            timestampString = "529340341.282045"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "54"
@@ -138,7 +122,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/LoginViewController.swift"
-            timestampString = "529173839.084813"
+            timestampString = "529340922.913832"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "40"
@@ -202,12 +186,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/AppDelegate.swift"
-            timestampString = "529334367.887368"
+            timestampString = "529341653.725404"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
-            landmarkName = "application(_:didRegisterForRemoteNotificationsWithDeviceToken:)"
+            startingLineNumber = "148"
+            endingLineNumber = "148"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -250,7 +234,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/LoginViewController.swift"
-            timestampString = "529173839.085036"
+            timestampString = "529340922.914514"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "90"
@@ -266,7 +250,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/ConversationListVC.swift"
-            timestampString = "526382433.632092"
+            timestampString = "529341653.725646"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "64"
@@ -282,7 +266,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/OrderMealController.swift"
-            timestampString = "529335561.265819"
+            timestampString = "529341653.725716"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "31"
@@ -298,12 +282,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/AppDelegate.swift"
-            timestampString = "529334367.887912"
+            timestampString = "529341653.725778"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "164"
-            endingLineNumber = "164"
-            landmarkName = "messagesDidReceive(_:)"
+            startingLineNumber = "168"
+            endingLineNumber = "168"
+            landmarkName = "application(_:didFailToRegisterForRemoteNotificationsWithError:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -314,7 +298,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/PersonalCenterViewController.swift"
-            timestampString = "529160483.482305"
+            timestampString = "529341653.72586"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "39"
@@ -406,7 +390,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x79c1;&#x5bb6;&#x53a8;&#x623f;/OrderMealController.swift"
-            timestampString = "529335561.266112"
+            timestampString = "529341653.726126"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "247"

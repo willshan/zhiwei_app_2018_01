@@ -167,26 +167,6 @@ extension PersonalCenterViewController : EMChatManagerDelegate{
     }
     
     func showTabBarBadge() {
-        /*
-        let conversations = EMClient.shared().chatManager.getAllConversations() as? [EMConversation]
-        var unreadMessageCount = 0
-        if conversations != nil {
-            for conv in conversations! {
-                unreadMessageCount += Int(conv.unreadMessagesCount)
-            }
-            let nav3 = self.navigationController
-            let tabNav = nav3?.tabBarController
-            let nav2 = tabNav?.viewControllers?[2]
-            
-            if unreadMessageCount == 0 {
-                nav2?.tabBarItem.badgeValue = nil
-            }
-            else {
-                
-                nav2?.tabBarItem.badgeValue = "\(unreadMessageCount)"
-            }
-        }*/
-        
         let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
         var unreadMessageCount = 0
         for conv in conversations {
