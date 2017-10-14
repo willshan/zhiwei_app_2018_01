@@ -132,7 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //let conversationListVC = nav2.viewControllers.first as! ConversationListVC
         nav2.tabBarItem.image = UIImage(named: "Message")
         nav2.title = "消息"
-        
+        /*
         let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
         var unreadMessageCount = 0
         for conv in conversations {
@@ -143,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         else {
             nav2.tabBarItem.badgeValue = "\(unreadMessageCount)"
-        }
+        }*/
         //tab3
         let nav3 = rootViewController.viewControllers?[3] as! UINavigationController
         let personalCenterController = nav3.viewControllers.first as! PersonalCenterViewController
@@ -234,13 +234,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         print("app will enter foreground")
         EMClient.shared().chatManager.remove(self)
-        
         EMClient.shared().applicationWillEnterForeground(application)
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         print("app did become active")
+        
+        let tabVC = self.window?.rootViewController as! UITabBarController
+        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+        let viewController = nav0.viewControllers.first as? OrderMealController
+
+        viewController?.viewWillAppear(true)
     }
 
     func applicationWillTerminate(_ application: UIApplication) {

@@ -724,7 +724,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Will/私家厨房V2.14_环信Lite/私家厨房/私家厨房-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "/Users/Will/Desktop/私家厨房V2.14_环信Lite/私家厨房/私家厨房-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = 1;

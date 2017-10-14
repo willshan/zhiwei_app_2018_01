@@ -226,7 +226,11 @@ extension OrderMealController {
         operation.recordWithIDWasDeletedBlock = { (recordId) in
             print("Record deleted:", recordId)
             // Write this record deletion to memory
+            //print("#1 stateController's meals count is \(self.stateController.meals?.count)")
             HandleCoreData.deleteData(recordId.0.recordName)
+            let updatedMeals = HandleCoreData.queryData(CKCurrentUserDefaultName)
+            self.stateController.saveMeal(updatedMeals)
+            //print("#2 stateController's meals count is \(self.stateController.meals?.count)")
         }
 
         operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
@@ -236,7 +240,7 @@ extension OrderMealController {
             let key = "zone_" + zoneId.zoneName
             let tokenURL = ICloudPropertyStore.iCloudProtpertyForKey(key: key)
             NSKeyedArchiver.archiveRootObject(token, toFile: tokenURL.path)
-            print("After update, zone change token is \(String(describing: token))")
+            //print("After update, zone change token is \(String(describing: token))")
         }
 
         operation.recordZoneFetchCompletionBlock = { (zoneId, changeToken, _, _, error) in
@@ -269,13 +273,12 @@ extension OrderMealController {
         let zoneIdURL = ICloudPropertyStore.iCloudProtpertyForKey(key: "zoneID_Meals")
         let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
         
-        //let zoneID = CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
-        print("zone id is \(zoneID)")
-        
         //Creat CKRecord
         //let mealRecordID = CKRecordID(recordName: meal.identifier)
         //let mealRecord = CKRecord(recordType: "Meal", recordID: mealRecordID)
         let mealRecord = CKRecord(recordType: "Meal", zoneID: zoneID)
+        
+        //participant.acceptanceStatus = .accepted
         
         //save image to local
         ImageStore().setImage(image: uploadImage, forKey: mealRecord.recordID.recordName)

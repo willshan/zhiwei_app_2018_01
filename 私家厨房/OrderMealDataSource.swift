@@ -130,7 +130,8 @@ extension OrderMealDataSource {
     //MARK: -Delete data in server
     func deleteMealInServer(_ meal : Meal) {
         // Delete in Parse server in background
-        let zoneID = CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
+        let zoneIdURL = ICloudPropertyStore.iCloudProtpertyForKey(key: "zoneID_Meals")
+        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
         let mealRecordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
         //Delete CKRecord
         let myContainer = CKContainer.default()
@@ -202,8 +203,8 @@ extension OrderMealDataSource {
         let orderedMealCount = orderMealController?.stateController.countOrderedMealCount()
         updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
         
-        print("被选中的菜有\(mealOrderList.enumerated())")
-        print("stateController中被选中的菜有\(String(describing: orderMealController?.stateController.mealOrderList.enumerated()))")
+        //print("被选中的菜有\(mealOrderList.enumerated())")
+        //print("stateController中被选中的菜有\(String(describing: orderMealController?.stateController.mealOrderList.enumerated()))")
     }
     
 
@@ -242,7 +243,6 @@ extension OrderMealDataSource {
     }
     
     func updateShoppingCartIconBadgeNumber(orderedMealCount : Int) {
-        
         //find shopping cart badge
         let nav0 = orderMealController?.navigationController
         let tabNav = nav0?.tabBarController
