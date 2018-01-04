@@ -1,8 +1,8 @@
 //
-//  OrderMealTableViewController.swift
+//  MealListVC.swift
 //  私家厨房
 //
-//  Created by Will.Shan on 25/03/2017.
+//  Created by Will.Shan on 28/12/2017.
 //  Copyright © 2017 待定. All rights reserved.
 //
 
@@ -11,16 +11,23 @@ import os.log
 import CoreData
 import CloudKit
 
-//合并后使用该class
-class OrderMealController: UITableViewController {
+//tableVC is easy for serachbar
+class MealListVC: UIViewController {
     //MARK: -Properties
+    
+    @IBOutlet weak var tableView: UITableView!
     var stateController : StateController!
-    var dataSource: OrderMealDataSource!
+    var dataSource : MealListDataSource!
+
+    //searchController要在这里设个变量
+    var searchController : UISearchController!
+    var resultsController = UITableViewController()
     
     // Define icloudKit
     let myContainer = CKContainer.default()
     var privateDB : CKDatabase!
     var sharedDB : CKDatabase!
+    var selectedIndexPath : IndexPath!
     
     // Store these to disk so that they persist across launches
     var createdCustomZone = ICloudPropertyStore.propertyForKey(key: ICloudPropertyStore.keyForCreatedCustomZone) ?? false
@@ -31,16 +38,14 @@ class OrderMealController: UITableViewController {
     let sharedSubscriptionId = "shared-changes"
 }
 
-extension OrderMealController{
+extension MealListVC{
     //MARK: -Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        //fetch changes from icloud
-        //添加聊天管理代理
-        EMClient.shared().chatManager.add(self, delegateQueue: nil)
-        
         // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem
+        
+        setSearchController()
         
         self.privateDB = myContainer.privateCloudDatabase
         self.sharedDB = myContainer.sharedCloudDatabase
@@ -80,39 +85,82 @@ extension OrderMealController{
         
         self.fetchChanges(in: .private) {}
         self.fetchChanges(in: .shared) {}
+
     }
     
     //这一步在unwind之后调用
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         print("view will appear in OrderMealVC")
-        dataSource = OrderMealDataSource(meals: stateController.meals)
-
-        dataSource.orderMealController = self
         
+        dataSource = MealListDataSource(meals: stateController.meals)
+        
+        dataSource.mealListVC = self
+
         if stateController.mealOrderList != nil {
             dataSource.mealOrderList = stateController.mealOrderList
         }
         tableView.dataSource = dataSource
+        tableView.delegate = dataSource
+        
+        resultsController.tableView.dataSource = dataSource
+        searchController.searchResultsUpdater = dataSource
+        resultsController.tableView.delegate = dataSource
+        /*
+        if (searchController.searchBar.text == nil) {
+            tableView.reloadData()
+        }else {
+            resultsController.tableView.reloadData()
+        }*/
         tableView.reloadData()
+        //resultsController.tableView.reloadData()
+    }
+}
+extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        if navigationItem.leftBarButtonItem?.title == "Edit" {
+            tableView.setEditing(true, animated: false)
+            navigationItem.leftBarButtonItem?.title = "Done"
+        }
+        else {
+            tableView.setEditing(false, animated: false)
+            navigationItem.leftBarButtonItem?.title = "Edit"
+        }
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(true)
+    func setSearchController() {
+        if #available(iOS 11.0, *) {
+            print("setting searchController")
+            navigationController?.navigationBar.prefersLargeTitles = true
+            navigationItem.largeTitleDisplayMode = .never
+            
+            let nib = UINib(nibName: "MealCell", bundle: nil)
+            tableView.register(nib, forCellReuseIdentifier: "MealCell")
+            resultsController.tableView.register(nib, forCellReuseIdentifier: "MealCell")
+            
+            self.searchController = UISearchController(searchResultsController: resultsController)
 
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+            resultsController.tableView.rowHeight = 90
+            
+            //searchController.delegate = self
+            //searchController.searchBar.delegate = self
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.dimsBackgroundDuringPresentation = true
+            
+            self.navigationItem.searchController = searchController
+            self.navigationItem.hidesSearchBarWhenScrolling = false
+            
+            //this step make searchbar visable in resultsController
+            self.definesPresentationContext = true
+            
+        } else {
+            // Fallback on earlier versions
+        }
     }
 }
 
-extension OrderMealController {
+extension MealListVC {
     func createDatabaseSubscriptionOperation(subscriptionId: String) -> CKModifySubscriptionsOperation {
         let subscription = CKDatabaseSubscription.init(subscriptionID: subscriptionId)
         let notificationInfo = CKNotificationInfo()
@@ -123,7 +171,7 @@ extension OrderMealController {
         
         let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
         operation.qualityOfService = .utility
-    
+        
         return operation
     }
     
@@ -196,7 +244,7 @@ extension OrderMealController {
     func fetchZoneChanges(database: CKDatabase, databaseTokenKey: String, zoneIDs: [CKRecordZoneID], completion: @escaping () -> Void) {
         // Look up the previous change token for each zone
         var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
-
+        
         for zoneID in zoneIDs {
             let key = "zone_" + zoneID.zoneName
             let tokenURL = ICloudPropertyStore.iCloudProtpertyForKey(key: key)
@@ -204,7 +252,7 @@ extension OrderMealController {
             let changeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken
             let options = CKFetchRecordZoneChangesOptions()
             options.previousServerChangeToken = changeToken // Read change token from disk
-                optionsByRecordZoneID[zoneID] = options
+            optionsByRecordZoneID[zoneID] = options
         }
         
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
@@ -222,7 +270,7 @@ extension OrderMealController {
             let updatedMeals = HandleCoreData.queryData(CKCurrentUserDefaultName)
             self.stateController.saveMeal(updatedMeals)
         }
- 
+        
         operation.recordWithIDWasDeletedBlock = { (recordId) in
             print("Record deleted:", recordId)
             // Write this record deletion to memory
@@ -232,7 +280,7 @@ extension OrderMealController {
             self.stateController.saveMeal(updatedMeals)
             //print("#2 stateController's meals count is \(self.stateController.meals?.count)")
         }
-
+        
         operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
             // Flush record changes and deletions for this zone to disk
             // Write this new zone change token to disk
@@ -242,7 +290,7 @@ extension OrderMealController {
             NSKeyedArchiver.archiveRootObject(token, toFile: tokenURL.path)
             //print("After update, zone change token is \(String(describing: token))")
         }
-
+        
         operation.recordZoneFetchCompletionBlock = { (zoneId, changeToken, _, _, error) in
             
             if let error = error {
@@ -257,7 +305,7 @@ extension OrderMealController {
             NSKeyedArchiver.archiveRootObject(changeToken, toFile: tokenURL.path)
             print("Compelte update, zone change token is \(String(describing: changeToken))")
         }
-
+        
         operation.fetchRecordZoneChangesCompletionBlock = { (error) in
             if let error = error {
                 print("Error fetching zone changes for \(databaseTokenKey) database:", error)
@@ -322,7 +370,7 @@ extension OrderMealController {
                         }
                         // Insert successfully saved record code
                         print("successfully save in icloud")
-
+                        
                     })
                 }
                 // else custom error handling
@@ -331,7 +379,7 @@ extension OrderMealController {
             createZoneOperation.qualityOfService = .userInitiated
             privateDB.add(createZoneOperation)
         }
-        //Save CKRecord without creating custom zone
+            //Save CKRecord without creating custom zone
         else {
             privateDB.save(mealRecord, completionHandler: { (record, error) in
                 if error != nil {
@@ -342,55 +390,66 @@ extension OrderMealController {
                 }
                 // Insert successfully saved record code
                 print("successfully save in icloud")
-
+                
             })
         }
     }
 }
 
-extension OrderMealController {
+extension MealListVC {
     //MARK: -Segus
+    func showMealDetail() {
+        self.performSegue(withIdentifier: SegueID.showMealDetail, sender: nil)
+    }
+    
     //Add New Meal and show meal details
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         super.prepare(for: segue, sender: sender)
+        
         switch(segue.identifier ?? "") {
             
-        case "AddNewMeal":
+        case SegueID.addNewMeal:
             os_log("Adding a new meal.", log: OSLog.default, type: .debug)
             
-        case "ShowDetailSegue":
-            
-            guard let viewDetailVC = segue.destination as? ViewDetailVC else {
+        case SegueID.showMealDetail:
+            guard let viewDetailVC = segue.destination as? MealDetailVC else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             
-            guard let selectedMealCell = sender as? OrderMealCell else {
-                fatalError("Unexpected sender: \(String(describing: sender))")
-            }
+//            guard let selectedMealCell = sender as? MealCell else {
+//                fatalError("Unexpected sender: \(String(describing: sender))")
+//            }
+//
+//            guard let indexPath = self.tableView.indexPath(for: selectedMealCell) else {
+//                fatalError("The selected cell is not being displayed by the table")
+//            }
             
-            guard let indexPath = tableView.indexPath(for: selectedMealCell) else {
-                fatalError("The selected cell is not being displayed by the table")
+            var selectedMeal = Meal()
+            print(dataSource.searchedMeals.count)
+            if dataSource.searchedMeals.count == 0 {
+                selectedMeal = self.dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row]
             }
+            else {
+                selectedMeal = self.dataSource.searchMealsBySections[selectedIndexPath.section][selectedIndexPath.row]
+            }
+//            let selectedMeal = self.dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row]
             
-            let selectedMeal = self.dataSource.mealListBySections[indexPath.section][indexPath.row]
             print("***************\(selectedMeal)")
             
             viewDetailVC.meal = selectedMeal
             
             viewDetailVC.photoFromOrderMeal = ImageStore().imageForKey(key: selectedMeal.identifier)
-            //cell.order?.setTitle("加入菜单", for: .normal)
-            //viewDetailVC.addToShoppingCartLabel = selectedMealCell.order?.titleLabel?.text
             
         default:
             fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
         }
     }
     @IBAction func saveUnwindToMealList(sender: UIStoryboardSegue) {
-        let sourceViewController = sender.source as? PersonalSetViewController
+        let sourceViewController = sender.source as? PersonalSetVC
         navigationItem.title = sourceViewController?.mealListName.text
         
         self.navigationController?.tabBarController?.tabBar.isHidden = false
-        }
+    }
     
     @IBAction func unwindFromOrderCenter(sender: UIStoryboardSegue) {
         return
@@ -398,12 +457,12 @@ extension OrderMealController {
     
     @IBAction func unwindToMealList(sender: UIStoryboardSegue) {
         print("transfered data to orderMeal")
-        if let sourceViewController = sender.source as? DetailMealViewController, let meal = sourceViewController.meal{
+        if let sourceViewController = sender.source as? EditMealVC, let meal = sourceViewController.meal{
             print("*****DetailMealViewController的meal不为空")
             // Save to Parse server in background
             let photochanged = sourceViewController.photochanged
             print("the photo changed is \(photochanged)")
-            let uploadImage = sourceViewController.photoFromOrderMeal ?? UIImage(named: "defaultPhoto")
+            let uploadImage = sourceViewController.photoFromOrderMeal ?? UIImage(named: AssetNames.defaultPhoto)
             
             //Determine update meal or add new meal
             if let selectedIndexPath = tableView.indexPathForSelectedRow {
@@ -513,7 +572,7 @@ extension OrderMealController {
             if photochanged == true {
                 ImageStore().setImage(image: uploadImage!, forKey: meal.identifier)
             }
-
+            
             // Save the meals to stateControler
             dataSource.updateMeals()
             stateController?.saveMeal(dataSource.meals!)
@@ -521,32 +580,3 @@ extension OrderMealController {
     }
 }
 
-//MARK: -监听消息列表
-extension OrderMealController : EMChatManagerDelegate{
-    func conversationListDidUpdate(_ aConversationList: [Any]!) {
-        self.showTabBarBadge()
-    }
-    
-    func messagesDidReceive(_ aMessages: [Any]!) {
-        self.showTabBarBadge()
-    }
-    
-    func showTabBarBadge() {
-        let conversations = EMClient.shared().chatManager.getAllConversations() as! [EMConversation]
-        var unreadMessageCount = 0
-        for conv in conversations {
-            unreadMessageCount += Int(conv.unreadMessagesCount)
-        }
-        let nav0 = self.navigationController
-        let tabNav = nav0?.tabBarController
-        let nav2 = tabNav?.viewControllers?[2]
-        
-        if unreadMessageCount == 0 {
-            nav2?.tabBarItem.badgeValue = nil
-        }
-        else {
-            
-            nav2?.tabBarItem.badgeValue = "\(unreadMessageCount)"
-        }
-    }
-}
