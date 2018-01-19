@@ -39,10 +39,12 @@ class HandleCoreData: NSObject {
                 fatalError("Unsolved error \(nserror), \(nserror.userInfo)")
             }
         }
+        print("++++++++++Complete saveContext+++++++++++++++")
     }
 	//Mark: - Clear data in coreData
     class func clearCoreData(_ userName : String) {
         //声明数据的请求
+        print("++++++++++clearCoreData+++++++++++++++")
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchRequest.fetchLimit = 30  //限制查询结果的数量
         fetchRequest.fetchOffset = 0  //查询的偏移量
@@ -74,6 +76,7 @@ class HandleCoreData: NSObject {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("++++++++++complete clearCoreData+++++++++++++++")
     }
     
     //Mark: - Insert data in coreData
@@ -85,6 +88,7 @@ class HandleCoreData: NSObject {
      */
     class func insertData(meal : Meal?, record : CKRecord?)-> Meal{
         //creat Meal
+        print("++++++++++insertData+++++++++++++++")
         let EntityName = "Meal"
         let mealToAdd = NSEntityDescription.insertNewObject(forEntityName: EntityName, into:context) as! Meal
         
@@ -133,9 +137,10 @@ class HandleCoreData: NSObject {
             mealToAdd.identifier = meal?.identifier ?? NSUUID().uuidString
 
         }
+        
         //保存
         saveContext()
-		
+		print("++++++++++Complete insertData+++++++++++++++")
 		return mealToAdd
     }
     
@@ -148,8 +153,48 @@ class HandleCoreData: NSObject {
      * 通过context.fetch执行查询操作
      * 使用查询出来的数据
      */
-    class func queryData(_ userName : String) -> [Meal] {
+    class func querySelectedMealsWithUserName(_ userName : String) -> [Meal] {
         
+        print("++++++++++querySelectedMealsWithUserName+++++++++++++++")
+        //获取数据上下文对象
+        var meals = [Meal]()
+        //声明数据的请求
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 100  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
+        
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        let predicate = NSPredicate.init(format: "userName = '\(userName)'", "")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            
+            //遍历查询的结果
+            for info in fetchedObjects{
+                if info.cellSelected == true {
+                    meals.append(info)
+                }
+                else {
+                    continue
+                }
+            }
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete querySelectedMealsWithUserName+++++++++++++++")
+        return meals
+    }
+    
+    class func queryDataWithUserName(_ userName : String) -> [Meal] {
+        print("+++++++++queryDataWithUserName++++++++++++++++")
         //获取数据上下文对象
         var meals = [Meal]()
         //声明数据的请求
@@ -173,17 +218,18 @@ class HandleCoreData: NSObject {
             //遍历查询的结果
             for info in fetchedObjects{
                 meals.append(info)
-                print("+++++++++++++++++++++++++")
             }
         }catch {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("+++++++++Completed QueryDataWithUserName++++++++++++++++")
         return meals
     }
     
     class func queryDataWithIdentifer(_ identifier : String) -> [Meal] {
         //获取数据上下文对象
+        print("++++++++++queryDataWithIdentifer+++++++++++++++")
         var meals = [Meal]()
         //声明数据的请求
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
@@ -205,19 +251,22 @@ class HandleCoreData: NSObject {
             //遍历查询的结果
             for info in fetchedObjects{
                 meals.append(info)
-                print("+++++++++++++++++++++++++")
+                
             }
         }catch {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("++++++++++Complete queryDataWithIdentifer+++++++++++++++")
         return meals
+        
     }
     
     
     class func queryDataWithIdentiferAndUser(_ userName : String, _ identifier : String) -> [Meal]? {
         
         //获取数据上下文对象
+        print("++++++++++queryDataWithIdentiferAndUser+++++++++++++++")
         var meals = [Meal]()
         //声明数据的请求
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
@@ -241,12 +290,12 @@ class HandleCoreData: NSObject {
             //遍历查询的结果
             for info in fetchedObjects{
                 meals.append(info)
-                print("+++++++++++++++++++++++++")
             }
         }catch {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("++++++++++Complete queryDataWithIdentiferAndUser+++++++++++++++")
         return meals
     }
     
@@ -261,6 +310,7 @@ class HandleCoreData: NSObject {
      */
     class func updateData(meal : Meal?, record : CKRecord?){
         //声明数据的请求
+        print("++++++++++updateData+++++++++++++++")
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchRequest.fetchLimit = 10  //限制查询结果的数量
         fetchRequest.fetchOffset = 0  //查询的偏移量
@@ -328,10 +378,12 @@ class HandleCoreData: NSObject {
                 fatalError("查询错误： \(nserror), \(nserror.userInfo)")
             }
         }
+        print("++++++++++Complete updateData+++++++++++++++")
     }
     
     class func updateMealIdentifer(identifier : String, recordName : String){
         //声明数据的请求
+        print("++++++++++updateMealIdentifer+++++++++++++++")
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchRequest.fetchLimit = 1  //限制查询结果的数量
         fetchRequest.fetchOffset = 0  //查询的偏移量
@@ -360,6 +412,47 @@ class HandleCoreData: NSObject {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("++++++++++Complete updateMealIdentifer+++++++++++++++")
+    }
+    
+    class func updateMealSelectionStatus(identifier : String){
+        //声明数据的请求
+        print("++++++++++updateMealSelectionStatus+++++++++++++++")
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 1  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
+        
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        let predicate = NSPredicate.init(format: "identifier = '\(identifier)'", "")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            
+            //遍历查询的结果
+            for meal in fetchedObjects{
+                //修改identifer
+                if meal.cellSelected == true {
+                    meal.cellSelected = false
+                    print("\(meal.identifier)")
+                }
+                else {
+                    meal.cellSelected = true
+                }
+                //重新保存
+                saveContext()
+            }
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete updateMealSelectionStatus+++++++++++++++")
     }
     
     
@@ -372,8 +465,9 @@ class HandleCoreData: NSObject {
      * 通过context.delete删除查询出来的某一个对象
      * 通过saveContext()保存修改后的实体对象
      */
-    class func deleteData(_ identifier : String){
+    class func deleteMealWithIdentifier(_ identifier : String){
         //声明数据的请求
+        print("++++++++++deleteMealWithIdentifier+++++++++++++++")
         let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchRequest.fetchLimit = 10  //限制查询结果的数量
         fetchRequest.fetchOffset = 0  //查询的偏移量
@@ -407,5 +501,6 @@ class HandleCoreData: NSObject {
             let nserror = error as NSError
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
+        print("++++++++++Complete deleteMealWithIdentifier+++++++++++++++")
     }
 }

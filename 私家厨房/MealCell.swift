@@ -1,18 +1,20 @@
 //
-//  ShppingCell.swift
+//  OrderMealTableViewCell.swift
 //  私家厨房
 //
-//  Created by Will.Shan on 03/04/2017.
+//  Created by Will.Shan on 25/03/2017.
 //  Copyright © 2017 待定. All rights reserved.
 //
 
 import UIKit
 
-class ShoppingCell: UITableViewCell {
+class MealCell: UITableViewCell {
 
-    @IBOutlet weak var index: UILabel!
-    @IBOutlet weak var mealName: UILabel!
-
+    @IBOutlet var mealName: UILabel!
+    @IBOutlet var spicy: Spicy!
+    @IBOutlet var photo: UIImageView!
+    @IBOutlet weak var order = UIButton()
+    
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -24,5 +26,4 @@ class ShoppingCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-
 }

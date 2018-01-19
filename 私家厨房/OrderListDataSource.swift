@@ -58,7 +58,7 @@ extension OrderListDataSource : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellIdentifier = "OrderListCell"
+        let cellIdentifier = TableCellReusableID.order
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? OrderListCell  else {
             fatalError("The dequeued cell is not an instance of MealTableViewCell.")

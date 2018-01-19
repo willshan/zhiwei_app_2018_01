@@ -4,6 +4,7 @@
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -11,18 +12,18 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MealCell" rowHeight="90" id="hFo-jp-Kz0" customClass="MealCell" customModule="私家厨房" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="375" height="90"/>
+        <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="MealCell" rowHeight="90" id="wip-Gu-7c9" customClass="MealCell" customModule="私家厨房" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="90"/>
             <autoresizingMask key="autoresizingMask"/>
-            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="hFo-jp-Kz0" id="gDh-do-Ulf">
-                <rect key="frame" x="0.0" y="0.0" width="375" height="89.5"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="wip-Gu-7c9" id="0xZ-7i-YxU">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="89.5"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="7Qp-mk-Uyl">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="defaultPhoto" translatesAutoresizingMaskIntoConstraints="NO" id="9jT-ew-WAo">
                         <rect key="frame" x="5" y="5" width="80" height="80"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="80" id="GXZ-ue-GxK"/>
-                            <constraint firstAttribute="height" constant="80" id="bQA-3N-89X"/>
+                            <constraint firstAttribute="width" constant="80" id="blJ-hC-gt2"/>
+                            <constraint firstAttribute="height" constant="80" id="spS-JK-r1H"/>
                         </constraints>
                         <userDefinedRuntimeAttributes>
                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -31,79 +32,52 @@
                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                         </userDefinedRuntimeAttributes>
                     </imageView>
-                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="25" translatesAutoresizingMaskIntoConstraints="NO" id="DAC-Ol-WJ4">
-                        <rect key="frame" x="95" y="26" width="168.5" height="57"/>
+                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="O45-pY-YCC">
+                        <rect key="frame" x="95" y="21" width="83.5" height="50.5"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="7pU-Yc-bm4">
-                                <rect key="frame" x="0.0" y="0.0" width="168.5" height="20"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="meal name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p6h-hm-5Uw">
-                                        <rect key="frame" x="0.0" y="0.0" width="83.5" height="20"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="ae6-ee-vZg" customClass="Spicy" customModule="私家厨房" customModuleProvider="target">
-                                        <rect key="frame" x="88.5" y="0.0" width="80" height="20"/>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="size" keyPath="spicySize">
-                                                <size key="value" width="16" height="20"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                    </view>
-                                </subviews>
-                            </stackView>
-                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gax-4E-xfw">
-                                <rect key="frame" x="0.0" y="45" width="62.5" height="12"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="下单次数：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="KF3-bl-8e5">
-                                        <rect key="frame" x="0.0" y="0.0" width="51.5" height="12"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XCn-YN-vLj">
-                                        <rect key="frame" x="51.5" y="0.0" width="11" height="12"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" constant="11" id="lRa-qv-Q6v"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="10"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="meal name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rXA-7a-O4K">
+                                <rect key="frame" x="0.0" y="0.0" width="83.5" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <view userInteractionEnabled="NO" contentMode="scaleAspectFit" translatesAutoresizingMaskIntoConstraints="NO" id="lYX-Yb-D6Q" customClass="Spicy" customModule="私家厨房" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="30.5" width="80" height="20"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="size" keyPath="spicySize">
+                                        <size key="value" width="16" height="20"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </view>
                         </subviews>
                     </stackView>
-                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1hd-p5-vSC">
-                        <rect key="frame" x="275" y="0.0" width="100" height="89.5"/>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zBz-ng-nKh">
+                        <rect key="frame" x="220" y="0.0" width="100" height="89.5"/>
                         <constraints>
-                            <constraint firstAttribute="width" constant="100" id="bNf-cv-9I7"/>
+                            <constraint firstAttribute="width" constant="100" id="eLB-Nq-4f9"/>
                         </constraints>
                         <state key="normal" title="AddTo"/>
                     </button>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="DAC-Ol-WJ4" firstAttribute="top" secondItem="gDh-do-Ulf" secondAttribute="topMargin" constant="15" id="bga-Gp-deh"/>
-                    <constraint firstAttribute="trailing" secondItem="1hd-p5-vSC" secondAttribute="trailing" id="fsF-7d-6qi"/>
-                    <constraint firstItem="7Qp-mk-Uyl" firstAttribute="leading" secondItem="gDh-do-Ulf" secondAttribute="leading" constant="5" id="fsw-x0-Icc"/>
-                    <constraint firstItem="DAC-Ol-WJ4" firstAttribute="leading" secondItem="7Qp-mk-Uyl" secondAttribute="trailing" constant="10" id="kFM-mx-qOU"/>
-                    <constraint firstItem="1hd-p5-vSC" firstAttribute="top" secondItem="gDh-do-Ulf" secondAttribute="top" id="kbD-SZ-e1g"/>
-                    <constraint firstAttribute="bottom" secondItem="1hd-p5-vSC" secondAttribute="bottom" id="w5X-4i-feW"/>
+                    <constraint firstItem="9jT-ew-WAo" firstAttribute="leading" secondItem="0xZ-7i-YxU" secondAttribute="leading" constant="5" id="Uy6-8t-Pa4"/>
+                    <constraint firstItem="zBz-ng-nKh" firstAttribute="top" secondItem="0xZ-7i-YxU" secondAttribute="top" id="gEB-ut-61k"/>
+                    <constraint firstAttribute="trailing" secondItem="zBz-ng-nKh" secondAttribute="trailing" id="kk5-7b-51S"/>
+                    <constraint firstItem="O45-pY-YCC" firstAttribute="leading" secondItem="9jT-ew-WAo" secondAttribute="trailing" constant="10" id="nz2-t3-cXs"/>
+                    <constraint firstAttribute="bottom" secondItem="zBz-ng-nKh" secondAttribute="bottom" id="tOV-se-LuE"/>
+                    <constraint firstItem="O45-pY-YCC" firstAttribute="top" secondItem="0xZ-7i-YxU" secondAttribute="topMargin" constant="10" id="uov-cU-C6w"/>
                 </constraints>
             </tableViewCellContentView>
             <constraints>
-                <constraint firstItem="7Qp-mk-Uyl" firstAttribute="centerY" secondItem="hFo-jp-Kz0" secondAttribute="centerY" id="a6e-oc-OSR"/>
+                <constraint firstItem="9jT-ew-WAo" firstAttribute="centerY" secondItem="wip-Gu-7c9" secondAttribute="centerY" id="dDQ-pO-Dwx"/>
             </constraints>
             <connections>
-                <outlet property="mealName" destination="p6h-hm-5Uw" id="PCM-W6-vql"/>
-                <outlet property="order" destination="1hd-p5-vSC" id="wDm-K3-Ogd"/>
-                <outlet property="orderTimes" destination="XCn-YN-vLj" id="t4c-hg-htq"/>
-                <outlet property="photo" destination="7Qp-mk-Uyl" id="9Es-0x-vjN"/>
-                <outlet property="spicy" destination="ae6-ee-vZg" id="L2Z-wB-pFk"/>
+                <outlet property="mealName" destination="rXA-7a-O4K" id="XqM-HT-Bom"/>
+                <outlet property="order" destination="zBz-ng-nKh" id="2xF-Dd-Nzg"/>
+                <outlet property="photo" destination="9jT-ew-WAo" id="BIF-W2-yyt"/>
+                <outlet property="spicy" destination="lYX-Yb-D6Q" id="VMT-VT-558"/>
             </connections>
-            <point key="canvasLocation" x="-327" y="-536"/>
         </tableViewCell>
     </objects>
     <resources>

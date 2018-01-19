@@ -12,8 +12,8 @@ import CloudKit
 class ICloudPropertyStore : NSObject{
     
     static let keyForCreatedCustomZone = "createdCustomZone"
-    static let keyForSubscribedToPrivateChanges = "createdCustomZone"
-    static let keyForSubscribedToSharedChanges = "createdCustomZone"
+    static let keyForSubscribedToPrivateChanges = "setSubscribedToPrivateChanges"
+    static let keyForSubscribedToSharedChanges = "setSubscribedToSharedChanges"
     /*
     var changeToken : CKServerChangeToken?
     
@@ -35,18 +35,18 @@ class ICloudPropertyStore : NSObject{
     
     //save property
     class func setiCloudProperty(property : Bool, forKey key: String){
-        
+
         let propertyURL = iCloudProtpertyForKey(key: key)
-        
+
         NSKeyedArchiver.archiveRootObject(property, toFile: propertyURL.path)
-        
+
     }
-    
+
     //use property
     class func propertyForKey(key : String) -> Bool? {
-        
+
         let propertyURL = iCloudProtpertyForKey(key: key)
-        
+
         return NSKeyedUnarchiver.unarchiveObject(withFile: propertyURL.path) as? Bool
     }
 }

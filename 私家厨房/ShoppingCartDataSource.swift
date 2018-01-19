@@ -9,37 +9,61 @@
 import UIKit
 
 class ShoppingCartDataSource : NSObject {
-    var mealListBySections : [[OrderedMeal]]
+    var mealListBySections : [[Meal]]
     //OrderedMeal是一个struct，用来记录mealName和mealCount
-    var mealOrderList : [IndexPath : OrderedMeal]!
-    var shoppingCartController : ShoppingCartViewController?
+//    var mealOrderList : [IndexPath : OrderedMeal]!
+    var shoppingCartController : ShoppingCartVC?
+    var selectedMeals : [Meal]?
+    var selectedMealsCount : Int
+//    var tableViewHeight : Int!
     
-    init(mealOrderList: [IndexPath : OrderedMeal]) {
-        self.mealOrderList = mealOrderList
-        var coldDishes = [OrderedMeal]()
-        var hotDishes = [OrderedMeal]()
-        var soup = [OrderedMeal]()
-        var drink = [OrderedMeal]()
+    init(selectedMeals: [Meal]) {
+        self.selectedMeals = selectedMeals
+        selectedMealsCount = selectedMeals.count
+        var coldDishes = [Meal]()
+        var hotDishes = [Meal]()
+        var soup = [Meal]()
+        var drink = [Meal]()
         
-        for meal in mealOrderList {
-            if meal.key.section == 0 {
-                coldDishes.append(meal.value)
+        
+        for meal in selectedMeals {
+            if meal.mealType == "凉菜" {
+                coldDishes.append(meal)
             }
-            if meal.key.section == 1 {
-                hotDishes.append(meal.value)
+            if meal.mealType == "热菜" {
+                hotDishes.append(meal)
             }
-            if meal.key.section == 2 {
-                soup.append(meal.value)
+            if meal.mealType == "汤" {
+                soup.append(meal)
             }
-            if meal.key.section == 3 {
-                drink.append(meal.value)
+            if meal.mealType == "酒水" {
+                drink.append(meal)
             }
         }
         mealListBySections = [coldDishes, hotDishes, soup, drink]
+        //Get tableView height
+//        tableViewHeight = selectedMealsCount*44
+//        var tableHeaderCount = 0
+//        if coldDishes.count != 0 {
+//            tableHeaderCount = tableHeaderCount + 1
+//        }
+//        if hotDishes.count != 0 {
+//            tableHeaderCount = tableHeaderCount + 1
+//        }
+//        if soup.count != 0 {
+//            tableHeaderCount = tableHeaderCount + 1
+//        }
+//        if drink.count != 0 {
+//            tableHeaderCount = tableHeaderCount + 1
+//        }
+//        tableViewHeight = tableViewHeight + tableHeaderCount*18
+//        if tableViewHeight < 250 {
+//            tableViewHeight = 250
+//        }
     }
 }
 
-extension ShoppingCartDataSource : UITableViewDataSource{
+extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return mealListBySections.count
@@ -82,99 +106,81 @@ extension ShoppingCartDataSource : UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         // Table view cells are reused and should be dequeued using a cell identifier.
-        let cellIdentifier = "ShoppingCell"
+        let cellIdentifier = TableCellReusableID.shoppingCart
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? ShoppingCell  else {
             fatalError("The dequeued cell is not an instance of MealTableViewCell.")
         }
         
-        // Fetches the appropriate meal for the data source layout.
-        // let meal = mealList.mealList[indexPath.row]
-        
         let meal = mealListBySections[indexPath.section][indexPath.row]
-        
-        print(meal)
         
         cell.index.text = String(indexPath.row+1)
         cell.mealName.text = meal.mealName
-        cell.mealCount.text = String(meal.mealCount)
-        
-        cell.minus?.addTarget(self, action: #selector(self.adjustMealCount(_:)), for: .touchUpInside)
-        cell.plus?.addTarget(self, action: #selector(self.adjustMealCount(_:)), for: .touchUpInside)
-        
-        //print("section number is \(indexPath.section)")
+
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        shoppingCartController?.dismissKeyBoard()
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            // Delete the row from the data source
+            // mealList.mealList.remove(at: indexPath.row)
+            print("调用删除公式")
+            
+            let meal = mealListBySections[indexPath.section][indexPath.row]
+            let title = "取消 \(meal.mealName)?"
+            let message = "确认取消这道菜么?"
+            let ac = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+            let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+            ac.addAction(cancelAction)
+            
+            let deleteAction = UIAlertAction(title: "删除", style: .destructive, handler: {
+                (action) -> Void in
+                
+                self.mealListBySections[indexPath.section].remove(at: indexPath.row)
+                
+                print("selected meal was removed")
+                
+                tableView.deleteRows(at: [indexPath], with: .fade)
+
+                //update meal in coredata
+                HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
+                self.selectedMealsCount = self.selectedMealsCount - 1
+                self.updateShoppingCartIconBadgeNumber(orderedMealCount: self.selectedMealsCount)
+                
+            })
+            ac.addAction(deleteAction)
+            shoppingCartController?.present(ac, animated: true, completion: nil)
+        }
+        else if editingStyle == .insert {
+            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
+        }
     }
 }
 
 extension ShoppingCartDataSource{
-
-    func adjustMealCount(_ sender: UIButton) {
-        
-        let contentView = sender.superview?.superview
-        let cell = contentView?.superview as! ShoppingCell
-        
-        //寻找cell对应的tableView
-        func superTableView() -> UITableView? {
-            for view in sequence(first: cell.superview, next: { $0?.superview }) {
-                if let tableView = view as? UITableView {
-                    return tableView
-                }
-            }
-            return nil
-        }
-        
-        let firstTableView = superTableView()
-        let index = firstTableView?.indexPath(for: cell)
-        if sender.titleLabel?.text == "-"{
-            if  mealListBySections[(index?.section)!][(index?.row)!].mealCount == 1
-            {
-                mealListBySections[(index?.section)!][(index?.row)!].mealCount = 1
-            }
-            else{
-                mealListBySections[(index?.section)!][(index?.row)!].mealCount -= 1
- 
-            }
-            print("已执行计算-")
-        }
-            
-        else{
-            print("已触发公式+")
-            mealListBySections[(index?.section)!][(index?.row)!].mealCount += 1
-  
-        }
-        //更新mealOrderList中的菜的数量
-        let index1 = mealListBySections[(index?.section)!][(index?.row)!].index
-        mealOrderList[index1]?.mealCount = mealListBySections[(index?.section)!][(index?.row)!].mealCount
-        
-        //update mealOrderList in stateController
-        self.shoppingCartController?.stateController.saveMealOrderList(mealOrderList)
-    
-        //update shopping cart badge number
-        let orderedMealCount = shoppingCartController?.stateController.countOrderedMealCount()
-        updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
-        
-        firstTableView?.reloadRows(at: [index!], with: .none)
-    }
     
     func updateMealListBySections (){
-        var coldDishes = [OrderedMeal]()
-        var hotDishes = [OrderedMeal]()
-        var soup = [OrderedMeal]()
-        var drink = [OrderedMeal]()
+        var coldDishes = [Meal]()
+        var hotDishes = [Meal]()
+        var soup = [Meal]()
+        var drink = [Meal]()
         
-        for meal in mealOrderList {
-            if meal.key.section == 0 {
-                coldDishes.append(meal.value)
+        for meal in selectedMeals! {
+            if meal.mealType == "凉菜" {
+                coldDishes.append(meal)
             }
-            if meal.key.section == 1 {
-                hotDishes.append(meal.value)
+            if meal.mealType == "热菜" {
+                hotDishes.append(meal)
             }
-            if meal.key.section == 2 {
-                soup.append(meal.value)
+            if meal.mealType == "汤" {
+                soup.append(meal)
             }
-            if meal.key.section == 3 {
-                drink.append(meal.value)
+            if meal.mealType == "酒水" {
+                drink.append(meal)
             }
         }
         mealListBySections = [coldDishes, hotDishes, soup, drink]

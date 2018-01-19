@@ -50,7 +50,7 @@ import UIKit
         
         //MARK: Button Action
         //ratingButtonTapped按钮点击后会有什么action，在这里写出来
-        func ratingButtonTapped(button: UIButton) {
+    @objc func ratingButtonTapped(button: UIButton) {
             //先找到点击的那个button在spicyButtons中处于第几个index
             guard let index = spicyButtons.index(of: button) else {
                 fatalError("The button, \(button), is not in the ratingButtons array: \(spicyButtons)")
@@ -87,8 +87,8 @@ import UIKit
             
             // Load Button Images
             let bundle = Bundle(for: type(of: self))
-            let redSpicy = UIImage(named: "redSpicy", in: bundle, compatibleWith: self.traitCollection)
-            let graySpicy = UIImage(named:"graySpicy", in: bundle, compatibleWith: self.traitCollection)
+            let redSpicy = UIImage(named: AssetNames.redSpicy, in: bundle, compatibleWith: self.traitCollection)
+            let graySpicy = UIImage(named: AssetNames.graySpicy, in: bundle, compatibleWith: self.traitCollection)
 
             //for in此处用来，根据提供的spicyCount这个变量，来设置button的数量
             for index in 0..<spicyCount {

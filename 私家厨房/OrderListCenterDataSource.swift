@@ -28,7 +28,7 @@ extension OrderListCenterDataSource : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cellIdentifier = "OrderListCenterCell"
+        let cellIdentifier = TableCellReusableID.orderCenter
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? OrderListCenterCell  else {
             fatalError("The dequeued cell is not an instance of OrderListCenterCell.")

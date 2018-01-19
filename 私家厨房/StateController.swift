@@ -13,20 +13,24 @@ import CloudKit
 class StateController {
     
     fileprivate(set) var meals : [Meal]?
+    fileprivate(set) var selectedMeals : [Meal]?
     fileprivate(set) var orderLists : [OrderListStruct]
     fileprivate(set) var mealOrderList : [IndexPath : OrderedMeal]!
     private let userName = CKCurrentUserDefaultName
-
-    //变量太多，难以维护，因此不用mealListBySections
-    //fileprivate(set) var mealListBySections : [[Meal]]
+    
+//    private let userName = CKCurrentUserDefaultName
+    fileprivate(set) var selectedMealsCount : Int
 
     //init(_ mealStorage : MealStorage) {
     init() {
-        self.meals = HandleCoreData.queryData(userName)
+        print("+++++CKCurrentUserDefaultName is \(userName)+++++")
+        self.meals = HandleCoreData.queryDataWithUserName(userName)
+        self.selectedMeals = HandleCoreData.querySelectedMealsWithUserName(userName)
         self.orderLists = [OrderListStruct]()
         self.mealOrderList = [IndexPath : OrderedMeal]()
+        self.selectedMealsCount = selectedMeals?.count ?? 0
         
-        //print("stateController initiation completed")
+        print("+++++stateController initiation completed++++++")
     }
     
     func saveMeal(_ meals : [Meal]) {
@@ -46,11 +50,8 @@ class StateController {
     }
     
     func countOrderedMealCount()-> Int {
-        var orderedMealCount = 0
-        for meal in mealOrderList {
-            orderedMealCount = orderedMealCount + meal.value.mealCount
-        }
-        return orderedMealCount
+        let meals = HandleCoreData.querySelectedMealsWithUserName(userName)
+        return meals.count
 	}
 	
     func saveMealOrderList(_ mealOrderList:[IndexPath : OrderedMeal]) {
@@ -59,5 +60,15 @@ class StateController {
     
     func removeMealOrderList() {
         self.mealOrderList.removeAll()
+    }
+    
+    func getSelectedMeals() -> [Meal] {
+        let meals = HandleCoreData.querySelectedMealsWithUserName(userName)
+        return meals
+    }
+    
+    func getAllMeals() -> [Meal] {
+        let meals = HandleCoreData.queryDataWithUserName(userName)
+        return meals
     }
 }
