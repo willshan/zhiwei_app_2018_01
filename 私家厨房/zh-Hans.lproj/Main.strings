@@ -1,0 +1,231 @@
+
+/* Class = "UILabel"; text = "备注一下"; ObjectID = "0RE-im-RVB"; */
+"0RE-im-RVB.text" = "备注一下";
+
+/* Class = "UILabel"; text = "辣度"; ObjectID = "342-6R-a61"; */
+"342-6R-a61.text" = "辣度";
+
+/* Class = "UILabel"; text = "菜名"; ObjectID = "3MC-uG-wtp"; */
+"3MC-uG-wtp.text" = "菜名";
+
+/* Class = "UILabel"; text = "5瓶酒水"; ObjectID = "3si-tF-p1G"; */
+"3si-tF-p1G.text" = "5瓶酒水";
+
+/* Class = "UIButton"; normalTitle = "点个赞"; ObjectID = "3uB-jd-J7R"; */
+"3uB-jd-J7R.normalTitle" = "点个赞";
+
+/* Class = "UIButton"; normalTitle = "Log Out"; ObjectID = "43c-i7-Atx"; */
+"43c-i7-Atx.normalTitle" = "Log Out";
+
+/* Class = "UITextField"; text = "私家厨房"; ObjectID = "5XK-aH-Q3B"; */
+"5XK-aH-Q3B.text" = "私家厨房";
+
+/* Class = "UILabel"; text = "数量"; ObjectID = "5ev-CN-yFI"; */
+"5ev-CN-yFI.text" = "数量";
+
+/* Class = "UILabel"; text = "厨师名称："; ObjectID = "6Qb-zx-Ji7"; */
+"6Qb-zx-Ji7.text" = "厨师名称：";
+
+/* Class = "UITabBarItem"; title = "消息"; ObjectID = "83x-tl-wQm"; */
+"83x-tl-wQm.title" = "消息";
+
+/* Class = "UILabel"; text = "下单成功"; ObjectID = "8LX-jV-eb4"; */
+"8LX-jV-eb4.text" = "下单成功";
+
+/* Class = "UILabel"; text = "下单时间"; ObjectID = "8QN-gz-WJG"; */
+"8QN-gz-WJG.text" = "下单时间";
+
+/* Class = "UILabel"; text = "1"; ObjectID = "9cy-aS-cYa"; */
+"9cy-aS-cYa.text" = "1";
+
+/* Class = "UINavigationItem"; title = "订单"; ObjectID = "Btj-ad-ro6"; */
+"Btj-ad-ro6.title" = "订单";
+
+/* Class = "UILabel"; text = " 辣度"; ObjectID = "FLZ-6m-wBY"; */
+"FLZ-6m-wBY.text" = " 辣度";
+
+/* Class = "UITextField"; text = "老妈"; ObjectID = "FWe-gi-2u3"; */
+"FWe-gi-2u3.text" = "老妈";
+
+/* Class = "UINavigationController"; title = "MealList Nav"; ObjectID = "FrF-Is-NvL"; */
+"FrF-Is-NvL.title" = "MealList Nav";
+
+/* Class = "UIButton"; normalTitle = "还想吃"; ObjectID = "H5a-98-IWM"; */
+"H5a-98-IWM.normalTitle" = "还想吃";
+
+/* Class = "UIButton"; normalTitle = "联系人"; ObjectID = "H8G-Gy-WsG"; */
+"H8G-Gy-WsG.normalTitle" = "联系人";
+
+/* Class = "UILabel"; text = "index"; ObjectID = "IKa-Vk-b2W"; */
+"IKa-Vk-b2W.text" = "index";
+
+/* Class = "UILabel"; text = "昵称："; ObjectID = "JYd-Yo-maZ"; */
+"JYd-Yo-maZ.text" = "昵称：";
+
+/* Class = "UILabel"; text = "meal name"; ObjectID = "LcJ-GA-mbY"; */
+"LcJ-GA-mbY.text" = "meal name";
+
+/* Class = "UINavigationItem"; title = "今日菜单"; ObjectID = "LmM-Wc-a5u"; */
+"LmM-Wc-a5u.title" = "今日菜单";
+
+/* Class = "UIButton"; normalTitle = "Reset Password"; ObjectID = "Oev-XX-nNp"; */
+"Oev-XX-nNp.normalTitle" = "Reset Password";
+
+/* Class = "UITextView"; text = "说点什么"; ObjectID = "OhD-dd-Pne"; */
+"OhD-dd-Pne.text" = "说点什么";
+
+/* Class = "UILabel"; text = "下单时间"; ObjectID = "Omn-0P-z0W"; */
+"Omn-0P-z0W.text" = "下单时间";
+
+/* Class = "UIButton"; normalTitle = "完成"; ObjectID = "PHl-Jz-PMd"; */
+"PHl-Jz-PMd.normalTitle" = "完成";
+
+/* Class = "UILabel"; text = "PrivateKitchen"; ObjectID = "PLN-ee-eqV"; */
+"PLN-ee-eqV.text" = "PrivateKitchen";
+
+/* Class = "UIButton"; normalTitle = "消息设置"; ObjectID = "Qyo-Qd-nYX"; */
+"Qyo-Qd-nYX.normalTitle" = "消息设置";
+
+/* Class = "UILabel"; text = "数量"; ObjectID = "R5m-2H-tAs"; */
+"R5m-2H-tAs.text" = "数量";
+
+/* Class = "UINavigationItem"; title = "New Meal"; ObjectID = "R8p-g0-Jeg"; */
+"R8p-g0-Jeg.title" = "New Meal";
+
+/* Class = "UILabel"; text = "执戟郎中"; ObjectID = "SvW-NO-JMn"; */
+"SvW-NO-JMn.text" = "执戟郎中";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "T4n-HJ-gsY"; */
+"T4n-HJ-gsY.placeholder" = "Email";
+
+/* Class = "UILabel"; text = "User Name"; ObjectID = "Tec-g4-TL5"; */
+"Tec-g4-TL5.text" = "User Name";
+
+/* Class = "UILabel"; text = "PrivateKitchen"; ObjectID = "Twi-wv-G8R"; */
+"Twi-wv-G8R.text" = "PrivateKitchen";
+
+/* Class = "UILabel"; text = "午餐"; ObjectID = "U0E-eR-uCL"; */
+"U0E-eR-uCL.text" = "午餐";
+
+/* Class = "UITextField"; placeholder = "Username"; ObjectID = "UlP-LR-9rL"; */
+"UlP-LR-9rL.placeholder" = "Username";
+
+/* Class = "UINavigationItem"; title = "个人中心"; ObjectID = "VRY-01-JLl"; */
+"VRY-01-JLl.title" = "个人中心";
+
+/* Class = "UILabel"; text = "…"; ObjectID = "WFm-FU-pad"; */
+"WFm-FU-pad.text" = "…";
+
+/* Class = "UINavigationItem"; title = "菜单"; ObjectID = "XFj-aN-kbr"; */
+"XFj-aN-kbr.title" = "菜单";
+
+/* Class = "UILabel"; text = "点击选择"; ObjectID = "Yia-25-V7g"; */
+"Yia-25-V7g.text" = "点击选择";
+
+/* Class = "UIViewController"; title = "今日菜单"; ObjectID = "ZvS-BE-RhO"; */
+"ZvS-BE-RhO.title" = "今日菜单";
+
+/* Class = "UILabel"; text = "meal name"; ObjectID = "a9e-wI-Z3V"; */
+"a9e-wI-Z3V.text" = "meal name";
+
+/* Class = "UILabel"; text = "*菜类"; ObjectID = "aso-10-Qcm"; */
+"aso-10-Qcm.text" = "*菜类";
+
+/* Class = "UIButton"; normalTitle = "Forgot Password?"; ObjectID = "bjZ-Ab-Oag"; */
+"bjZ-Ab-Oag.normalTitle" = "Forgot Password?";
+
+/* Class = "UITextField"; placeholder = "Email"; ObjectID = "cwg-hk-kR9"; */
+"cwg-hk-kR9.placeholder" = "Email";
+
+/* Class = "UIButton"; normalTitle = "个人设置"; ObjectID = "dc0-NG-Ugb"; */
+"dc0-NG-Ugb.normalTitle" = "个人设置";
+
+/* Class = "UILabel"; text = "12道菜"; ObjectID = "ddV-ry-7AS"; */
+"ddV-ry-7AS.text" = "12道菜";
+
+/* Class = "UILabel"; text = "*菜名"; ObjectID = "eBf-FH-vgE"; */
+"eBf-FH-vgE.text" = "*菜名";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "epH-em-Cfw"; */
+"epH-em-Cfw.placeholder" = "Password";
+
+/* Class = "UINavigationItem"; title = "个人设置"; ObjectID = "gVl-Z9-FrV"; */
+"gVl-Z9-FrV.title" = "个人设置";
+
+/* Class = "UIButton"; normalTitle = "AddTo"; ObjectID = "hbR-6Y-9TX"; */
+"hbR-6Y-9TX.normalTitle" = "AddTo";
+
+/* Class = "UIButton"; normalTitle = "Sign Up"; ObjectID = "hqP-pD-Xnu"; */
+"hqP-pD-Xnu.normalTitle" = "Sign Up";
+
+/* Class = "UILabel"; text = "index"; ObjectID = "iIO-Ui-8VQ"; */
+"iIO-Ui-8VQ.text" = "index";
+
+/* Class = "UIButton"; normalTitle = "Sign Up"; ObjectID = "iK4-JG-X1Z"; */
+"iK4-JG-X1Z.normalTitle" = "Sign Up";
+
+/* Class = "UITabBarItem"; title = "购物车"; ObjectID = "kGz-yp-3vh"; */
+"kGz-yp-3vh.title" = "购物车";
+
+/* Class = "UITextField"; placeholder = "Password"; ObjectID = "kb7-Mh-eY1"; */
+"kb7-Mh-eY1.placeholder" = "Password";
+
+/* Class = "UILabel"; text = "备注"; ObjectID = "lQq-Tn-lNc"; */
+"lQq-Tn-lNc.text" = "备注";
+
+/* Class = "UILabel"; text = "mealName"; ObjectID = "lau-NY-nys"; */
+"lau-NY-nys.text" = "mealName";
+
+/* Class = "UITabBarItem"; title = "个人中心"; ObjectID = "lln-W6-dV3"; */
+"lln-W6-dV3.title" = "个人中心";
+
+/* Class = "UILabel"; text = "下单时间"; ObjectID = "pwa-gd-RYd"; */
+"pwa-gd-RYd.text" = "下单时间";
+
+/* Class = "UIButton"; normalTitle = "Login"; ObjectID = "qHr-YU-RG5"; */
+"qHr-YU-RG5.normalTitle" = "Login";
+
+/* Class = "UIViewController"; title = "MealListVC"; ObjectID = "rAT-t9-nft"; */
+"rAT-t9-nft.title" = "MealListVC";
+
+/* Class = "UILabel"; text = "今日"; ObjectID = "rQw-Fc-hsY"; */
+"rQw-Fc-hsY.text" = "今日";
+
+/* Class = "UIButton"; normalTitle = "AddTo"; ObjectID = "reW-rL-4ZB"; */
+"reW-rL-4ZB.normalTitle" = "AddTo";
+
+/* Class = "UITextField"; placeholder = "Username"; ObjectID = "rlD-Ia-0XL"; */
+"rlD-Ia-0XL.placeholder" = "Username";
+
+/* Class = "UITabBarItem"; title = "菜单"; ObjectID = "s5q-El-vlV"; */
+"s5q-El-vlV.title" = "菜单";
+
+/* Class = "UILabel"; text = "备注"; ObjectID = "sNu-i4-F9y"; */
+"sNu-i4-F9y.text" = "备注";
+
+/* Class = "UILabel"; text = "date"; ObjectID = "tss-2O-Y1l"; */
+"tss-2O-Y1l.text" = "date";
+
+/* Class = "UIButton"; normalTitle = "我的订单"; ObjectID = "u3a-gt-tQb"; */
+"u3a-gt-tQb.normalTitle" = "我的订单";
+
+/* Class = "UILabel"; text = "meal name"; ObjectID = "u4p-jM-evZ"; */
+"u4p-jM-evZ.text" = "meal name";
+
+/* Class = "UILabel"; text = "菜单名称："; ObjectID = "uoC-aX-Ub7"; */
+"uoC-aX-Ub7.text" = "菜单名称：";
+
+/* Class = "UILabel"; text = "菜类"; ObjectID = "vbS-w1-2Hm"; */
+"vbS-w1-2Hm.text" = "菜类";
+
+/* Class = "UILabel"; text = "PrivateKitchen"; ObjectID = "vm4-Yr-GBu"; */
+"vm4-Yr-GBu.text" = "PrivateKitchen";
+
+/* Class = "UITableViewController"; title = "MealListSearchVC"; ObjectID = "xsN-8i-Svs"; */
+"xsN-8i-Svs.title" = "MealListSearchVC";
+
+/* Class = "UILabel"; text = "meal name"; ObjectID = "yK2-KZ-QGS"; */
+"yK2-KZ-QGS.text" = "meal name";
+
+/* Class = "UILabel"; text = "date"; ObjectID = "z29-xI-Jjd"; */
+"z29-xI-Jjd.text" = "date";
