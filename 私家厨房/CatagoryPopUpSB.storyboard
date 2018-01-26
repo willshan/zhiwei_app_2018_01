@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Bcv-Io-pp3">
-    <device id="retina4_7" orientation="portrait">
+    <device id="retina4_0" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
+        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,17 +19,17 @@
                         <viewControllerLayoutGuide type="bottom" id="DD2-1R-sk1"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GUA-wc-ONG">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qzw-NS-3Wu">
-                                <rect key="frame" x="66" y="70" width="243" height="200"/>
+                                <rect key="frame" x="40" y="70" width="240" height="200"/>
                                 <subviews>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rgT-Kw-DEO">
-                                        <rect key="frame" x="0.0" y="40" width="243" height="120"/>
+                                        <rect key="frame" x="0.0" y="40" width="240" height="120"/>
                                     </pickerView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Dpe-aJ-8Qr">
-                                        <rect key="frame" x="0.0" y="160" width="243" height="40"/>
+                                        <rect key="frame" x="0.0" y="160" width="240" height="40"/>
                                         <color key="backgroundColor" red="0.23195812900000001" green="0.59094517430000004" blue="0.72336632010000002" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="6nq-67-9fW"/>
@@ -43,7 +43,7 @@
                                         </connections>
                                     </button>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="请选择" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qNm-ZO-68r">
-                                        <rect key="frame" x="0.0" y="0.0" width="243" height="40"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
                                         <color key="backgroundColor" red="0.88235294119999996" green="0.2173015177" blue="0.65249124930000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="fS0-t8-VKh"/>
@@ -57,12 +57,12 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="200" id="4kQ-Zu-odl"/>
                                     <constraint firstAttribute="trailing" secondItem="qNm-ZO-68r" secondAttribute="trailing" id="7od-wQ-7ot"/>
+                                    <constraint firstAttribute="width" constant="240" id="Anj-fO-YK5"/>
                                     <constraint firstAttribute="trailing" secondItem="Dpe-aJ-8Qr" secondAttribute="trailing" id="R8r-au-qqm"/>
                                     <constraint firstItem="rgT-Kw-DEO" firstAttribute="top" secondItem="qNm-ZO-68r" secondAttribute="bottom" id="S4i-Dl-Yev"/>
                                     <constraint firstItem="qNm-ZO-68r" firstAttribute="leading" secondItem="qzw-NS-3Wu" secondAttribute="leading" id="Wwq-GK-2IJ"/>
                                     <constraint firstItem="qNm-ZO-68r" firstAttribute="top" secondItem="qzw-NS-3Wu" secondAttribute="top" id="ZaA-iK-38E"/>
                                     <constraint firstItem="Dpe-aJ-8Qr" firstAttribute="top" secondItem="rgT-Kw-DEO" secondAttribute="bottom" id="Zcq-mr-BF4"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="200" id="emi-Kr-rtW"/>
                                     <constraint firstItem="rgT-Kw-DEO" firstAttribute="leading" secondItem="qzw-NS-3Wu" secondAttribute="leading" id="nOs-fj-mOp"/>
                                     <constraint firstAttribute="bottom" secondItem="Dpe-aJ-8Qr" secondAttribute="bottom" id="nTI-6s-9IX"/>
                                     <constraint firstItem="Dpe-aJ-8Qr" firstAttribute="leading" secondItem="qzw-NS-3Wu" secondAttribute="leading" id="plZ-UT-EYj"/>
@@ -73,9 +73,8 @@
                         <color key="backgroundColor" white="0.66666666669999997" alpha="0.5" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
-                            <constraint firstItem="qzw-NS-3Wu" firstAttribute="leading" secondItem="GUA-wc-ONG" secondAttribute="leadingMargin" constant="50" id="3D6-MR-dib"/>
                             <constraint firstItem="qzw-NS-3Wu" firstAttribute="top" secondItem="oaD-Mo-R5k" secondAttribute="bottom" constant="50" id="R87-gk-bbn"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="qzw-NS-3Wu" secondAttribute="trailing" constant="50" id="WBD-nY-YQ0"/>
+                            <constraint firstItem="qzw-NS-3Wu" firstAttribute="centerX" secondItem="Yt4-CL-foF" secondAttribute="centerX" id="stQ-nl-xLv"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="Yt4-CL-foF"/>
                         <connections>
