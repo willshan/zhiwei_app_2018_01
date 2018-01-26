@@ -18,6 +18,7 @@ class MealListDataSource : NSObject {
     var mealListVC : MealListVC!
     var searchedMeals = [Meal]()
     var searchMealsBySections : [[Meal]]
+    var orderedMealIdentifers = [String]()
     
     //OrderedMeal是一个struct，用来记录mealName和mealCount
     var mealOrderList = [IndexPath : OrderedMeal]()
@@ -37,6 +38,10 @@ class MealListDataSource : NSObject {
             self.meals = []
             self.updateMealListBySections()
         }
+        
+        //get orderedMealIdentifers from disk
+        let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+        orderedMealIdentifers = shoppingCartList?.mealsIdentifiers ?? [String]()
     }
 }
 
@@ -185,6 +190,11 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
                 
                 //Delete meal in coredata
                 HandleCoreData.deleteMealWithIdentifier(meal.identifier)
+                
+                //update shopping cart badge number
+                let orderedMealCount = self.mealListVC?.stateController.countOrderedMealCount()
+                self.updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
+                
             })
             ac.addAction(deleteAction)
             mealListVC?.present(ac, animated: true, completion: nil)
@@ -199,7 +209,7 @@ extension MealListDataSource {
     //MARK: -Delete data in server
     func deleteMealInServer(_ meal : Meal) {
         // Delete in Parse server in background
-        let zoneIdURL = ICloudPropertyStore.iCloudProtpertyForKey(key: "zoneID_Meals")
+        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
         let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
         let mealRecordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
         //Delete CKRecord
@@ -249,35 +259,44 @@ extension MealListDataSource {
         }else {
             meal = searchMealsBySections[index!.section][index!.row]
         }
+        
+        //update meal selection status in coredata
         let identifier = meal.identifier
         HandleCoreData.updateMealSelectionStatus(identifier: identifier)
         
+        //update [mealsIdentifiers] of ordered meals
         if sender.isEnabled == true && sender.isSelected == false{
-            
             //将按钮设为“已加入”
             sender.isSelected = true
-
-//
-//            更新数据源信息
-//            mealListBySections[index!.section][index!.row].cellSelected = true
-//
-//            将选中菜品加入mealOrderList
-//            mealOrderList[index!] = OrderedMeal(mealName: cell.mealName.text!, mealIdentifier: mealListBySections[index!.section][index!.row].identifier, mealCount: 1, index: index! )
-
+            orderedMealIdentifers.append(identifier)
+            
         }
         else {
             //将按钮设为“加入菜单”
             sender.isSelected = false
-            
-//            //更新数据源信息
-//            mealListBySections[index!.section][index!.row].cellSelected = false
-//            mealOrderList.removeValue(forKey: index!)
+            for i in 0..<(orderedMealIdentifers.count) {
+                if orderedMealIdentifers[i] == identifier {
+                    orderedMealIdentifers.remove(at: i)
+                    break
+                }
+            }
         }
-
+        //read shoppingCartList from disk
+        var shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+        if shoppingCartList == nil {
+            //save shoppingCartList to disk
+            shoppingCartList = ShoppingCartList(date: Date(), mealCatagory: "晚餐", mealsIdentifiers: orderedMealIdentifers)
+            NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
+        }
+        else {
+            //save shoppingCartList to disk
+            shoppingCartList?.mealsIdentifiers = orderedMealIdentifers
+            NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
+        }
+ 
         //update shopping cart badge number
         let orderedMealCount = mealListVC?.stateController.countOrderedMealCount()
         updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
-        
     }
     
 

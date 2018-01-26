@@ -27,25 +27,25 @@ class ICloudPropertyStore : NSObject{
     }
     */
     
-    class func iCloudProtpertyForKey(key : String)-> URL {
+    class func URLofiCloudPropertyForKey(key : String)-> URL {
         let documentsDirectories = FileManager().urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
         return documentDirectory.appendingPathComponent(key)
     }
     
     //save property
-    class func setiCloudProperty(property : Bool, forKey key: String){
+    class func setICloudPropertyForKey(property : Bool, forKey key: String){
 
-        let propertyURL = iCloudProtpertyForKey(key: key)
+        let propertyURL = URLofiCloudPropertyForKey(key: key)
 
         NSKeyedArchiver.archiveRootObject(property, toFile: propertyURL.path)
 
     }
 
     //use property
-    class func propertyForKey(key : String) -> Bool? {
+    class func getICloudPropertyForKey(key : String) -> Bool? {
 
-        let propertyURL = iCloudProtpertyForKey(key: key)
+        let propertyURL = URLofiCloudPropertyForKey(key: key)
 
         return NSKeyedUnarchiver.unarchiveObject(withFile: propertyURL.path) as? Bool
     }

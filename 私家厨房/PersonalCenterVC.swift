@@ -23,9 +23,7 @@ class PersonalCenterVC: UIViewController {
     @IBOutlet weak var buttonHeight: NSLayoutConstraint!
     @IBOutlet weak var buttonWidth: NSLayoutConstraint!
     @IBOutlet weak var personalPhoto: UIImageView!
-    @IBAction func goToContactVC(_ sender: Any) {
 
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -115,6 +113,9 @@ extension PersonalCenterVC {
             
             print("即将传递数据到orderListCenter")
             print("传递的数据为\(String(describing: orderListCenterController.orderList))")
+           
+        case SegueID.showFamilyList:
+            print("Show family list")
             
         case SegueID.personalSet:
             os_log("Adding a new meal.", log: OSLog.default, type: .debug)

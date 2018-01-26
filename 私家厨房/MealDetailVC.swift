@@ -19,16 +19,16 @@ class MealDetailVC: UIViewController {
     @IBOutlet weak var comment: UITextView!
     @IBOutlet weak var photo: UIImageView!
     @IBOutlet weak var mealType: UILabel!
-
+    @IBOutlet weak var spinner: UIActivityIndicatorView!
+    
     var meal: Meal!
     var photoFromOrderMeal : UIImage!
-    //var delegate : MealDataTransferDelegate?
-    
+
+
     // Define icloudKit
     let myContainer = CKContainer.default()
     var privateDB : CKDatabase!
     var sharedDB : CKDatabase!
-    
 
     let dateFormatter : DateFormatter = {
         let formatter = DateFormatter()
@@ -38,11 +38,12 @@ class MealDetailVC: UIViewController {
     }()
 }
 
+
 extension MealDetailVC {
     //MARK: -LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.privateDB = myContainer.privateCloudDatabase
         self.sharedDB = myContainer.sharedCloudDatabase
         
@@ -71,17 +72,15 @@ extension MealDetailVC {
         photo.image = photoFromOrderMeal
 
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+      
+        spinner.center = CGPoint(x: UIScreen().bounds.size.width / 2, y: UIScreen().bounds.size.height / 2 - 88)
+    }
 }
 
-extension MealDetailVC : UICloudSharingControllerDelegate{
-    func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
-        print("\(error)")
-    }
-    
-    func itemTitle(for csc: UICloudSharingController) -> String? {
-        return meal.mealName
-    }
-    
+extension MealDetailVC {
     //MARK: -Actions
     //func editMeal(_ sender : UIBarButtonItem){
     @objc func editMeal(_ sender : UIBarButtonItem){
@@ -92,17 +91,90 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         }
         //}
     }
+}
+
+extension MealDetailVC : UICloudSharingControllerDelegate{
+    
+    func cloudSharingController(_ csc: UICloudSharingController, failedToSaveShareWithError error: Error) {
+        print("\(error)")
+    }
+    
+    func itemTitle(for csc: UICloudSharingController) -> String? {
+        return meal.mealName
+    }
+    
+    // When a topic is shared successfully, this method is called, the CKShare should have been created,
+    // and the whole share hierarchy should have been updated in server side. So fetch the changes and
+    // update the local cache.
+    //
+    func cloudSharingControllerDidSaveShare(_ csc: UICloudSharingController) {
+
+    }
+    
+    // When a share is stopped and this method is called, the CKShare record should have been removed and
+    // the root record should have been updated in the server side. So fetch the changes and update
+    // the local cache.
+    //
+    func cloudSharingControllerDidStopSharing(_ csc: UICloudSharingController) {
+        
+        // Stop sharing can happen on two scenarios, a ower stop a share or a participant removes self from a share.
+        // In the former case, no visual things will be changed in the owner side (privateDB);
+        // in the latter case, the share will disappear from the sharedDB; and if the share is the only item in the
+        // current zone, the zone should also be removed.
+        // Note fetching immediately here may not get all the changes because the server side needs a while to index.
+
+    }
+    
+    func presentOrAlertOnMainQueue(sharingController: UICloudSharingController?) {
+        if let sharingController = sharingController {
+            DispatchQueue.main.async {
+                sharingController.delegate = self
+                sharingController.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
+                self.present(sharingController, animated: true) {
+                    self.spinner.stopAnimating()
+                }
+            }
+        }
+            
+        else {
+            DispatchQueue.main.async {
+                let alert = UIAlertController(title: "Failed to share.",
+                                              message: "Can't set up a valid share object.",
+                                              preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+                self.present(alert, animated: true) {
+                    self.spinner.stopAnimating()
+                }
+            }
+        }
+    }
     
     //MARK: Init sharing view controller
     @objc func shareWithFamilyMember(_ sender : UIBarButtonItem) {
         print("init sharing")
         
-        let zoneIdURL = ICloudPropertyStore.iCloudProtpertyForKey(key: "zoneID_Meals")
+        spinner.startAnimating()
+        
+        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
         let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
         print("the zone id of current meal is \(String(describing: zoneID))")
         
         let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID!)
         print("zone id is \(String(describing: zoneID))")
+        
+        // participantLookupInfos, if any, can be set up like this:
+//        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "example@email.com"),
+//                                      CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
+//        DispatchQueue.main.async {
+//            TopicLocalCache.share.container.prepareSharingController(
+//                rootRecord: topic.record, uniqueName: UUID().uuidString, shareTitle: "A cool topic to share!",
+//                participantLookupInfos: participantLookupInfos, database: TopicLocalCache.share.database) { controller in
+//                    
+//                    self.rootRecord = topic.record
+//                    self.presentOrAlertOnMainQueue(sharingController: controller)
+//            }
+//        }
+        
         privateDB.fetch(withRecordID: recordID, completionHandler: { (record, error) in
             if error != nil {
                 // Insert error handling
@@ -113,7 +185,6 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
                 let shareRecord = CKShare(rootRecord: record!)
 //                shareRecord[CKShareTitleKey] = "\(self.meal.mealName)" as CKRecordValue
                 
-                
                 let sharingController = UICloudSharingController() {
                     (controller: UICloudSharingController,
                     prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
@@ -122,6 +193,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
                     
                     modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
                         if error == nil {
+                            print("+++++++share successfully")
                             prepareCompletionHandler(shareRecord, self.myContainer, nil)
                         }
                     }
@@ -132,7 +204,9 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
                 sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
                 sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
                 sharingController.delegate = self
-                self.present(sharingController, animated:true, completion:nil)
+                self.present(sharingController, animated:true) {
+                    self.spinner.stopAnimating()
+                }
                 
                 //Save CKRecord
 

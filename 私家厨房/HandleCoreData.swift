@@ -362,12 +362,12 @@ class HandleCoreData: NSObject {
                     mealToAdd.date = record!["mealCreatedAt"] as! NSDate
                     mealToAdd.comment = record!["comment"] as? String
                     mealToAdd.mealType = record!["mealType"] as! String
-                    if record!["cellSelected"] as! Int64 == Int64(0) {
-                        mealToAdd.cellSelected = false
-                    }
-                    else {
-                        mealToAdd.cellSelected = true
-                    }
+//                    if record!["cellSelected"] as! Int64 == Int64(0) {
+//                        mealToAdd.cellSelected = false
+//                    }
+//                    else {
+//                        mealToAdd.cellSelected = true
+//                    }
                     mealToAdd.userName = CKCurrentUserDefaultName
                     mealToAdd.identifier = record!["mealIdentifier"] as! String
                     //重新保存

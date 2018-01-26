@@ -28,6 +28,7 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
     
     var stateController : StateController!
     var dataSource: ShoppingCartDataSource!
+    var shoppingCartList : ShoppingCartList?
     
     let dateFormatter : DateFormatter = {
         let formatter = DateFormatter()
@@ -45,7 +46,6 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(keyboardWillChange(_:)),
                                                name: .UIKeyboardWillChangeFrame, object: nil)
-        
         comment.delegate = self
     }
     
@@ -53,6 +53,17 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
         super.viewWillAppear(true)
 
         print("view appear in shoppingCart vc")
+        
+        //get date and catagory informaton from disk
+        shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+        if shoppingCartList != nil
+        {
+            dateLabel.text = dateFormatter.string(from: shoppingCartList!.date)
+            catagoryLabel.text = shoppingCartList!.mealCatagory ?? "晚餐"
+        }
+        else {
+            print("++++++++shoppingCartList is nil")
+        }
 //        let dateFormatter : DateFormatter = {
 //            let formatter = DateFormatter()
 //            formatter.dateStyle = .none
@@ -80,6 +91,8 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(true)
+        
+        print("+++++++++++shoppingCartVC will disappear")
     }
 
     override func didReceiveMemoryWarning() {
@@ -106,6 +119,19 @@ extension ShoppingCartVC : DataTransferBackProtocol{
     
     func stringTransferBack(string: String) {
         catagoryLabel.text = string
+        
+        //save catagory label to disk
+        //save datelabel to disk
+        if shoppingCartList != nil {
+            shoppingCartList?.mealCatagory = string
+        }
+        else {
+            shoppingCartList = ShoppingCartList(date: Date(), mealCatagory: string, mealsIdentifiers: nil)
+        }
+
+        NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
+        //save catagory label to icloud
+        
     }
     
     func dismissKeyBoard(){
@@ -123,7 +149,29 @@ extension ShoppingCartVC : DataTransferBackProtocol{
     
     func dateTransferBack(date: Date) {
         print("dataTransferBack was running")
+        
         dateLabel.text = dateFormatter.string(from: date)
+        
+//        let dateFormatter : DateFormatter = {
+//            let formatter = DateFormatter()
+//            formatter.dateStyle = .medium
+//            formatter.timeStyle = .none
+//            return formatter
+//
+//        }()
+        
+//        //save datelabel to disk
+        if shoppingCartList != nil {
+            shoppingCartList?.date = date
+        }
+        else {
+            shoppingCartList = ShoppingCartList(date: date, mealCatagory: nil, mealsIdentifiers: nil)
+        }
+
+        NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
+        
+        //save datelabel to icloud
+        
     }
 }
 

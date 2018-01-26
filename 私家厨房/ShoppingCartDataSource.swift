@@ -151,6 +151,22 @@ extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
                 self.selectedMealsCount = self.selectedMealsCount - 1
                 self.updateShoppingCartIconBadgeNumber(orderedMealCount: self.selectedMealsCount)
                 
+                //read shoppingCartList from disk
+                var shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+                
+                //remove deleted meal from shoppingCartlist
+                var orderedMealIdentifers = self.shoppingCartController!.shoppingCartList!.mealsIdentifiers!
+                for i in 0..<orderedMealIdentifers.count {
+                    if orderedMealIdentifers[i] == meal.identifier {
+                        orderedMealIdentifers.remove(at: i)
+                        break
+                    }
+                }
+
+                //save shoppingCartList to disk
+                shoppingCartList?.mealsIdentifiers = orderedMealIdentifers
+                NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
+                
             })
             ac.addAction(deleteAction)
             shoppingCartController?.present(ac, animated: true, completion: nil)

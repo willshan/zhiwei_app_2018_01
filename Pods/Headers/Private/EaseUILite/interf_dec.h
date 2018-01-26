@@ -1,1 +1,0 @@
-../../../EaseUILite/EaseUI/EMUIKit/3rdparty/DeviceHelper/VoiceConvert/opencore-amrnb/interf_dec.h

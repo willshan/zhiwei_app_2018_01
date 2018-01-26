@@ -79,12 +79,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // set its value to true. This is mentioned in the WWDC 2016 session 226 “What’s New with CloudKit”.
     //
     func application(_ application: UIApplication, userDidAcceptCloudKitShareWith cloudKitShareMetadata: CKShareMetadata) {
-        
+        print("++++++++++user accepted share")
         let acceptSharesOp = CKAcceptSharesOperation(shareMetadatas: [cloudKitShareMetadata])
         acceptSharesOp.acceptSharesCompletionBlock = { error in
             guard CloudKitError.share.handle(error: error, operation: .acceptShare, alert: true) == nil else {return}
         }
-        //TopicLocalCache.share.container.add(acceptSharesOp)
+        container.add(acceptSharesOp)
     }
     
     // 1 成功获得deviceToken
@@ -176,8 +176,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                     
                     DispatchQueue.main.async {
-                        let alert = UIAlertController(title: "iCloud account is unavailable.",
-                                                      message: "Be sure to sign in iCloud and turn on iCloud Drive before using this sample.",
+                        let alert = UIAlertController(title: "iCloud账户不可用",
+                                                      message: "请确认已登录iCloud并开启iCloud Drive",
                                                       preferredStyle: .alert)
                         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
                         self.window?.rootViewController?.present(alert, animated: true)
@@ -218,25 +218,25 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     func userNotificationCenter(_ center: UNUserNotificationCenter,
                                 willPresent notification: UNNotification,
                                 withCompletionHandler completionHandler:@escaping (UNNotificationPresentationOptions) -> Void) {
-    /*
-        let userInfo = notification.request.content.userInfo
-        let request = notification.request
-        let content = request.content
-        let badge = content.badge
-        let body = content.body
-        let sound = content.sound
-        let subTitle = content.subtitle
-        let title = content.title
- */
-        print("这个方法被激发")
-        if notification.request.trigger?.isKind(of: UNPushNotificationTrigger.self) == true{
-            print("前台收到远程通知")
-        }
-        else {
-            print("***********前台收到本地通知")
-        }
-        //PFPush.handle(notification.request.content.userInfo)
-        completionHandler([.alert, .badge, .sound])
+  
+//        let userInfo = notification.request.content.userInfo
+//        let request = notification.request
+//        let content = request.content
+//        let badge = content.badge
+//        let body = content.body
+//        let sound = content.sound
+//        let subTitle = content.subtitle
+//        let title = content.title
+//
+//        print("这个方法被激发")
+//        if notification.request.trigger?.isKind(of: UNPushNotificationTrigger.self) == true{
+//            print("前台收到远程通知")
+//        }
+//        else {
+//            print("***********前台收到本地通知")
+//        }
+//        //PFPush.handle(notification.request.content.userInfo)
+//        completionHandler([.alert, .badge, .sound])
     }
 
 }

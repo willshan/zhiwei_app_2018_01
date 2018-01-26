@@ -70,6 +70,8 @@ struct SegueID {
     static let editMealDetail = "EditMeal"
     static let comfirmOrderList = "ComfirmOrderList"
     static let showOrderListDetail = "ShowOrderListDetail"
+    static let showFamilyList = "ShowFamilyList"
+    static let showFamilyMember = "ShowFamilyMember"
     static let loadFamilyMealList = "LoadFamilyMealList"
     static let invitation = "Invitation"
     static let personalSet = "PersonalSet"
@@ -85,3 +87,4 @@ struct AssetNames {
     static let personalCenter = "personalCenter"
     static let shoppingCart = "shoppingCart"
 }
+
