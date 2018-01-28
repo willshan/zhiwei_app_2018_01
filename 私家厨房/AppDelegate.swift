@@ -25,8 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
-            //ZoneLocalCache.share.initialize(container: self.container)
-            //TopicLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: CKRecordZone.default())
+            DatabaseLocalCache.share.initialize(container: self.container)
         }
         
         //MARK: 注册离线推送
@@ -135,16 +134,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         print("******Received notification!")
-        let tabVC = self.window?.rootViewController as! UITabBarController
-        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
-        guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
+//        let tabVC = self.window?.rootViewController as! UITabBarController
+//        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+//        guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
 
         let dict = userInfo as! [String: NSObject]
         guard let notification : CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary:dict) as? CKDatabaseNotification else { return }
-        
-        viewController.fetchChanges(in: notification.databaseScope) {
+        DatabaseLocalCache.share.fetchChanges(in: notification.databaseScope) {
             completionHandler(.newData)
         }
+//        viewController.fetchChanges(in: notification.databaseScope) {
+//            completionHandler(.newData)
+//        }
     }
     
     // Checking account availability. We do account check when the app comes back to foreground.
