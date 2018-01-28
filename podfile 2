@@ -1,0 +1,7 @@
+platform :ios, ’10.2’
+target '私家厨房' do
+pod 'ParseUI' 
+pod 'Parse'
+pod 'HyphenateLite'
+pod 'EaseUILite', :git =>'https://github.com/easemob/easeui-ios-hyphenate-cocoapods.git', :tag => '3.3.2'
+end
