@@ -69,6 +69,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
             DatabaseLocalCache.share.initialize(container: self.container)
+            DatabaseLocalCache.share.fetchChanges(in: .private, completion: { (error) in
+                if error == nil {
+                    DispatchQueue.main.async {
+                        orderMealController.updateUI()
+                    }
+                }
+            })
         }
         
         return true
@@ -119,11 +126,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         print("app will enter foreground")
+        
+        //update UI
         let tabVC = self.window?.rootViewController as! UITabBarController
         let nav0 = tabVC.viewControllers?[0] as! UINavigationController
         guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
-        viewController.updateUI()
-
+        DispatchQueue.main.async {
+            viewController.updateUI()
+        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {

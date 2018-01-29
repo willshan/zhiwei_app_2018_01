@@ -119,8 +119,8 @@ final class DatabaseLocalCache {
         //        }
         
 //        fetch changes when start
-        self.fetchChanges(in: .private) {_ in}
-        self.fetchChanges(in: .shared) {_ in}
+//        self.fetchChanges(in: .private) {_ in}
+//        self.fetchChanges(in: .shared) {_ in}
     }
     
     //creat database subscription
@@ -281,6 +281,7 @@ final class DatabaseLocalCache {
             print("++++++++Compelte update, zone change token is \(String(describing: changeToken))")
         }
         
+        //the last function being used
         operation.fetchRecordZoneChangesCompletionBlock = { (error) in
             if let error = error {
                 print("++++++++2-Error fetching zone changes for \(databaseTokenKey) database:", error)
