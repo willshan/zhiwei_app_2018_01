@@ -24,22 +24,6 @@ class MealListVC: UIViewController {
     var searchController : UISearchController!
     var resultsController = UITableViewController()
     var selectedIndexPath : IndexPath!
-    
-//    // Define icloudKit
-//    let container = CKContainer.default()
-//    var privateDB : CKDatabase!
-//    var sharedDB : CKDatabase!
-//
-//    // Store these to disk so that they persist across launches
-//    var createdCustomZone = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForCreatedCustomZone) ?? false
-//    var subscribedToPrivateChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToPrivateChanges) ?? false
-//    var subscribedToSharedChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToSharedChanges) ?? false
-//
-//    let privateSubscriptionId = "private-changes"
-//    let sharedSubscriptionId = "shared-changes"
-//
-//    let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-//    let zoneChangeTokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zone_Meals")
 }
 
 extension MealListVC{
@@ -51,69 +35,6 @@ extension MealListVC{
         navigationItem.leftBarButtonItem = editButtonItem
         
         setSearchController()
-        
-//        self.privateDB = container.privateCloudDatabase
-//        self.sharedDB = container.sharedCloudDatabase
-//
-//        //creat custon zone
-//        let createZoneGroup = DispatchGroup()
-//        if !self.createdCustomZone {
-//            //start to create custom zone
-//            createZoneGroup.enter()
-//
-//            let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
-//
-//            let customZone = CKRecordZone(zoneID: zoneID)
-//            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [] )
-//
-//            createZoneOperation.modifyRecordZonesCompletionBlock = { (saved, deleted, error) in
-//                if (error == nil) {
-//                    self.createdCustomZone = true
-//                    ICloudPropertyStore.setICloudPropertyForKey(property: self.createdCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
-//                }
-//                // else custom error handling
-//                createZoneGroup.leave()
-//            }
-//            createZoneOperation.qualityOfService = .userInitiated
-//            privateDB.add(createZoneOperation)
-//        }
-//
-//        if !self.subscribedToPrivateChanges {
-//            let createSubscriptionOperation = self.createDatabaseSubscriptionOperation(subscriptionId: privateSubscriptionId)
-//            createSubscriptionOperation.modifySubscriptionsCompletionBlock = { (subscriptions, deletedIds, error) in
-//                if error == nil {
-//                    self.subscribedToPrivateChanges = true
-//                    ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToPrivateChanges, forKey: ICloudPropertyStore.keyForSubscribedToPrivateChanges)
-//                }
-//                // else custom error handling
-//            }
-//            self.privateDB?.add(createSubscriptionOperation)
-//        }
-//
-//        if !self.subscribedToSharedChanges {
-//            let createSubscriptionOperation = self.createDatabaseSubscriptionOperation(subscriptionId: sharedSubscriptionId)
-//            createSubscriptionOperation.modifySubscriptionsCompletionBlock = { (subscriptions, deletedIds, error) in
-//
-//                if error == nil {
-//                    self.subscribedToSharedChanges = true
-//                    ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToSharedChanges, forKey: ICloudPropertyStore.keyForSubscribedToSharedChanges)
-//                }
-//                // else custom error handling
-//            }
-//            self.sharedDB?.add(createSubscriptionOperation)
-//        }
-//
-//        // Fetch any changes from the server that happened while the app wasn't running
-//        createZoneGroup.notify(queue: DispatchQueue.global()) {
-//            if self.createdCustomZone {
-//                self.fetchChanges(in: .private) {}
-//                self.fetchChanges(in: .shared) {}
-//            }
-//        }
-//
-//        //fetch changes when start
-//        self.fetchChanges(in: .private) {}
-//        self.fetchChanges(in: .shared) {}
         
     }
     
@@ -180,7 +101,6 @@ extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
             
         } else {
             // Fallback on earlier versions
-
             let nib = UINib(nibName: "MealCell", bundle: nil)
             firstTableView.register(nib, forCellReuseIdentifier: "MealCell")
             resultsController.tableView.register(nib, forCellReuseIdentifier: "MealCell")
@@ -203,195 +123,6 @@ extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
 }
 
 extension MealListVC {
-//    func createDatabaseSubscriptionOperation(subscriptionId: String) -> CKModifySubscriptionsOperation {
-//        let subscription = CKDatabaseSubscription.init(subscriptionID: subscriptionId)
-//        let notificationInfo = CKNotificationInfo()
-//
-//        // send a silent notification
-//        notificationInfo.shouldSendContentAvailable = true
-//        subscription.notificationInfo = notificationInfo
-//
-//        let operation = CKModifySubscriptionsOperation(subscriptionsToSave: [subscription], subscriptionIDsToDelete: [])
-//        operation.qualityOfService = .utility
-//
-//        return operation
-//    }
-//
-//    func fetchChanges(in databaseScope: CKDatabaseScope, completion: @escaping () -> Void) {
-//        switch databaseScope {
-//        case .private:
-//            fetchDatabaseChanges(database: self.privateDB, databaseTokenKey: "private", completion: completion)
-//
-//        case .shared:
-//            fetchDatabaseChanges(database: self.sharedDB, databaseTokenKey: "shared", completion: completion)
-//
-//        case .public:
-//            fatalError()
-//        }
-//    }
-//    //MARK: Fetch the database changes:
-//    func fetchDatabaseChanges(database: CKDatabase, databaseTokenKey: String, completion: @escaping () -> Void) {
-//        print("++++++++fetch data begin")
-//        var changedZoneIDs: [CKRecordZoneID] = []
-//
-//        let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: databaseTokenKey)
-//        //Be noted: this changeToken is database change token, not zone change token.
-//        let changeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken // Read change token from disk
-//
-//        var changeTokenInMemory = changeToken
-//
-//        let operation = CKFetchDatabaseChangesOperation(previousServerChangeToken: changeToken)
-//        print("++++++++database change token is \(String(describing: changeToken))")
-//
-////        operation.fetchAllChanges = true
-//
-//        operation.recordZoneWithIDChangedBlock = { (zoneID) in
-//            changedZoneIDs.append(zoneID)
-////            save zone id to disk
-//            print("+++++++create custom zone is \(self.createdCustomZone)")
-//            if zoneID.zoneName == "Meals" {
-//                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-//                NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
-//
-//                print("+++++++zoneID to be saved is \(zoneID)")
-//            }
-//        }
-//
-//        operation.recordZoneWithIDWasDeletedBlock = { (zoneID) in
-//            // Write this zone deletion to memory
-//
-//        }
-//
-//        operation.changeTokenUpdatedBlock = { (token) in
-//            // Flush zone deletions for this database to disk
-//
-//            NSKeyedArchiver.archiveRootObject(token, toFile: tokenURL.path)
-//            print("After update, database change token is \(token)")
-//            // Write this new database change token to memory
-//            changeTokenInMemory = token
-//        }
-//
-//        operation.fetchDatabaseChangesCompletionBlock = { (token, moreComing, error) in
-//            if let error = error {
-//                print("Error during fetch shared database changes operation", error)
-//                completion()
-//                return
-//            }
-//            // Flush zone deletions for this database to disk
-//            NSKeyedArchiver.archiveRootObject(token as Any, toFile: tokenURL.path)
-//            print("Completed update, database change token is \(String(describing: token))")
-//            // Write this new database change token to memory
-//            changeTokenInMemory = token
-//
-//            self.fetchZoneChanges(database: database, databaseTokenKey: databaseTokenKey, zoneIDs: changedZoneIDs) {
-//                // Flush in-memory database change token to disk
-//                NSKeyedArchiver.archiveRootObject(changeTokenInMemory as Any, toFile: tokenURL.path)
-//                completion()
-//            }
-//        }
-//        operation.qualityOfService = .userInitiated
-//        database.add(operation)
-//    }
-//
-//    //MARK: Fetch the zone changes:
-//    func fetchZoneChanges(database: CKDatabase, databaseTokenKey: String, zoneIDs: [CKRecordZoneID], completion: @escaping () -> Void) {
-//        // Look up the previous change token for each zone
-//        print("++++++++fetch zone begin")
-//        var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
-//
-//        for zoneID in zoneIDs {
-//            print("+++++++the zoneID is \(zoneID)")
-//            let key = "zone_" + zoneID.zoneName
-//            let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
-//            print("++++++++the zoneID change token key is \(key)")
-//            let changeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken
-//            let options = CKFetchRecordZoneChangesOptions()
-//            options.previousServerChangeToken = changeToken // Read change token from disk
-//            optionsByRecordZoneID[zoneID] = options
-//        }
-//
-//        let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
-//
-//        //        open var recordChangedBlock: ((CKRecord) -> Swift.Void)?
-//        operation.recordChangedBlock = { (record) in
-//            print("++++++++Record changed: \(record["mealName"] as! String)")
-//
-//            // Write this record change to memory
-//            let identifier = record["mealIdentifier"] as! String
-//            let meals = HandleCoreData.queryDataWithIdentifer(identifier)
-//            if meals.count == 0 {
-//                let _ = HandleCoreData.insertData(meal: nil, record: record)
-//
-//                //update UI
-//                DispatchQueue.main.async {
-//                self.updateUI()
-//                }
-//            }
-//            else {
-//                HandleCoreData.updateData(meal: nil, record: record)
-//
-//                //update UI
-//                DispatchQueue.main.async {
-//                self.updateUI()
-//                }
-//
-//            }
-//            let updatedMeals = HandleCoreData.queryDataWithUserName(CKCurrentUserDefaultName)
-//            self.stateController.saveMeal(updatedMeals)
-//        }
-//
-//        //    open var recordWithIDWasDeletedBlock: ((CKRecordID, String) -> Swift.Void)?
-//        operation.recordWithIDWasDeletedBlock = { (recordId, string) in
-//            print("++++++++Record deleted:", string)
-//            // Write this record deletion to memory
-//            //print("#1 stateController's meals count is \(self.stateController.meals?.count)")
-//            HandleCoreData.deleteMealWithIdentifier(recordId.recordName)
-//            //update UI
-//            DispatchQueue.main.async {
-//                self.updateUI()
-//            }
-//
-//            let updatedMeals = HandleCoreData.queryDataWithUserName(CKCurrentUserDefaultName)
-//            self.stateController.saveMeal(updatedMeals)
-//            //print("#2 stateController's meals count is \(self.stateController.meals?.count)")
-//        }
-//
-//        operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
-//            // Flush record changes and deletions for this zone to disk
-//            // Write this new zone change token to disk
-//            //Be noted: this changeToken is zone change token, not database change token
-//            let key = "zone_" + zoneId.zoneName
-//            let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
-//            NSKeyedArchiver.archiveRootObject(token as Any, toFile: tokenURL.path)
-//            //print("After update, zone change token is \(String(describing: token))")
-//        }
-//
-//        operation.recordZoneFetchCompletionBlock = { (zoneId, changeToken, _, _, error) in
-//            if let error = error {
-//                print("++++++++1-Error fetching zone changes for \(databaseTokenKey) database:", error)
-//                return
-//            }
-//            // Flush record changes and deletions for this zone to disk
-//
-//            // Write this new zone change token to disk
-//            let key = "zone_" + zoneId.zoneName
-//            let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
-//            NSKeyedArchiver.archiveRootObject(changeToken as Any, toFile: tokenURL.path)
-//            print("++++++++Compelte update, zone change token is \(String(describing: changeToken))")
-//        }
-//
-//        operation.fetchRecordZoneChangesCompletionBlock = { (error) in
-//            if let error = error {
-//                print("++++++++2-Error fetching zone changes for \(databaseTokenKey) database:", error)
-//            }
-//            else {
-//                print("++++++++Successfully fetching zone changes for \(databaseTokenKey) database:")
-//            }
-//            completion()
-//        }
-//        database.add(operation)
-//    }
-    
     //update UI
     func updateUI() {
         self.dataSource = MealListDataSource(meals: self.stateController.getAllMeals())
@@ -492,15 +223,6 @@ extension MealListVC {
             guard let viewDetailVC = segue.destination as? MealDetailVC else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
-            
-            //            guard let selectedMealCell = sender as? MealCell else {
-            //                fatalError("Unexpected sender: \(String(describing: sender))")
-            //            }
-            //
-            //            guard let indexPath = self.tableView.indexPath(for: selectedMealCell) else {
-            //                fatalError("The selected cell is not being displayed by the table")
-            //            }
-            
             var selectedMeal = Meal()
             print(dataSource.searchedMeals.count)
             if dataSource.searchedMeals.count == 0 {
@@ -509,7 +231,6 @@ extension MealListVC {
             else {
                 selectedMeal = self.dataSource.searchMealsBySections[selectedIndexPath.section][selectedIndexPath.row]
             }
-            //            let selectedMeal = self.dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row]
             
             print("***************\(selectedMeal)")
             
