@@ -23,11 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
-        // Checking account availability. Create local cache objects if the accountStatus is available.
-        checkAccountStatus(for: container) {
-            DatabaseLocalCache.share.initialize(container: self.container)
-        }
-        
         //MARK: 注册离线推送
         // Silent push
         let notificationInfo = CKNotificationInfo()
@@ -70,6 +65,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         personalCenterController.stateController = stateController
 
         self.stateController = stateController
+        
+        // Checking account availability. Create local cache objects if the accountStatus is available.
+        checkAccountStatus(for: container) {
+            DatabaseLocalCache.share.initialize(container: self.container)
+        }
         
         return true
     }
@@ -119,6 +119,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationWillEnterForeground(_ application: UIApplication) {
         // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
         print("app will enter foreground")
+        let tabVC = self.window?.rootViewController as! UITabBarController
+        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+        guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
+        viewController.updateUI()
 
     }
 
@@ -134,18 +138,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         print("******Received notification!")
-//        let tabVC = self.window?.rootViewController as! UITabBarController
-//        let nav0 = tabVC.viewControllers?[0] as! UINavigationController
-//        guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
 
         let dict = userInfo as! [String: NSObject]
         guard let notification : CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary:dict) as? CKDatabaseNotification else { return }
-        DatabaseLocalCache.share.fetchChanges(in: notification.databaseScope) {
+        DatabaseLocalCache.share.fetchChanges(in: notification.databaseScope) {_ in 
             completionHandler(.newData)
+            if application.applicationState == UIApplicationState.active {
+                //update UI
+                let tabVC = self.window?.rootViewController as! UITabBarController
+                let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+                guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
+                DispatchQueue.main.async {
+                    viewController.updateUI()
+                }
+            }
         }
-//        viewController.fetchChanges(in: notification.databaseScope) {
-//            completionHandler(.newData)
-//        }
     }
     
     // Checking account availability. We do account check when the app comes back to foreground.

@@ -68,7 +68,7 @@ final class DatabaseLocalCache {
         self.creatCustomZone(zoneName: "Meals", database: privateDB) { (error) in
             if error == nil {print("creat custom zone successfully")}
             
-            self.fetchChanges(in: .private) {}
+            self.fetchChanges(in: .private) {_ in }
 //            self.fetchChanges(in: .shared) {}
         }
 
@@ -118,9 +118,9 @@ final class DatabaseLocalCache {
         //            }
         //        }
         
-        //fetch changes when start
-        self.fetchChanges(in: .private) {}
-        self.fetchChanges(in: .shared) {}
+//        fetch changes when start
+        self.fetchChanges(in: .private) {_ in}
+        self.fetchChanges(in: .shared) {_ in}
     }
     
     //creat database subscription
@@ -139,7 +139,7 @@ final class DatabaseLocalCache {
     }
     
     //fetch changes
-    func fetchChanges(in databaseScope: CKDatabaseScope, completion: @escaping () -> Void) {
+    func fetchChanges(in databaseScope: CKDatabaseScope, completion: @escaping (_ error : Error?) -> Void) {
         switch databaseScope {
         case .private:
             fetchDatabaseChanges(database: self.privateDB, databaseTokenKey: "private", completion: completion)
@@ -153,7 +153,7 @@ final class DatabaseLocalCache {
     }
     
     //MARK: Fetch the database changes:
-    func fetchDatabaseChanges(database: CKDatabase, databaseTokenKey: String, completion: @escaping () -> Void) {
+    func fetchDatabaseChanges(database: CKDatabase, databaseTokenKey: String, completion: @escaping (_ error : Error?) -> Void) {
         print("++++++++fetch \(databaseTokenKey) data begin")
         var changedZoneIDs: [CKRecordZoneID] = []
         
@@ -194,7 +194,7 @@ final class DatabaseLocalCache {
         operation.fetchDatabaseChangesCompletionBlock = { (serverChangeToken, moreComing, error) in
             if let error = error {
                 print("Error during fetch \(databaseTokenKey) database changes operation", error)
-                completion()
+                completion(error)
                 return
             }
             // Flush zone deletions for this database to disk
@@ -203,11 +203,11 @@ final class DatabaseLocalCache {
             // Write this new database change token to memory
             databaseChangeTokenInMemory = serverChangeToken
             
-            self.fetchZoneChanges(database: database, databaseTokenKey: databaseTokenKey, zoneIDs: changedZoneIDs) {
+            self.fetchZoneChanges(database: database, databaseTokenKey: databaseTokenKey, zoneIDs: changedZoneIDs) {error in
                 // Flush in-memory database change token to disk
                 NSKeyedArchiver.archiveRootObject(databaseChangeTokenInMemory as Any, toFile: databaseChangetokenURL.path)
                 print("Completed update, \(databaseTokenKey) database change token is \(String(describing: serverChangeToken))")
-                completion()
+                completion(error)
             }
         }
         operation.database = database
@@ -216,7 +216,7 @@ final class DatabaseLocalCache {
     }
     
     //MARK: Fetch the zone changes:
-    func fetchZoneChanges(database: CKDatabase, databaseTokenKey: String, zoneIDs: [CKRecordZoneID], completion: @escaping () -> Void) {
+    func fetchZoneChanges(database: CKDatabase, databaseTokenKey: String, zoneIDs: [CKRecordZoneID], completion: @escaping (_ error : Error?) -> Void) {
         // Look up the previous change token for each zone
         print("++++++++fetch zone begin")
         var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
@@ -288,7 +288,7 @@ final class DatabaseLocalCache {
             else {
                 print("++++++++Successfully fetching zone changes for \(databaseTokenKey) database:")
             }
-            completion()
+            completion(error)
         }
         operation.database = database
         operationQueue.addOperation(operation)
