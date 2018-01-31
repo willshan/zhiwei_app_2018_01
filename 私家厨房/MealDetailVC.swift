@@ -24,12 +24,6 @@ class MealDetailVC: UIViewController {
     var meal: Meal!
     var photoFromOrderMeal : UIImage!
 
-
-    // Define icloudKit
-    let myContainer = CKContainer.default()
-    var privateDB : CKDatabase!
-    var sharedDB : CKDatabase!
-
     let dateFormatter : DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -43,10 +37,7 @@ extension MealDetailVC {
     //MARK: -LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        self.privateDB = myContainer.privateCloudDatabase
-        self.sharedDB = myContainer.sharedCloudDatabase
-        
+    
         if #available(iOS 11.0, *) {
             navigationItem.largeTitleDisplayMode = .always
         } else {
@@ -154,13 +145,26 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         print("init sharing")
         
         spinner.startAnimating()
+        //used record meta data stored in disk to get root record ID
+//        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
+//        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
+//        print("the zone id of current meal is \(String(describing: zoneID))")
+//
+//        let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID!)
+//        print("zone id is \(String(describing: zoneID))")
         
-        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
-        print("the zone id of current meal is \(String(describing: zoneID))")
+//        set up the CKRecord with its metadata
+        let key = "Record_"+meal.identifier
+        let url = DataStore().objectURLForKey(key: key)
+        let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
         
-        let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID!)
-        print("zone id is \(String(describing: zoneID))")
+        let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
+        
+        coder.requiresSecureCoding = true
+        
+        let record = CKRecord(coder: coder)
+        
+        coder.finishDecoding()
         
         // participantLookupInfos, if any, can be set up like this:
 //        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "example@email.com"),
@@ -175,43 +179,71 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
 //            }
 //        }
         
-        privateDB.fetch(withRecordID: recordID, completionHandler: { (record, error) in
-            if error != nil {
-                // Insert error handling
-                print("Can't fetch record from icloud")
-            }
-            else {
-                //Creat Share
-                let shareRecord = CKShare(rootRecord: record!)
-//                shareRecord[CKShareTitleKey] = "\(self.meal.mealName)" as CKRecordValue
-                
-                let sharingController = UICloudSharingController() {
-                    (controller: UICloudSharingController,
-                    prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
-                    let modifyOp = CKModifyRecordsOperation(recordsToSave: [record!, shareRecord],
-                                                            recordIDsToDelete: nil)
-                    
-                    modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
-                        if error == nil {
-                            print("+++++++share successfully")
-                            prepareCompletionHandler(shareRecord, self.myContainer, nil)
-                        }
-                    }
-                    
-                    self.myContainer.privateCloudDatabase.add(modifyOp)
+		//don't fetch record from icloud, use encodedSystemFields to encode from disk with meta data
+//        Creat Share
+        let shareRecord = CKShare(rootRecord: record!)
+        
+        let sharingController = UICloudSharingController() {
+            (controller: UICloudSharingController,
+            prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
+            let modifyOp = CKModifyRecordsOperation(recordsToSave: [record!, shareRecord],
+                                                    recordIDsToDelete: nil)
+            
+            modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
+                if error == nil {
+                    print("+++++++share successfully")
+                    prepareCompletionHandler(shareRecord, DatabaseLocalCache.share.container, nil)
                 }
-                                                                 
-                sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
-                sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
-                sharingController.delegate = self
-                self.present(sharingController, animated:true) {
-                    self.spinner.stopAnimating()
-                }
-                
-                //Save CKRecord
-
             }
-        })
+            
+            DatabaseLocalCache.share.privateDB.add(modifyOp)
+        }
+        
+        sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
+        sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
+        sharingController.delegate = self
+        self.present(sharingController, animated:true) {
+            self.spinner.stopAnimating()
+        }
+        
+        
+//        privateDB.fetch(withRecordID: recordID!, completionHandler: { (record, error) in
+//            if error != nil {
+//                // Insert error handling
+//                print("Can't fetch record from icloud")
+//            }
+//            else {
+//                //Creat Share
+//                let shareRecord = CKShare(rootRecord: record!)
+//               shareRecord[CKShareTitleKey] = "\(self.meal.mealName)" as CKRecordValue
+//
+//                let sharingController = UICloudSharingController() {
+//                    (controller: UICloudSharingController,
+//                    prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
+//                    let modifyOp = CKModifyRecordsOperation(recordsToSave: [record!, shareRecord],
+//                                                            recordIDsToDelete: nil)
+//
+//                    modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
+//                        if error == nil {
+//                            print("+++++++share successfully")
+//                            prepareCompletionHandler(shareRecord, self.myContainer, nil)
+//                        }
+//                    }
+//
+//                    self.myContainer.privateCloudDatabase.add(modifyOp)
+//                }
+//
+//                sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
+//                sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
+//                sharingController.delegate = self
+//                self.present(sharingController, animated:true) {
+//                    self.spinner.stopAnimating()
+//                }
+//
+//                //Save CKRecord
+//
+//            }
+//        })
     }
 }
 

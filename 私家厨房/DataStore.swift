@@ -7,22 +7,31 @@
 //
 
 import UIKit
+import CloudKit
 
-class ImageStore : NSObject {
+class DataStore : NSObject {
     
     let cache = NSCache<AnyObject, AnyObject>()
     
-    func imageURLForKey(key : String)-> URL {
+    func objectURLForKey(key : String)-> URL {
         let documentsDirectories = FileManager().urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
         return documentDirectory.appendingPathComponent(key)
     }
+    //save Metadata of CKRecord
+//    func setMetadataOfRecord(record : CKRecord, forKey key : String){
+//        cache.setObject(record, forKey : key as AnyObject)
+//
+//        let url = objectURLForKey(key: key)
+//
+//
+//    }
     
     //save images
     func setImage(image : UIImage, forKey key: String){
         cache.setObject(image, forKey : key as AnyObject)
         
-        let imageURL = imageURLForKey(key: key)
+        let imageURL = objectURLForKey(key: key)
         
         if let data = UIImageJPEGRepresentation(image, 0.5) {
             do {
@@ -43,7 +52,7 @@ class ImageStore : NSObject {
             return exitingImage
         }
         
-        let imageURL = imageURLForKey(key: key)
+        let imageURL = objectURLForKey(key: key)
         guard let imageFromDisk = UIImage(contentsOfFile: imageURL.path) else {
             return nil
         }
@@ -60,7 +69,7 @@ class ImageStore : NSObject {
         //从cache中删除
         cache.removeObject(forKey: key as AnyObject)
         
-        let imageURL = imageURLForKey(key: key)
+        let imageURL = objectURLForKey(key: key)
         
         do {
             //从fileSystem中删除

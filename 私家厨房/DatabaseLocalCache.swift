@@ -234,11 +234,10 @@ final class DatabaseLocalCache {
         
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
         
-        //        open var recordChangedBlock: ((CKRecord) -> Swift.Void)?
         operation.recordChangedBlock = { (record) in
             print("++++++++Record changed: \(record["mealName"] as! String)")
             
-            // Write this record change to memory
+            // Write this record change to memery
             let identifier = record["mealIdentifier"] as! String
             let meals = HandleCoreData.queryDataWithIdentifer(identifier)
             if meals.count == 0 {
@@ -248,6 +247,23 @@ final class DatabaseLocalCache {
             else {
                 HandleCoreData.updateData(meal: nil, record: record)
             }
+            
+            // Write meladata to disk
+            // obtain the metadata from the CKRecord
+            
+            let data = NSMutableData()
+            
+            let coder = NSKeyedArchiver.init(forWritingWith: data)
+            
+            coder.requiresSecureCoding = true
+            
+            record.encodeSystemFields(with: coder)
+            
+            coder.finishEncoding()
+            let key = "Record_"+identifier
+            let url = DataStore().objectURLForKey(key: key)
+            NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+            
         }
         
         //    open var recordWithIDWasDeletedBlock: ((CKRecordID, String) -> Swift.Void)?

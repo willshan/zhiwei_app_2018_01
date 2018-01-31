@@ -154,14 +154,14 @@ extension MealListVC {
         //participant.acceptanceStatus = .accepted
         
         //save image to local
-        ImageStore().setImage(image: uploadImage, forKey: mealRecord.recordID.recordName)
+        DataStore().setImage(image: uploadImage, forKey: mealRecord.recordID.recordName)
         //update meal identifier in local
         HandleCoreData.updateMealIdentifer(identifier: meal.identifier, recordName: mealRecord.recordID.recordName)
         
         mealRecord["cellSelected"] = Int64(0) as CKRecordValue
         mealRecord["comment"] = meal.comment! as NSString
         
-        let URL = ImageStore().imageURLForKey(key: mealRecord.recordID.recordName)
+        let URL = DataStore().objectURLForKey(key: mealRecord.recordID.recordName)
         let imageAsset = CKAsset(fileURL: URL)
         mealRecord["image"] = imageAsset
         
@@ -236,7 +236,7 @@ extension MealListVC {
             
             viewDetailVC.meal = selectedMeal
             
-            viewDetailVC.photoFromOrderMeal = ImageStore().imageForKey(key: selectedMeal.identifier)
+            viewDetailVC.photoFromOrderMeal = DataStore().imageForKey(key: selectedMeal.identifier)
             
         default:
             fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
@@ -317,7 +317,7 @@ extension MealListVC {
                         //Update CKRecord
                         record!["comment"] = meal.comment! as NSString
                         if photochanged == true {
-                            let URL = ImageStore().imageURLForKey(key: meal.identifier)
+                            let URL = DataStore().objectURLForKey(key: meal.identifier)
                             let imageAsset = CKAsset(fileURL: URL)
                             record!["image"] = imageAsset
                         }
@@ -366,7 +366,7 @@ extension MealListVC {
             }
             //添加图片到Disk
             if photochanged == true {
-                ImageStore().setImage(image: uploadImage!, forKey: meal.identifier)
+                DataStore().setImage(image: uploadImage!, forKey: meal.identifier)
             }
             
             // Save the meals to stateControler

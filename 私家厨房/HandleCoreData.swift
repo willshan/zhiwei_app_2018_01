@@ -98,7 +98,7 @@ class HandleCoreData: NSObject {
             let imageAsset = record!["image"] as! CKAsset
             let imageURL = imageAsset.fileURL
             let image = UIImage(contentsOfFile: imageURL.path)
-            ImageStore().setImage(image: image!, forKey: record!.recordID.recordName)
+            DataStore().setImage(image: image!, forKey: record!.recordID.recordName)
             
             mealToAdd.mealName = record!["mealName"] as! String
             mealToAdd.spicy = record!["spicy"] as! Int64
@@ -355,7 +355,7 @@ class HandleCoreData: NSObject {
                     let imageAsset = record!["image"] as! CKAsset
                     let imageURL = imageAsset.fileURL
                     let image = UIImage(contentsOfFile: imageURL.path)
-                    ImageStore().setImage(image: image!, forKey: record!.recordID.recordName)
+                    DataStore().setImage(image: image!, forKey: record!.recordID.recordName)
                     
                     mealToAdd.mealName = record!["mealName"] as! String
                     mealToAdd.spicy = record!["spicy"] as! Int64

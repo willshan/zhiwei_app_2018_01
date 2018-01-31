@@ -120,7 +120,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         cell.mealName.text = meal.mealName
         cell.spicy.spicy = Int(meal.spicy)
         cell.spicy.spicyCount = Int(meal.spicy)
-        cell.photo.image = ImageStore().imageForKey(key: meal.identifier)
+        cell.photo.image = DataStore().imageForKey(key: meal.identifier)
         //photos[meal.identifier!] = cell.photo.image
         
         //设置cell的背景和按钮
