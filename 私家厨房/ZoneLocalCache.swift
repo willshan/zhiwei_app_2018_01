@@ -24,9 +24,6 @@ final class ZoneLocalCache: BaseLocalCache {
     var subscribedToPrivateChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToPrivateChanges) ?? false
     var subscribedToSharedChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToSharedChanges) ?? false
     
-    let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-    let zoneChangeTokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zone_Meals")
-    
     private override init() {} // Prevent clients from creating another instance.
     
     // Subscribe the database changes and do the first fetch from server to build up the cache
@@ -144,7 +141,8 @@ final class ZoneLocalCache: BaseLocalCache {
             zoneIDsChanged.append(zoneID)
             //save zoneID for "Meals" in disk
             if zoneID.zoneName == "Meals" {
-                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
+                
+                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
                 NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
                 
                 print("+++++++zoneID to be saved is \(zoneID)")

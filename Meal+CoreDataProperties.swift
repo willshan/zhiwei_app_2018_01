@@ -24,5 +24,6 @@ extension Meal {
     @NSManaged public var spicy: Int64
     @NSManaged public var userName: String
     @NSManaged public var identifier: String
+    @NSManaged public var database: String
 
 }

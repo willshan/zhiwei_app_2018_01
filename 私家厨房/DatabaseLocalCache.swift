@@ -20,21 +20,19 @@ final class DatabaseLocalCache {
     var container: CKContainer!
     var privateDB : CKDatabase!
     var sharedDB : CKDatabase!
-    
+
     lazy var operationQueue: OperationQueue = {
         return OperationQueue()
     }()
     
     // Store these to disk so that they persist across launches
-    var createdCustomZone = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForCreatedCustomZone) ?? false
+    var createdPrivateCustomZone = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForCreatedCustomZone) ?? false
+    var createdShareZone = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForCreatedShareZone) ?? false
     var subscribedToPrivateChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToPrivateChanges) ?? false
     var subscribedToSharedChanges = ICloudPropertyStore.getICloudPropertyForKey(key: ICloudPropertyStore.keyForSubscribedToSharedChanges) ?? false
     
     let privateSubscriptionId = "private-changes"
     let sharedSubscriptionId = "shared-changes"
-    
-    let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-    let zoneChangeTokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zone_Meals")
     
     private init() {} // Prevent clients from creating another instance.
     
@@ -65,12 +63,21 @@ final class DatabaseLocalCache {
         self.sharedDB = container.sharedCloudDatabase
         
         //creat custon zone
-        self.creatCustomZone(zoneName: "Meals", database: privateDB) { (error) in
-            if error == nil {print("creat custom zone successfully")}
-            
+        self.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, database: privateDB) { (error) in
+            if error == nil {print(":-) creat private custom zone successfully")}
+            else {
+                print(":-( failed creat private custom zone")
+            }
             self.fetchChanges(in: .private) {_ in }
-//            self.fetchChanges(in: .shared) {}
         }
+//        self.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.sharedCustomZoneName, database: sharedDB) { (error) in
+//            if error == nil {print(":-) creat share custom zone successfully")}
+//            else {
+//                print(":-( failed creat shared custom zone")
+//            }
+//            self.fetchChanges(in: .shared) {_ in }
+//            //            self.fetchChanges(in: .shared) {}
+//        }
 
         //Use CKDatabaseSubscription to sync the changes on
         //sharedDB and custom zones of privateDB
@@ -119,8 +126,8 @@ final class DatabaseLocalCache {
         //        }
         
 //        fetch changes when start
-//        self.fetchChanges(in: .private) {_ in}
-//        self.fetchChanges(in: .shared) {_ in}
+        self.fetchChanges(in: .private) {_ in}
+        self.fetchChanges(in: .shared) {_ in}
     }
     
     //creat database subscription
@@ -142,10 +149,10 @@ final class DatabaseLocalCache {
     func fetchChanges(in databaseScope: CKDatabaseScope, completion: @escaping (_ error : Error?) -> Void) {
         switch databaseScope {
         case .private:
-            fetchDatabaseChanges(database: self.privateDB, databaseTokenKey: "private", completion: completion)
+            fetchDatabaseChanges(database: self.privateDB, databaseTokenKey: "privateDBToken", completion: completion)
             
         case .shared:
-            fetchDatabaseChanges(database: self.sharedDB, databaseTokenKey: "shared", completion: completion)
+            fetchDatabaseChanges(database: self.sharedDB, databaseTokenKey: "sharedDBToken", completion: completion)
             
         case .public:
             fatalError()
@@ -168,9 +175,10 @@ final class DatabaseLocalCache {
         
         operation.recordZoneWithIDChangedBlock = { (zoneID) in
             changedZoneIDs.append(zoneID)
-            //            save zone id to disk
-            if zoneID.zoneName == "Meals" {
-                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
+            // save zone id to disk
+            if zoneID.zoneName == ICloudPropertyStore.zoneName.privateCustomZoneName {
+                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+
                 NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
                 
                 print("+++++++zoneID to be saved is \(zoneID)")
@@ -220,6 +228,8 @@ final class DatabaseLocalCache {
         // Look up the previous change token for each zone
         print("++++++++fetch zone begin")
         var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
+        var recordsChanged = [CKRecord]()
+        var recordIDsDeleted = [CKRecordID]()
         
         for zoneID in zoneIDs {
             print("+++++++the zoneID is \(zoneID)")
@@ -235,49 +245,33 @@ final class DatabaseLocalCache {
         let operation = CKFetchRecordZoneChangesOperation(recordZoneIDs: zoneIDs, optionsByRecordZoneID: optionsByRecordZoneID)
         
         operation.recordChangedBlock = { (record) in
-            print("++++++++Record changed: \(record["mealName"] as! String)")
+//            print("++++++++Record changed: \(record["mealName"] as! String)")
             
             // Write this record change to memery
-            let identifier = record["mealIdentifier"] as! String
-            let meals = HandleCoreData.queryDataWithIdentifer(identifier)
-            if meals.count == 0 {
-                let _ = HandleCoreData.insertData(meal: nil, record: record)
-                
-            }
-            else {
-                HandleCoreData.updateData(meal: nil, record: record)
-            }
-            
-            // Write meladata to disk
-            // obtain the metadata from the CKRecord
-            
-            let data = NSMutableData()
-            
-            let coder = NSKeyedArchiver.init(forWritingWith: data)
-            
-            coder.requiresSecureCoding = true
-            
-            record.encodeSystemFields(with: coder)
-            
-            coder.finishEncoding()
-            let key = "Record_"+identifier
-            let url = DataStore().objectURLForKey(key: key)
-            NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+            recordsChanged.append(record)
             
         }
         
         //    open var recordWithIDWasDeletedBlock: ((CKRecordID, String) -> Swift.Void)?
         operation.recordWithIDWasDeletedBlock = { (recordId, string) in
             print("++++++++Record deleted:", string)
-            // Write this record deletion to memory
-            HandleCoreData.deleteMealWithIdentifier(recordId.recordName)
+            recordIDsDeleted.append(recordId)
+            
         }
         
         operation.recordZoneChangeTokensUpdatedBlock = { (zoneId, token, data) in
             // Flush record changes and deletions for this zone to disk
             // Write this new zone change token to disk
             //Be noted: this changeToken is zone change token, not database change token
-            let key = "zone_" + zoneId.zoneName
+            var key = ""
+            if self.container.displayName(of: database) == "Private" {
+                key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
+            }
+            
+            if self.container.displayName(of: database) == "Shared" {
+                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
+            }
+            
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
             NSKeyedArchiver.archiveRootObject(token as Any, toFile: tokenURL.path)
             //print("After update, zone change token is \(String(describing: token))")
@@ -291,10 +285,18 @@ final class DatabaseLocalCache {
             // Flush record changes and deletions for this zone to disk
             
             // Write this new zone change token to disk
-            let key = "zone_" + zoneId.zoneName
+            var key = ""
+            if self.container.displayName(of: database) == "Private" {
+                key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
+            }
+            
+            if self.container.displayName(of: database) == "Shared" {
+                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
+            }
+            
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
             NSKeyedArchiver.archiveRootObject(changeToken as Any, toFile: tokenURL.path)
-            print("++++++++Compelte update, zone change token is \(String(describing: changeToken))")
+            
         }
         
         //the last function being used
@@ -304,6 +306,10 @@ final class DatabaseLocalCache {
             }
             else {
                 print("++++++++Successfully fetching zone changes for \(databaseTokenKey) database:")
+                
+                // Do the update.
+                self.update(withRecordIDsDeleted: recordIDsDeleted, database: database)
+                self.update(withRecordsChanged: recordsChanged, database: database)
             }
             completion(error)
         }
@@ -311,26 +317,97 @@ final class DatabaseLocalCache {
         operationQueue.addOperation(operation)
     }
 }
+extension DatabaseLocalCache {
+    func update(withRecordIDsDeleted : [CKRecordID], database : CKDatabase) {
+        // Write this record deletion to memory
+        for recordId in withRecordIDsDeleted {
+            HandleCoreData.deleteMealWithIdentifier(recordId.recordName)
+        }
+    }
+    
+    func update(withRecordsChanged : [CKRecord], database : CKDatabase) {
+        for record in withRecordsChanged {
+            print(record.recordType)
+            if record.recordType == ICloudPropertyStore.recordType.meal {
+                let identifier = record["mealIdentifier"] as! String
+                print("\(identifier)")
+                print("\(container.displayName(of: database))")
+                let meals = HandleCoreData.queryDataWithIdentifer(identifier)
+                if meals.count == 0 {
+                    let _ = HandleCoreData.insertData(meal: nil, record: record, database: container.displayName(of: database))
+                    
+                }
+                else {
+                    HandleCoreData.updateData(meal: nil, record: record)
+                }
+                
+                // Write meladata to disk
+                // obtain the metadata from the CKRecord
+                
+                let data = NSMutableData()
+                let coder = NSKeyedArchiver.init(forWritingWith: data)
+                coder.requiresSecureCoding = true
+                record.encodeSystemFields(with: coder)
+                
+                coder.finishEncoding()
+                
+                let key = "Record_"+identifier
+                let url = DataStore().objectURLForKey(key: key)
+                NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+            }
+            else {
+                continue
+            }
+        }
+    }
+}
 
 extension DatabaseLocalCache {
     //creat custon zone
-    func creatCustomZone (zoneName : String, database : CKDatabase?, completion: @escaping (_ error : Error?) -> Void) {
-
-        guard self.createdCustomZone == false else {return}
-        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: zoneName, ownerName: CKCurrentUserDefaultName)
-        let customZone = CKRecordZone(zoneID: zoneID)
-        let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [customZone], recordZoneIDsToDelete: [] )
+    func creatCustomZone (zoneName : String, database : CKDatabase, completion: @escaping (_ error : Error?) -> Void) {
         
-        createZoneOperation.modifyRecordZonesCompletionBlock = { (zones, zoneIDs, error) in
-            if (error == nil) {
-                self.createdCustomZone = true
-                ICloudPropertyStore.setICloudPropertyForKey(property: self.createdCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
+        //creat custom zone for privateDB
+        if database.databaseScope == .private {
+            guard self.createdPrivateCustomZone == false else {return}
+            
+            // Fetch any changes from the server that happened while the app wasn't running
+            let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+            let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: zoneName, ownerName: CKCurrentUserDefaultName)
+            let privateCustomZone = CKRecordZone(zoneID: zoneID)
+            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [privateCustomZone], recordZoneIDsToDelete: [] )
+            
+            createZoneOperation.modifyRecordZonesCompletionBlock = { (zones, zoneIDs, error) in
+                if (error == nil) {
+                    self.createdPrivateCustomZone = true
+                    ICloudPropertyStore.setICloudPropertyForKey(property: self.createdPrivateCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
+                }
+                completion(error)
             }
-            completion(error)
+            
+            createZoneOperation.database = database
+            createZoneOperation.qualityOfService = .userInitiated
+            operationQueue.addOperation(createZoneOperation)
         }
-        
-        createZoneOperation.database = database ?? privateDB
-        createZoneOperation.qualityOfService = .userInitiated
-        operationQueue.addOperation(createZoneOperation)
+        //creat custom zone for sharedDB
+        else {
+//            guard self.createdShareZone == false else {return}
+//            // Fetch any changes from the server that happened while the app wasn't running
+//            let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForSharedCustomZoneID)
+//            let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: zoneName, ownerName: CKCurrentUserDefaultName)
+//            let shareCustomZone = CKRecordZone(zoneID: zoneID)
+//            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [shareCustomZone], recordZoneIDsToDelete: [] )
+//
+//            createZoneOperation.modifyRecordZonesCompletionBlock = { (zones, zoneIDs, error) in
+//                if (error == nil) {
+//                    self.createdShareZone = true
+//                    ICloudPropertyStore.setICloudPropertyForKey(property: self.createdShareZone, forKey: ICloudPropertyStore.keyForCreatedShareZone)
+//                }
+//                completion(error)
+//            }
+//
+//            createZoneOperation.database = database
+//            createZoneOperation.qualityOfService = .userInitiated
+//            operationQueue.addOperation(createZoneOperation)
+        }
     }
 }

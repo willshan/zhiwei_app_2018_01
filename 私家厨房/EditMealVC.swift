@@ -234,9 +234,10 @@ extension EditMealVC{
             mealToAdd.mealType = mealType!
             mealToAdd.spicy = Int64(spicy)
             mealToAdd.userName = CKCurrentUserDefaultName
+            mealToAdd.database = "Private"
             
             //mealToAdd.identifier = HandleCoreData.RandomString()
-            mealToAdd.identifier = "notAssigned"
+            mealToAdd.identifier = NSUUID().uuidString
             print("the user of the meal is \(mealToAdd.userName)")
             print("the identifer of the meal is \(mealToAdd.identifier)")
 

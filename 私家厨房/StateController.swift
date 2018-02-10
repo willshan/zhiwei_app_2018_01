@@ -17,8 +17,7 @@ class StateController {
     fileprivate(set) var orderLists : [OrderListStruct]
     fileprivate(set) var mealOrderList : [IndexPath : OrderedMeal]!
     private let userName = CKCurrentUserDefaultName
-    
-//    private let userName = CKCurrentUserDefaultName
+
     fileprivate(set) var selectedMealsCount : Int
 
     //init(_ mealStorage : MealStorage) {

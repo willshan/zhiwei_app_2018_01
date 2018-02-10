@@ -208,23 +208,59 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
 extension MealListDataSource {
     //MARK: -Delete data in server
     func deleteMealInServer(_ meal : Meal) {
-        // Delete in Parse server in background
-        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
-        let mealRecordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
-        //Delete CKRecord
-        let myContainer = CKContainer.default()
-        let privateDatebase = myContainer.privateCloudDatabase
-        privateDatebase.delete(withRecordID: mealRecordID) { (recordID, error) in
-            if error != nil {
-                // Insert error handling
-                print("failed delete in icloud")
-                return
+        //option 1: use metadata in local
+        let key = "Record_"+meal.identifier
+        let url = DataStore().objectURLForKey(key: key)
+        let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
+        let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
+        coder.requiresSecureCoding = true
+        let record = CKRecord(coder: coder)
+        coder.finishDecoding()
+        
+        if meal.database == "Private" {
+            //delete CKRecord
+            DatabaseLocalCache.share.privateDB.delete(withRecordID: record!.recordID) { (recordID, error) in
+                if error != nil {
+                    // Insert error handling
+                    print("failed delete in icloud")
+                    return
+                }
+                
+                // Insert successfully saved record code
+                print("successfully delete in icloud")
             }
-            
-            // Insert successfully saved record code
-            print("successfully delete in icloud")
         }
+        else {
+            //delete CKRecord
+            DatabaseLocalCache.share.sharedDB.delete(withRecordID: record!.recordID) { (recordID, error) in
+                if error != nil {
+                    // Insert error handling
+                    print("failed delete in icloud")
+                    return
+                }
+                
+                // Insert successfully saved record code
+                print("successfully delete in icloud")
+            }
+        }
+        //option 2:
+//        // Delete in background
+//        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+//        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, ownerName: CKCurrentUserDefaultName)
+//        let mealRecordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
+//        //Delete CKRecord
+//        let myContainer = CKContainer.default()
+//        let privateDatebase = myContainer.privateCloudDatabase
+//        privateDatebase.delete(withRecordID: mealRecordID) { (recordID, error) in
+//            if error != nil {
+//                // Insert error handling
+//                print("failed delete in icloud")
+//                return
+//            }
+//
+//            // Insert successfully saved record code
+//            print("successfully delete in icloud")
+//        }
     }
 }
 

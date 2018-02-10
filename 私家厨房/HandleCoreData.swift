@@ -86,7 +86,7 @@ class HandleCoreData: NSObject {
      * 给实体对象赋值
      * 通过saveContext()保存实体对象
      */
-    class func insertData(meal : Meal?, record : CKRecord?)-> Meal{
+    class func insertData(meal : Meal?, record : CKRecord?, database : String)-> Meal{
         //creat Meal
         print("++++++++++insertData+++++++++++++++")
         let EntityName = "Meal"
@@ -113,6 +113,7 @@ class HandleCoreData: NSObject {
             }
             mealToAdd.userName = CKCurrentUserDefaultName
             mealToAdd.identifier = record!["mealIdentifier"] as! String
+            mealToAdd.database = database
             /*
             let userName : String? = UserDefaults.standard.string(forKey: "user_name")
             let invitationCode = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
@@ -135,6 +136,7 @@ class HandleCoreData: NSObject {
             mealToAdd.cellSelected = meal!.cellSelected
             mealToAdd.userName = meal!.userName
             mealToAdd.identifier = meal?.identifier ?? NSUUID().uuidString
+            mealToAdd.database = database
 
         }
         

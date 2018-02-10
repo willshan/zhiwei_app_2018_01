@@ -11,9 +11,27 @@ import CloudKit
 
 class ICloudPropertyStore : NSObject{
     
-    static let keyForCreatedCustomZone = "createdCustomZone"
+    static let keyForCreatedCustomZone = "createdPrivateCustomZone"
+    static let keyForCreatedShareZone = "createdShareZone"
     static let keyForSubscribedToPrivateChanges = "setSubscribedToPrivateChanges"
     static let keyForSubscribedToSharedChanges = "setSubscribedToSharedChanges"
+    static let keyForPrivateCustomZoneID = "private_zoneID_Meals"
+    static let keyForSharedCustomZoneID = "shared_zoneID_Meals"
+    
+    struct zoneName {
+        static let privateCustomZoneName = "Meals"
+        static let sharedCustomZoneName = "SharedMeals"
+    }
+    struct recordType {
+        static let meal = "Meal"
+        static let share = "cloudkit.share"
+    }
+    struct changeTokenKey {
+        static let privateDB = "privateDBChangeToken"
+        static let privateCustomeZone = "privateCustomeZoneChangeToken"
+        static let sharedDB = "sharedDBChangeToken"
+        static let sharedCustomeZone = "sharedCustomeZoneChangeToken"
+    }
     /*
     var changeToken : CKServerChangeToken?
     

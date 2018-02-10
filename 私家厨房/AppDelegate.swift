@@ -76,6 +76,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     }
                 }
             })
+            DatabaseLocalCache.share.fetchChanges(in: .shared, completion: { (error) in
+                if error == nil {
+                    DispatchQueue.main.async {
+                        orderMealController.updateUI()
+                    }
+                }
+            })
         }
         
         

@@ -145,8 +145,8 @@ extension MealListVC {
     func saveRecordIniCloud(meal : Meal, uploadImage : UIImage){
         //define
         // Fetch any changes from the server that happened while the app wasn't running
-        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
+        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, ownerName: CKCurrentUserDefaultName)
         
         //Creat CKRecord
         let mealRecord = CKRecord(recordType: "Meal", zoneID: zoneID)
@@ -155,7 +155,7 @@ extension MealListVC {
         
         //save image to local
         DataStore().setImage(image: uploadImage, forKey: mealRecord.recordID.recordName)
-        //update meal identifier in local
+        //update meal identifier in local, use mealRecord.recordID.recordName to replace previous meal.identifer
         HandleCoreData.updateMealIdentifer(identifier: meal.identifier, recordName: mealRecord.recordID.recordName)
         
         mealRecord["cellSelected"] = Int64(0) as CKRecordValue
@@ -166,13 +166,14 @@ extension MealListVC {
         mealRecord["image"] = imageAsset
         
         mealRecord["mealCreatedAt"] = meal.date
+		//recordID.recordName is a UUID
         mealRecord["mealIdentifier"] = mealRecord.recordID.recordName as NSString
         mealRecord["mealName"] = meal.mealName as NSString
         mealRecord["mealType"] = meal.mealType as NSString
         mealRecord["spicy"] = meal.spicy as CKRecordValue
         
         //Creat custom Zone and Save CKRecord
-        DatabaseLocalCache.share.creatCustomZone(zoneName: "Meals", database: nil) { (error) in
+        DatabaseLocalCache.share.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, database: DatabaseLocalCache.share.privateDB) { (error) in
             if error == nil {
                 DatabaseLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
                     if error != nil {
@@ -184,11 +185,23 @@ extension MealListVC {
                     // Insert successfully saved record code
                     print("successfully save in icloud")
                     
+                    // Write meladata to disk
+                    // obtain the metadata from the CKRecord
+                    let data = NSMutableData()
+                    let coder = NSKeyedArchiver.init(forWritingWith: data)
+                    coder.requiresSecureCoding = true
+                    record?.encodeSystemFields(with: coder)
+                    coder.finishEncoding()
+                    
+                    let key = "Record_"+mealRecord.recordID.recordName
+                    let url = DataStore().objectURLForKey(key: key)
+                    NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+                    
                 })
             }
         }
         
-        if DatabaseLocalCache.share.createdCustomZone == true {
+        if DatabaseLocalCache.share.createdPrivateCustomZone == true {
             DatabaseLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
                 if error != nil {
                     // Insert error handling
@@ -198,6 +211,18 @@ extension MealListVC {
                 }
                 // Insert successfully saved record code
                 print("successfully save in icloud")
+                
+                // Write meladata to disk
+                // obtain the metadata from the CKRecord
+                let data = NSMutableData()
+                let coder = NSKeyedArchiver.init(forWritingWith: data)
+                coder.requiresSecureCoding = true
+                record?.encodeSystemFields(with: coder)
+                coder.finishEncoding()
+                
+                let key = "Record_"+mealRecord.recordID.recordName
+                let url = DataStore().objectURLForKey(key: key)
+                NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                 
             })
         }
@@ -300,43 +325,146 @@ extension MealListVC {
                 }
                 
                 //MARK: Update meal to iCloud
-                //Fetch CKRecord
-                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: "zoneID_Meals")
-                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: "Meals", ownerName: CKCurrentUserDefaultName)
-//                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
-                print("the zone id of current meal is \(String(describing: zoneID))")
-
-                let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
-                print("zone id is \(String(describing: zoneID))")
-                DatabaseLocalCache.share.privateDB.fetch(withRecordID: recordID, completionHandler: { (record, error) in
-                    if error != nil {
-                        // Insert error handling
-                        print("Can't fetch record from icloud")
-                    }
-                    else {
-                        //Update CKRecord
-                        record!["comment"] = meal.comment! as NSString
-                        if photochanged == true {
-                            let URL = DataStore().objectURLForKey(key: meal.identifier)
-                            let imageAsset = CKAsset(fileURL: URL)
-                            record!["image"] = imageAsset
+                //option 1: use metadata in local
+                let key = "Record_"+meal.identifier
+                let url = DataStore().objectURLForKey(key: key)
+                let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
+                let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
+                coder.requiresSecureCoding = true
+                let record = CKRecord(coder: coder)
+                coder.finishDecoding()
+                
+                //Update CKRecord
+                record!["comment"] = meal.comment! as NSString
+                if photochanged == true {
+                    let URL = DataStore().objectURLForKey(key: meal.identifier)
+                    let imageAsset = CKAsset(fileURL: URL)
+                    record!["image"] = imageAsset
+                }
+                record!["mealName"] = meal.mealName as NSString
+                record!["mealType"] = meal.mealType as NSString
+                record!["spicy"] = meal.spicy as CKRecordValue
+                print(meal.database)
+                if meal.database == "Private" {
+                    //Save CKRecord
+                    DatabaseLocalCache.share.privateDB.save(record!, completionHandler: { (record, error) in
+                        if error != nil {
+                            // Insert error handling
+                            print("failed save in icloud")
+                            return
                         }
-                        record!["mealName"] = meal.mealName as NSString
-                        record!["mealType"] = meal.mealType as NSString
-                        record!["spicy"] = meal.spicy as CKRecordValue
+                        // Insert successfully saved record code
+                        // Write meladata to disk
+                        // obtain the metadata from the CKRecord
                         
-                        //Save CKRecord
-                        DatabaseLocalCache.share.privateDB.save(record!, completionHandler: { (record, error) in
-                            if error != nil {
-                                // Insert error handling
-                                print("failed save in icloud")
-                                return
-                            }
-                            // Insert successfully saved record code
-                            print("successfully save in icloud")
-                        })
-                    }
-                })
+                        let data = NSMutableData()
+                        let coder = NSKeyedArchiver.init(forWritingWith: data)
+                        coder.requiresSecureCoding = true
+                        record?.encodeSystemFields(with: coder)
+                        
+                        coder.finishEncoding()
+                        
+                        let key = "Record_"+meal.identifier
+                        let url = DataStore().objectURLForKey(key: key)
+                        NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+                        
+                        print("successfully save in icloud")
+                    })
+                }
+                else {
+                    //Save CKRecord
+                    DatabaseLocalCache.share.sharedDB.save(record!, completionHandler: { (record, error) in
+                        if error != nil {
+                            // Insert error handling
+                            print("failed save in icloud")
+                            return
+                        }
+                        // Insert successfully saved record code
+                        // Write meladata to disk
+                        // obtain the metadata from the CKRecord
+                        
+                        let data = NSMutableData()
+                        let coder = NSKeyedArchiver.init(forWritingWith: data)
+                        coder.requiresSecureCoding = true
+                        record?.encodeSystemFields(with: coder)
+                        
+                        coder.finishEncoding()
+                        
+                        let key = "Record_"+meal.identifier
+                        let url = DataStore().objectURLForKey(key: key)
+                        NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+
+                        print("successfully save in icloud")
+                    })
+                }
+                //option 2: Fetch CKRecord from icloud and save
+//                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+//                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, ownerName: CKCurrentUserDefaultName)
+////                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
+//                print("the zone id of current meal is \(String(describing: zoneID))")
+//
+//                let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
+//                print("zone id is \(String(describing: zoneID))")
+//
+//                DatabaseLocalCache.share.sharedDB.fetch(withRecordID: recordID, completionHandler: { (record, error) in
+//                    if error != nil {
+//                        // Insert error handling
+//                        print("Can't fetch record from shareDB in icloud")
+//                    }
+//                    else {
+//                        //Update CKRecord
+//                        record!["comment"] = meal.comment! as NSString
+//                        if photochanged == true {
+//                            let URL = DataStore().objectURLForKey(key: meal.identifier)
+//                            let imageAsset = CKAsset(fileURL: URL)
+//                            record!["image"] = imageAsset
+//                        }
+//                        record!["mealName"] = meal.mealName as NSString
+//                        record!["mealType"] = meal.mealType as NSString
+//                        record!["spicy"] = meal.spicy as CKRecordValue
+//
+//                        //Save CKRecord
+//                        DatabaseLocalCache.share.sharedDB.save(record!, completionHandler: { (record, error) in
+//                            if error != nil {
+//                                // Insert error handling
+//                                print("failed save in icloud")
+//                                return
+//                            }
+//                            // Insert successfully saved record code
+//                            print("successfully save in icloud")
+//                        })
+//                    }
+//                })
+//
+//                DatabaseLocalCache.share.privateDB.fetch(withRecordID: recordID, completionHandler: { (record, error) in
+//                    if error != nil {
+//                        // Insert error handling
+//                        print("Can't fetch record from privateDB in icloud")
+//                    }
+//                    else {
+//                        //Update CKRecord
+//                        record!["comment"] = meal.comment! as NSString
+//                        if photochanged == true {
+//                            let URL = DataStore().objectURLForKey(key: meal.identifier)
+//                            let imageAsset = CKAsset(fileURL: URL)
+//                            record!["image"] = imageAsset
+//                        }
+//                        record!["mealName"] = meal.mealName as NSString
+//                        record!["mealType"] = meal.mealType as NSString
+//                        record!["spicy"] = meal.spicy as CKRecordValue
+//
+//                        //Save CKRecord
+//                        DatabaseLocalCache.share.privateDB.save(record!, completionHandler: { (record, error) in
+//                            if error != nil {
+//                                // Insert error handling
+//                                print("failed save in icloud")
+//                                return
+//                            }
+//                            // Insert successfully saved record code
+//                            print("successfully save in icloud")
+//                        })
+//                    }
+//                })
             }
             else {
                 //Add a new meal

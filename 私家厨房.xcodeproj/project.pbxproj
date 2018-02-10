@@ -14,6 +14,7 @@
 		BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */; };
 		BE10313C1F2789E800DAA003 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE10313B1F2789E800DAA003 /* DataStore.swift */; };
 		BE24A9641F94E9C600BCB339 /* ExtensionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24A9601F94D08900BCB339 /* ExtensionList.swift */; };
+		BE324A862022140000DC778D /* CloudExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE324A852022140000DC778D /* CloudExtension.swift */; };
 		BE3310FD1F2A6D81001E7E3B /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3310FC1F2A6D81001E7E3B /* ImageHelper.swift */; };
 		BE3DDF4A1F263F310013AD47 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BE3DDF481F263F310013AD47 /* DataModel.xcdatamodeld */; };
 		BE3DDF4C1F2648E60013AD47 /* HandleCoreData.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3DDF4B1F2648E60013AD47 /* HandleCoreData.swift */; };
@@ -81,6 +82,7 @@
 		BE24A95F1F94C60000BCB339 /* CloudKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitExtensions.swift; sourceTree = "<group>"; };
 		BE24A9601F94D08900BCB339 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
 		BE2ACE6620090674001F4F66 /* 私家厨房.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "私家厨房.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE324A852022140000DC778D /* CloudExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExtension.swift; sourceTree = "<group>"; };
 		BE3310FC1F2A6D81001E7E3B /* ImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		BE3DDF491F263F310013AD47 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		BE3DDF4B1F2648E60013AD47 /* HandleCoreData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandleCoreData.swift; sourceTree = "<group>"; };
@@ -165,6 +167,7 @@
 				BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */,
 				BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */,
 				BE8D0165201E0D0500C81D92 /* DatabaseLocalCache.swift */,
+				BE324A852022140000DC778D /* CloudExtension.swift */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -491,6 +494,7 @@
 				BE480D811E86BD0400EE9470 /* MealCell.swift in Sources */,
 				BE3DDF4C1F2648E60013AD47 /* HandleCoreData.swift in Sources */,
 				BE7215701F55BAEC00067530 /* OrderListDataSource.swift in Sources */,
+				BE324A862022140000DC778D /* CloudExtension.swift in Sources */,
 				BE910090200068BA00E6C9A8 /* CatagoryPopUpVC.swift in Sources */,
 				BE8F80941F563EEF00D67599 /* MealDetailVC.swift in Sources */,
 				BE9591C72018DDB900A24393 /* FamilyList.swift in Sources */,
