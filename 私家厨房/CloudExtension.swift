@@ -78,7 +78,7 @@ extension CKContainer {
             operationQueue.addOperation(fetchParticipantsOp)
         }
     }
-    /*
+    
     // Set up UICloudSharingController for a root record. This is synchronous but can be called
     // from any queue.
     //
@@ -100,6 +100,7 @@ extension CKContainer {
         if let shareRef = rootRecord.share {
             // Fetch CKShare record if the root record has alreaad shared.
             //
+            print("share was already exited")
             let fetchRecordsOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
             fetchRecordsOp.fetchRecordsCompletionBlock = {recordsByRecordID, error in
                 
@@ -125,11 +126,14 @@ extension CKContainer {
             }
         }
         else {
-            
+            print("creat new share")
             sharingController = UICloudSharingController(){(controller, prepareCompletionHandler) in
                 
-                let shareID = CKRecordID(recordName: uniqueName, zoneID: TopicLocalCache.share.zone.zoneID)
-                share = CKShare(rootRecord: rootRecord, share: shareID)
+                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
+                let shareID = CKRecordID(recordName: UUID().uuidString, zoneID: zoneID!)
+                
+                share = CKShare(rootRecord: rootRecord, shareID: shareID)
                 share[CKShareTitleKey] = shareTitle as CKRecordValue
                 share.publicPermission = .none // default value.
                 
@@ -164,5 +168,5 @@ extension CKContainer {
             }
         }
         completionHandler(sharingController)
-    }*/
+    }
 }

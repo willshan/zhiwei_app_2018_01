@@ -161,7 +161,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
     //MARK: Init sharing view controller
     @objc func shareWithFamilyMember(_ sender : UIBarButtonItem) {
         print("init sharing")
-        let operationQueue = OperationQueue()
+//        let operationQueue = OperationQueue()
         
         spinner.startAnimating()
         // Option 1: set up the CKRecord with its metadata
@@ -173,41 +173,59 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         coder.requiresSecureCoding = true
         let record = CKRecord(coder: coder)
         coder.finishDecoding()
-
-//        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com")]
-        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
-        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
-        let shareID = CKRecordID(recordName: UUID().uuidString, zoneID: zoneID!)
-        let shareRecord = CKShare(rootRecord: record!, shareID: shareID)
-        shareRecord.publicPermission = .none
-
+        
         let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com"),
                                       CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
-        self.addParticipants(to: shareRecord, lookupInfos: participantLookupInfos, operationQueue: operationQueue)
+        let shareTitle = meal.mealName
         
-        let sharingController = UICloudSharingController() {
-            (controller: UICloudSharingController,
-            prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
-            let modifyOp = CKModifyRecordsOperation(recordsToSave: [record!, shareRecord],
-                                                    recordIDsToDelete: nil)
-
-            modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
-                if error == nil {
-                    prepareCompletionHandler(shareRecord, DatabaseLocalCache.share.container, nil)
-                }
+        DispatchQueue.main.async {
+            DatabaseLocalCache.share.container.prepareSharingController(
+                rootRecord: record!, uniqueName: UUID().uuidString, shareTitle: shareTitle,
+                participantLookupInfos: participantLookupInfos, database: DatabaseLocalCache.share.privateDB) { controller in
+                    
+                    self.presentOrAlertOnMainQueue(sharingController: controller)
+//                    controller?.popoverPresentationController?.sourceView = self.navigationItem.titleView
+//                    controller?.delegate = self
+//                    self.present(controller!, animated:true) {
+//                        self.spinner.stopAnimating()
+ //                    }
             }
-            modifyOp.database = DatabaseLocalCache.share.privateDB
-            operationQueue.addOperation(modifyOp)
-//            DatabaseLocalCache.share.privateDB.add(modifyOp)
         }
-
-//        sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
-        sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
-        sharingController.delegate = self
-        self.present(sharingController, animated:true) {
-            self.spinner.stopAnimating()
-        }
-        
+//        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com")]
+//
+//        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
+//        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
+//        let shareID = CKRecordID(recordName: UUID().uuidString, zoneID: zoneID!)
+//        var shareRecord = CKShare(rootRecord: record!, shareID: shareID)
+//        shareRecord.publicPermission = .none
+//
+//        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com"),
+//                                      CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
+//        self.addParticipants(to: shareRecord, lookupInfos: participantLookupInfos, operationQueue: operationQueue)
+//
+//        let sharingController = UICloudSharingController() {
+//            (controller: UICloudSharingController,
+//            prepareCompletionHandler : @escaping (CKShare?, CKContainer?, NSError?) -> Void) in
+//            let modifyOp = CKModifyRecordsOperation(recordsToSave: [record!, shareRecord],
+//                                                    recordIDsToDelete: nil)
+//
+//            modifyOp.modifyRecordsCompletionBlock = { (_, _, error) in
+//                if error == nil {
+//                    prepareCompletionHandler(shareRecord, DatabaseLocalCache.share.container, nil)
+//                }
+//            }
+//            modifyOp.database = DatabaseLocalCache.share.privateDB
+//            operationQueue.addOperation(modifyOp)
+////            DatabaseLocalCache.share.privateDB.add(modifyOp)
+//        }
+//
+////        sharingController.availablePermissions = [.allowPublic, .allowReadWrite]
+//        sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
+//        sharingController.delegate = self
+//        self.present(sharingController, animated:true) {
+//            self.spinner.stopAnimating()
+//        }
+//
 //        Option 2: get CKRecord from icloud and then share
 //        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
 //        let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID

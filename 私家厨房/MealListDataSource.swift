@@ -217,6 +217,8 @@ extension MealListDataSource {
         let record = CKRecord(coder: coder)
         coder.finishDecoding()
         
+        print(meal.database)
+
         if meal.database == "Private" {
             //delete CKRecord
             DatabaseLocalCache.share.privateDB.delete(withRecordID: record!.recordID) { (recordID, error) in
@@ -230,19 +232,19 @@ extension MealListDataSource {
                 print("successfully delete in icloud")
             }
         }
-        else {
-            //delete CKRecord
-            DatabaseLocalCache.share.sharedDB.delete(withRecordID: record!.recordID) { (recordID, error) in
-                if error != nil {
-                    // Insert error handling
-                    print("failed delete in icloud")
-                    return
-                }
-                
-                // Insert successfully saved record code
-                print("successfully delete in icloud")
-            }
-        }
+//        else {
+//            //delete CKRecord
+//            DatabaseLocalCache.share.sharedDB.delete(withRecordID: record!.recordID) { (recordID, error) in
+//                if error != nil {
+//                    // Insert error handling
+//                    print("failed delete in icloud")
+//                    return
+//                }
+//
+//                // Insert successfully saved record code
+//                print("successfully delete in icloud")
+//            }
+//        }
         //option 2:
 //        // Delete in background
 //        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)

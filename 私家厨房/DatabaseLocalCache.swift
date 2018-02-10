@@ -321,6 +321,7 @@ extension DatabaseLocalCache {
     func update(withRecordIDsDeleted : [CKRecordID], database : CKDatabase) {
         // Write this record deletion to memory
         for recordId in withRecordIDsDeleted {
+            print(recordId.recordName)
             HandleCoreData.deleteMealWithIdentifier(recordId.recordName)
         }
     }
