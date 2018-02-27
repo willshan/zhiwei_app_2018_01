@@ -11,20 +11,20 @@ import CloudKit
 
 
 // CloudKit database schema name constants.
-
-struct Schema {
-    struct RecordType {
-        static let topic = "Topic"
-        static let note = "Note"
-    }
-    struct Topic {
-        static let name = "name"
-    }
-    struct Note {
-        static let title = "title"
-        static let topic = "topic"
-    }
-}
+//
+//struct Schema {
+//    struct RecordType {
+//        static let meal = "Meal"
+//        static let note = "Note"
+//    }
+//    struct Topic {
+//        static let name = "name"
+//    }
+//    struct Note {
+//        static let title = "title"
+//        static let topic = "topic"
+//    }
+//}
 
 class Database {
     var serverChangeToken: CKServerChangeToken? = nil

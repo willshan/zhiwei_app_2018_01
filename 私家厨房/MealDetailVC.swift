@@ -120,6 +120,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         if let sharingController = sharingController {
             DispatchQueue.main.async {
                 sharingController.delegate = self
+                sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
                 sharingController.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                 self.present(sharingController, animated: true) {
                     self.spinner.stopAnimating()
@@ -153,7 +154,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
             fetchParticipantsOp.fetchShareParticipantsCompletionBlock = { error in
                 guard CloudKitError.share.handle(error: error, operation: .fetchRecords) == nil else {return}
             }
-            fetchParticipantsOp.container = DatabaseLocalCache.share.container
+            fetchParticipantsOp.container = ZoneLocalCache.share.container
             operationQueue.addOperation(fetchParticipantsOp)
         }
     }
@@ -179,9 +180,9 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         let shareTitle = meal.mealName
         
         DispatchQueue.main.async {
-            DatabaseLocalCache.share.container.prepareSharingController(
+            ZoneLocalCache.share.container.prepareSharingController(
                 rootRecord: record!, uniqueName: UUID().uuidString, shareTitle: shareTitle,
-                participantLookupInfos: participantLookupInfos, database: DatabaseLocalCache.share.privateDB) { controller in
+                participantLookupInfos: participantLookupInfos, database: ZoneLocalCache.share.privateDB) { controller in
                     
                     self.presentOrAlertOnMainQueue(sharingController: controller)
 //                    controller?.popoverPresentationController?.sourceView = self.navigationItem.titleView

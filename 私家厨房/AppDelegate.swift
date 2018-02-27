@@ -9,7 +9,7 @@
 import UIKit
 import UserNotifications
 import CoreData
-import CloudKit
+import CloudKit 
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -68,15 +68,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
-            DatabaseLocalCache.share.initialize(container: self.container)
-            DatabaseLocalCache.share.fetchChanges(in: .private, completion: { (error) in
+            ZoneLocalCache.share.initialize(container: self.container)
+            ZoneLocalCache.share.fetchChanges(in: .private, completion: { (error) in
                 if error == nil {
                     DispatchQueue.main.async {
                         orderMealController.updateUI()
                     }
                 }
             })
-            DatabaseLocalCache.share.fetchChanges(in: .shared, completion: { (error) in
+            ZoneLocalCache.share.fetchChanges(in: .shared, completion: { (error) in
                 if error == nil {
                     DispatchQueue.main.async {
                         orderMealController.updateUI()
@@ -159,7 +159,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let dict = userInfo as! [String: NSObject]
         guard let notification : CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary:dict) as? CKDatabaseNotification else { return }
-        DatabaseLocalCache.share.fetchChanges(in: notification.databaseScope) {_ in 
+        ZoneLocalCache.share.fetchChanges(in: notification.databaseScope) {_ in 
             completionHandler(.newData)
             if application.applicationState == UIApplicationState.active {
                 //update UI

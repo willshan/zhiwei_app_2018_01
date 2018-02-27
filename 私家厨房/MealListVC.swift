@@ -173,9 +173,9 @@ extension MealListVC {
         mealRecord["spicy"] = meal.spicy as CKRecordValue
         
         //Creat custom Zone and Save CKRecord
-        DatabaseLocalCache.share.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, database: DatabaseLocalCache.share.privateDB) { (error) in
+        ZoneLocalCache.share.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, database: ZoneLocalCache.share.privateDB) { (error) in
             if error == nil {
-                DatabaseLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
+                ZoneLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
                     if error != nil {
                         // Insert error handling
                         print("failed save in icloud")
@@ -201,8 +201,8 @@ extension MealListVC {
             }
         }
         
-        if DatabaseLocalCache.share.createdPrivateCustomZone == true {
-            DatabaseLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
+        if ZoneLocalCache.share.createdPrivateCustomZone == true {
+            ZoneLocalCache.share.privateDB.save(mealRecord, completionHandler: { (record, error) in
                 if error != nil {
                     // Insert error handling
                     print("failed save in icloud")
@@ -347,7 +347,7 @@ extension MealListVC {
                 print(meal.database)
                 if meal.database == "Private" {
                     //Save CKRecord
-                    DatabaseLocalCache.share.privateDB.save(record!, completionHandler: { (record, error) in
+                    ZoneLocalCache.share.privateDB.save(record!, completionHandler: { (record, error) in
                         if error != nil {
                             // Insert error handling
                             print("failed save in icloud")
@@ -373,7 +373,7 @@ extension MealListVC {
                 }
                 else {
                     //Save CKRecord
-                    DatabaseLocalCache.share.sharedDB.save(record!, completionHandler: { (record, error) in
+                    ZoneLocalCache.share.sharedDB.save(record!, completionHandler: { (record, error) in
                         if error != nil {
                             // Insert error handling
                             print("failed save in icloud")
