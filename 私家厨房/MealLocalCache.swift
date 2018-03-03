@@ -87,17 +87,16 @@ final class MealLocalCache: BaseLocalCache {
         print("Fetching changed records begining")
         let notificationObject = NSMutableDictionary()
         
-        var optionsByRecordZoneID = [CKRecordZoneID: CKFetchRecordZoneChangesOptions]()
         let options = CKFetchRecordZoneChangesOptions()
         
         if serverChangeToken == nil {
             
-            let key = "zone_" + zoneID.zoneName
+            let key = "zone_" + zone.zoneID.zoneName
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
             print("++++++++the zoneID change token key is \(key)")
             let changeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken
             options.previousServerChangeToken = changeToken // Read change token from disk
-            optionsByRecordZoneID[zoneID] = options
+        
         }
         else {
             options.previousServerChangeToken = serverChangeToken
@@ -121,6 +120,18 @@ final class MealLocalCache: BaseLocalCache {
         operation.recordZoneChangeTokensUpdatedBlock = {(zoneID, serverChangeToken, clientChangeTokenData) in
             assert(zoneID == self.zone.zoneID)
             self.serverChangeToken = serverChangeToken
+            //save serverChangeToken to disk
+            var key = ""
+            if self.container.displayName(of: self.database) == "Private" {
+                key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
+            }
+            
+            if self.container.displayName(of: self.database) == "Shared" {
+                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
+            }
+            
+            let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
+            NSKeyedArchiver.archiveRootObject(serverChangeToken as Any, toFile: tokenURL.path)
         }
         
         operation.recordZoneFetchCompletionBlock = {
@@ -140,6 +151,19 @@ final class MealLocalCache: BaseLocalCache {
             }
             assert(zoneID == self.zone.zoneID && moreComing == false)
             self.serverChangeToken = serverChangeToken
+            
+            //save serverChangeToken to disk
+            var key = ""
+            if self.container.displayName(of: self.database) == "Private" {
+                key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
+            }
+            
+            if self.container.displayName(of: self.database) == "Shared" {
+                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
+            }
+            
+            let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
+            NSKeyedArchiver.archiveRootObject(serverChangeToken as Any, toFile: tokenURL.path)
         }
         
         operation.fetchRecordZoneChangesCompletionBlock = { error in
@@ -162,7 +186,6 @@ final class MealLocalCache: BaseLocalCache {
             notificationObject.setValue(recordsChanged, forKey: NotificationObjectKey.recordsChanged)
             
             // Do the update.
-            //
             self.update(withRecordIDsDeleted: recordIDsDeleted)
             self.update(withRecordsChanged: recordsChanged, database: self.database)
         }

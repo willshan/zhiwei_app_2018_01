@@ -301,7 +301,10 @@ extension ZoneLocalCache {
                 if (error == nil) {
                     self.createdPrivateCustomZone = true
                     ICloudPropertyStore.setICloudPropertyForKey(property: self.createdPrivateCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
+                    
+                    //save custom zone to MealLocalCache
                     MealLocalCache.share.zone = zones![0]
+                    MealLocalCache.share.fetchChanges()
                 }
                 completion(error)
             }

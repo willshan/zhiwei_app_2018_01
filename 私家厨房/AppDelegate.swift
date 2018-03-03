@@ -72,18 +72,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: CKRecordZone.default())
             
             ZoneLocalCache.share.fetchChanges(in: .private, completion: { (error) in
-                if error == nil {
-                    DispatchQueue.main.async {
-                        orderMealController.updateUI()
-                    }
-                }
+//                if error == nil {
+//                    DispatchQueue.main.async {
+//                        orderMealController.updateUI()
+//                    }
+//                }
             })
             ZoneLocalCache.share.fetchChanges(in: .shared, completion: { (error) in
-                if error == nil {
-                    DispatchQueue.main.async {
-                        orderMealController.updateUI()
-                    }
-                }
+//                if error == nil {
+//                    DispatchQueue.main.async {
+//                        orderMealController.updateUI()
+//                    }
+//                }
             })
         }
         
@@ -141,9 +141,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let tabVC = self.window?.rootViewController as! UITabBarController
         let nav0 = tabVC.viewControllers?[0] as! UINavigationController
         guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
-        DispatchQueue.main.async {
-            viewController.updateUI()
-        }
+//        DispatchQueue.main.async {
+//            viewController.updateUI()
+//        }
     }
 
     func applicationDidBecomeActive(_ application: UIApplication) {
@@ -167,13 +167,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
               print("01start updating UI")
             if application.applicationState == UIApplicationState.active {
                 //update UI
-                print("start updating UI")
-                let tabVC = self.window?.rootViewController as! UITabBarController
-                let nav0 = tabVC.viewControllers?[0] as! UINavigationController
-                guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
-                DispatchQueue.main.async {
-                    viewController.updateUI()
-                }
+//                print("start updating UI")
+//                let tabVC = self.window?.rootViewController as! UITabBarController
+//                let nav0 = tabVC.viewControllers?[0] as! UINavigationController
+//                guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
+//                DispatchQueue.main.async {
+//                    viewController.updateUI()
+//                }
             }
         }
     }
