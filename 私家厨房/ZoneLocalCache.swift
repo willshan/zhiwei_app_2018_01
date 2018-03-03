@@ -69,42 +69,47 @@ final class ZoneLocalCache : BaseLocalCache{
 
         //Use CKDatabaseSubscription to sync the changes on
         //sharedDB and custom zones of privateDB
-        //Option 1:
-//        for database in databases where database.cloudKitDB.databaseScope != .public {
-//            if !self.subscribedToPrivateChanges && database.cloudKitDB.databaseScope == .private{
-//                database.cloudKitDB.addDatabaseSubscription(
-//                    subscriptionID: subscriptionIDs(database: database)!,
-//                    operationQueue: operationQueue) { error in
-//                        guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
-//
-//                        self.subscribedToPrivateChanges = true
-//                        ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToPrivateChanges, forKey: ICloudPropertyStore.keyForSubscribedToPrivateChanges)
-//                }
-//            }
-//
-//            if !self.subscribedToSharedChanges && database.cloudKitDB.databaseScope == .shared{
-//                database.cloudKitDB.addDatabaseSubscription(
-//                    subscriptionID: subscriptionIDs(database: database)!,
-//                    operationQueue: operationQueue) { error in
-//                        guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
-//
-//                        self.subscribedToSharedChanges = true
-//                        ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToSharedChanges, forKey: ICloudPropertyStore.keyForSubscribedToSharedChanges)
-//
-//                }
-//            }
-//        }
-        //Option 2:
+//        Option 1:
         for database in databases where database.cloudKitDB.databaseScope != .public {
-            
-            database.cloudKitDB.addDatabaseSubscription(
-                subscriptionID: subscriptionIDs(database: database)!,
-                operationQueue: operationQueue) { error in
-                    guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
-                    self.fetchChanges(in: database.cloudKitDB.databaseScope, completion: { (_) in
-                    })
+            if !self.subscribedToPrivateChanges && database.cloudKitDB.databaseScope == .private{
+                database.cloudKitDB.addDatabaseSubscription(
+                    subscriptionID: subscriptionIDs(database: database)!,
+                    operationQueue: operationQueue) { error in
+                        guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
+
+                        self.subscribedToPrivateChanges = true
+                        ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToPrivateChanges, forKey: ICloudPropertyStore.keyForSubscribedToPrivateChanges)
+                        
+                        self.fetchChanges(in: database.cloudKitDB.databaseScope, completion: { (_) in
+                        })
+                }
+            }
+
+            if !self.subscribedToSharedChanges && database.cloudKitDB.databaseScope == .shared{
+                database.cloudKitDB.addDatabaseSubscription(
+                    subscriptionID: subscriptionIDs(database: database)!,
+                    operationQueue: operationQueue) { error in
+                        guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
+
+                        self.subscribedToSharedChanges = true
+                        ICloudPropertyStore.setICloudPropertyForKey(property: self.subscribedToSharedChanges, forKey: ICloudPropertyStore.keyForSubscribedToSharedChanges)
+                        
+                        self.fetchChanges(in: database.cloudKitDB.databaseScope, completion: { (_) in
+                        })
+                }
             }
         }
+//        //Option 2:
+//        for database in databases where database.cloudKitDB.databaseScope != .public {
+//
+//            database.cloudKitDB.addDatabaseSubscription(
+//                subscriptionID: subscriptionIDs(database: database)!,
+//                operationQueue: operationQueue) { error in
+//                    guard CloudKitError.share.handle(error: error, operation: .modifySubscriptions, alert: true) == nil else {return}
+//                    self.fetchChanges(in: database.cloudKitDB.databaseScope, completion: { (_) in
+//                    })
+//            }
+//        }
         
 //        if !self.subscribedToPrivateChanges {
 //            let createSubscriptionOperation = self.createDatabaseSubscriptionOperation(subscriptionId: privateSubscriptionId)
@@ -151,8 +156,8 @@ final class ZoneLocalCache : BaseLocalCache{
         //        }
         
 //        fetch changes when start
-//        self.fetchChanges(in: .private) {_ in}
-//        self.fetchChanges(in: .shared) {_ in}
+        self.fetchChanges(in: .private) {_ in}
+        self.fetchChanges(in: .shared) {_ in}
     }
     
     //creat database subscription
@@ -245,30 +250,29 @@ final class ZoneLocalCache : BaseLocalCache{
             
             guard moreComing == false else {return}
         
-            let newZoneIDs = zoneIDsChanged.filter() {zoneID in
-                let index = database.zones.index(where: { zone in zone.zoneID == zoneID})
-                return index == nil ? true : false
-            }
-            
-            guard newZoneIDs.count > 0 else {return}
-            
-            let fetchZonesOp = CKFetchRecordZonesOperation(recordZoneIDs: newZoneIDs)
-            fetchZonesOp.fetchRecordZonesCompletionBlock = { results, error in
-                
-                guard CloudKitError.share.handle(error: error, operation: .fetchRecords) == nil,
-                    let zoneDictionary = results else {return}
-                
-                for (_, zone) in zoneDictionary { database.zones.append(zone) }
-                database.zones.sort(){ $0.zoneID.zoneName < $1.zoneID.zoneName }
-            }
-            
-            fetchZonesOp.database = database.cloudKitDB
-            self.operationQueue.addOperation(fetchZonesOp)
+//            let newZoneIDs = zoneIDsChanged.filter() {zoneID in
+//                let index = database.zones.index(where: { zone in zone.zoneID == zoneID})
+//                return index == nil ? true : false
+//            }
+//
+//            guard newZoneIDs.count > 0 else {return}
+//
+//            let fetchZonesOp = CKFetchRecordZonesOperation(recordZoneIDs: newZoneIDs)
+//            fetchZonesOp.fetchRecordZonesCompletionBlock = { results, error in
+//
+//                guard CloudKitError.share.handle(error: error, operation: .fetchRecords) == nil,
+//                    let zoneDictionary = results else {return}
+//
+//                for (_, zone) in zoneDictionary { database.zones.append(zone) }
+//                database.zones.sort(){ $0.zoneID.zoneName < $1.zoneID.zoneName }
+//            }
+//
+//            fetchZonesOp.database = database.cloudKitDB
+//            self.operationQueue.addOperation(fetchZonesOp)
             
 //            // Flush in-memory database change token to disk
 //            NSKeyedArchiver.archiveRootObject(database.serverChangeToken as Any, toFile: databaseChangetokenURL.path)
             MealLocalCache.share.fetchChanges()
-            
             completion(error)
 //            self.fetchZoneChanges(database: database, databaseTokenKey: databaseTokenKey, zoneIDs: zoneIDsChanged) {error in
 //                // Flush in-memory database change token to disk
@@ -301,9 +305,13 @@ extension ZoneLocalCache {
                 if (error == nil) {
                     self.createdPrivateCustomZone = true
                     ICloudPropertyStore.setICloudPropertyForKey(property: self.createdPrivateCustomZone, forKey: ICloudPropertyStore.keyForCreatedCustomZone)
-                    
+    
                     //save custom zone to MealLocalCache
                     MealLocalCache.share.zone = zones![0]
+
+                    //save custom zoneID in disk
+                    NSKeyedArchiver.archiveRootObject(zones![0].zoneID, toFile: zoneIdURL.path)
+                    
                     MealLocalCache.share.fetchChanges()
                 }
                 completion(error)

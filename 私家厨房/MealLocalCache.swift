@@ -85,7 +85,7 @@ final class MealLocalCache: BaseLocalCache {
         // because this may be changed in the completion handler.
         //
         print("Fetching changed records begining")
-        let notificationObject = NSMutableDictionary()
+//        let notificationObject = NSMutableDictionary()
         
         let options = CKFetchRecordZoneChangesOptions()
         
@@ -170,28 +170,28 @@ final class MealLocalCache: BaseLocalCache {
             
             // The zone has been deleted, notify the clients so that they can update UI.
             //
-            if let result = CloudKitError.share.handle(error: error, operation: .fetchChanges,
-                                                       affectedObjects: [self.zone.zoneID], alert: true) {
-                
-                if let ckError = result[CloudKitError.Result.ckError] as? CKError, ckError.code == .zoneNotFound {
-                    
-                    notificationObject.setValue(NotificationReason.zoneNotFound,
-                                                forKey: NotificationObjectKey.reason)
-                }
-                return
-            }
+//            if let result = CloudKitError.share.handle(error: error, operation: .fetchChanges,
+//                                                       affectedObjects: [self.zone.zoneID], alert: true) {
+//
+//                if let ckError = result[CloudKitError.Result.ckError] as? CKError, ckError.code == .zoneNotFound {
+//
+//                    notificationObject.setValue(NotificationReason.zoneNotFound,
+//                                                forKey: NotificationObjectKey.reason)
+//                }
+//                return
+//            }
             // Push recordIDsDeleted and recordsChanged into notification payload.
             //
-            notificationObject.setValue(recordIDsDeleted, forKey: NotificationObjectKey.recordIDsDeleted)
-            notificationObject.setValue(recordsChanged, forKey: NotificationObjectKey.recordsChanged)
-            
+//            notificationObject.setValue(recordIDsDeleted, forKey: NotificationObjectKey.recordIDsDeleted)
+//            notificationObject.setValue(recordsChanged, forKey: NotificationObjectKey.recordsChanged)
+//
             // Do the update.
             self.update(withRecordIDsDeleted: recordIDsDeleted)
             self.update(withRecordsChanged: recordsChanged, database: self.database)
         }
         operation.database = database
         operationQueue.addOperation(operation)
-        postNotificationWhenAllOperationsAreFinished(name: .mealCacheDidChange, object: notificationObject)
+//        postNotificationWhenAllOperationsAreFinished(name: .mealCacheDidChange, object: notificationObject)
     }
     
     // Convenient method to update the cache with one specified record ID.
