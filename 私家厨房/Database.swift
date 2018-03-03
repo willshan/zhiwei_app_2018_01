@@ -14,7 +14,7 @@ import CloudKit
 //
 //struct Schema {
 //    struct RecordType {
-//        static let meal = "Meal"
+//        static let topic = "Topic"
 //        static let note = "Note"
 //    }
 //    struct Topic {

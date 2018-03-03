@@ -34,9 +34,10 @@
 		BE7215751F55C91A00067530 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = BE7215741F55C91A00067530 /* LaunchScreen.storyboard */; };
 		BE8A9A881FF53EB900AA324D /* MealListVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8A9A871FF53EB900AA324D /* MealListVC.swift */; };
 		BE8D0163201D5CEB00C81D92 /* CloudKitError.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */; };
-		BE8E38D7204591FC00CC12FB /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8D015A201B777100C81D92 /* Database.swift */; };
-		BE8E38DB204592F200CC12FB /* BaseLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E38DA204592F200CC12FB /* BaseLocalCache.swift */; };
 		BE8E38DC2045940C00CC12FB /* ZoneLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8D0165201E0D0500C81D92 /* ZoneLocalCache.swift */; };
+		BE8E38E020459B6000CC12FB /* Database.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E38DF20459B5F00CC12FB /* Database.swift */; };
+		BE8E38EA20459C6900CC12FB /* BaseLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E38E920459C6900CC12FB /* BaseLocalCache.swift */; };
+		BE8E38EC2045B10900CC12FB /* MealLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8E38EB2045B10900CC12FB /* MealLocalCache.swift */; };
 		BE8F80941F563EEF00D67599 /* MealDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE8F80931F563EEF00D67599 /* MealDetailVC.swift */; };
 		BE9047CE1FFD401400282B0F /* MealDetailVC.xib in Resources */ = {isa = PBXBuildFile; fileRef = BE9047CD1FFD401400282B0F /* MealDetailVC.xib */; };
 		BE910090200068BA00E6C9A8 /* CatagoryPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE91008F200068BA00E6C9A8 /* CatagoryPopUpVC.swift */; };
@@ -74,6 +75,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		BE002872204AA5DE00886B79 /* DatabaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseLocalCache.swift; sourceTree = "<group>"; };
 		BE087B341F2F73610005128B /* EditMealVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMealVC.swift; sourceTree = "<group>"; };
 		BE08D8361F22F8A4001A93C7 /* PersonalSetVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalSetVC.swift; sourceTree = "<group>"; };
 		BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ICloudPropertyStore.swift; sourceTree = "<group>"; };
@@ -103,10 +105,10 @@
 		BE72156F1F55BAEC00067530 /* OrderListDataSource.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderListDataSource.swift; sourceTree = "<group>"; };
 		BE7215741F55C91A00067530 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		BE8A9A871FF53EB900AA324D /* MealListVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealListVC.swift; sourceTree = "<group>"; };
-		BE8D0156201B764E00C81D92 /* BaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseLocalCache.swift; sourceTree = "<group>"; };
-		BE8D015A201B777100C81D92 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
 		BE8D0165201E0D0500C81D92 /* ZoneLocalCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZoneLocalCache.swift; sourceTree = "<group>"; };
-		BE8E38DA204592F200CC12FB /* BaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BaseLocalCache.swift; path = ../../CloudKitShareBuildingCloudKitlocalcacheandusingCloudKitshareAPIs/CloudShares/Model/BaseLocalCache.swift; sourceTree = "<group>"; };
+		BE8E38DF20459B5F00CC12FB /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
+		BE8E38E920459C6900CC12FB /* BaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseLocalCache.swift; sourceTree = "<group>"; };
+		BE8E38EB2045B10900CC12FB /* MealLocalCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MealLocalCache.swift; sourceTree = "<group>"; };
 		BE8F80931F563EEF00D67599 /* MealDetailVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MealDetailVC.swift; sourceTree = "<group>"; };
 		BE9047CD1FFD401400282B0F /* MealDetailVC.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MealDetailVC.xib; sourceTree = "<group>"; };
 		BE91008F200068BA00E6C9A8 /* CatagoryPopUpVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatagoryPopUpVC.swift; sourceTree = "<group>"; };
@@ -167,9 +169,10 @@
 			children = (
 				BE8D0164201D5D8E00C81D92 /* Not used in project */,
 				BE0CB0681F892E2E00EEF54A /* ICloudPropertyStore.swift */,
-				BE8D015A201B777100C81D92 /* Database.swift */,
-				BE8E38DA204592F200CC12FB /* BaseLocalCache.swift */,
+				BE8E38DF20459B5F00CC12FB /* Database.swift */,
+				BE8E38E920459C6900CC12FB /* BaseLocalCache.swift */,
 				BE8D0165201E0D0500C81D92 /* ZoneLocalCache.swift */,
+				BE8E38EB2045B10900CC12FB /* MealLocalCache.swift */,
 				BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */,
 				BE324A852022140000DC778D /* CloudExtension.swift */,
 			);
@@ -289,8 +292,8 @@
 		BE8D0164201D5D8E00C81D92 /* Not used in project */ = {
 			isa = PBXGroup;
 			children = (
-				BE8D0156201B764E00C81D92 /* BaseLocalCache.swift */,
 				BE24A95F1F94C60000BCB339 /* CloudKitExtensions.swift */,
+				BE002872204AA5DE00886B79 /* DatabaseLocalCache.swift */,
 			);
 			name = "Not used in project";
 			sourceTree = "<group>";
@@ -481,11 +484,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEB1C3591EB58E9600F1D804 /* OrderListDetailDataSource.swift in Sources */,
-				BE8E38DB204592F200CC12FB /* BaseLocalCache.swift in Sources */,
 				BE7215491F55B8C800067530 /* OrderListCenterVC.swift in Sources */,
 				BE7036FF1FFE83400003F9FB /* DatePopUpVC.swift in Sources */,
 				BE72156A1F55BAB900067530 /* ShoppingCell.swift in Sources */,
 				BE3310FD1F2A6D81001E7E3B /* ImageHelper.swift in Sources */,
+				BE8E38EC2045B10900CC12FB /* MealLocalCache.swift in Sources */,
 				BEEDFBBD1EACC9A4001E5E17 /* StateController.swift in Sources */,
 				BE08D8371F22F8A4001A93C7 /* PersonalSetVC.swift in Sources */,
 				BE910092200078A200E6C9A8 /* ProtocolList.swift in Sources */,
@@ -493,8 +496,8 @@
 				BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */,
 				BE8E38DC2045940C00CC12FB /* ZoneLocalCache.swift in Sources */,
 				BE7215541F55B9C500067530 /* StructList.swift in Sources */,
+				BE8E38E020459B6000CC12FB /* Database.swift in Sources */,
 				BEDB166D1E9D53C300D9C9E1 /* OrderListCell.swift in Sources */,
-				BE8E38D7204591FC00CC12FB /* Database.swift in Sources */,
 				BE24A9641F94E9C600BCB339 /* ExtensionList.swift in Sources */,
 				BEB1C3521EB4E65C00F1D804 /* OrderListCenterDataSource.swift in Sources */,
 				BE72155E1F55BA3100067530 /* OrderListDetailVC.swift in Sources */,
@@ -503,6 +506,7 @@
 				BE9D0C7E1EB0E53D009FF3D3 /* MealListDataSource.swift in Sources */,
 				BE8A9A881FF53EB900AA324D /* MealListVC.swift in Sources */,
 				BEAD6E731E6B96D9001BF58A /* Spicy.swift in Sources */,
+				BE8E38EA20459C6900CC12FB /* BaseLocalCache.swift in Sources */,
 				BEB1C35B1EB58EAE00F1D804 /* OrderListDetailCell.swift in Sources */,
 				BE480D811E86BD0400EE9470 /* MealCell.swift in Sources */,
 				BE3DDF4C1F2648E60013AD47 /* HandleCoreData.swift in Sources */,

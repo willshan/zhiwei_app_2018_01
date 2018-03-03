@@ -182,7 +182,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         DispatchQueue.main.async {
             ZoneLocalCache.share.container.prepareSharingController(
                 rootRecord: record!, uniqueName: UUID().uuidString, shareTitle: shareTitle,
-                participantLookupInfos: participantLookupInfos, database: ZoneLocalCache.share.privateDB) { controller in
+                participantLookupInfos: participantLookupInfos, database: ZoneLocalCache.share.databases[1].cloudKitDB) { controller in
                     
                     self.presentOrAlertOnMainQueue(sharingController: controller)
 //                    controller?.popoverPresentationController?.sourceView = self.navigationItem.titleView

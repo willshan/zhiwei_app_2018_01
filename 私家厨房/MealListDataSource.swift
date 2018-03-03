@@ -221,7 +221,7 @@ extension MealListDataSource {
 
         if meal.database == "Private" {
             //delete CKRecord
-            ZoneLocalCache.share.privateDB.delete(withRecordID: record!.recordID) { (recordID, error) in
+            ZoneLocalCache.share.databases[1].cloudKitDB.delete(withRecordID: record!.recordID) { (recordID, error) in
                 if error != nil {
                     // Insert error handling
                     print("failed delete in icloud")

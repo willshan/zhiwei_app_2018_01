@@ -16,13 +16,14 @@ extension Notification.Name {
 
 enum NotificationReason {
     case zoneNotFound
-    
+    case switchTopic
 }
 
 struct NotificationObjectKey {
     static let reason = "reason"
     static let recordIDsDeleted = "recordIDsDeleted"
     static let recordsChanged = "recordsChanged"
+    static let newMeal = "newMeal"
 }
 
 class BaseLocalCache {
@@ -64,27 +65,38 @@ class BaseLocalCache {
     }
     
     // Return the subscription IDs used for current local cache.
-    //
-    func subscriptionIDs(databaseName: String, zone: CKRecordZone? = nil, recordType: String? = nil) -> [String] {
-
-        guard let zone = zone else { return [databaseName] }
-
-        let prefix = databaseName + "." + zone.zoneID.zoneName + "-" + zone.zoneID.ownerName
-        // Return identifier for the record type if it is specified.
-        //
-        if let recordType = recordType {
-            return [prefix + "." + recordType]
+    func subscriptionIDs(database: Database) -> String? {
+        if database.cloudKitDB.databaseScope == .private {
+            return "private-changes"
         }
-        // If the record type is not specified, and the zone is the default one,
-        // return all valid IDs
-        //
-        if zone == CKRecordZone.default() {
-            
-            return [prefix + "." + Schema.RecordType.topic,
-                    prefix + "." + Schema.RecordType.note]
+        if database.cloudKitDB.databaseScope == .shared {
+            return "shared-changes"
         }
-        return [prefix]
+        else {
+            return nil
+        }
     }
+    
+//    func subscriptionIDs(databaseName: String, zone: CKRecordZone? = nil, recordType: String? = nil) -> [String] {
+//
+//        guard let zone = zone else { return [databaseName] }
+//
+//        let prefix = databaseName + "." + zone.zoneID.zoneName + "-" + zone.zoneID.ownerName
+//        // Return identifier for the record type if it is specified.
+//        //
+//        if let recordType = recordType {
+//            return [prefix + "." + recordType]
+//        }
+//        // If the record type is not specified, and the zone is the default one,
+//        // return all valid IDs
+//        //
+//        if zone == CKRecordZone.default() {
+//
+//            return [prefix + "." + Schema.RecordType.topic,
+//                    prefix + "." + Schema.RecordType.note]
+//        }
+//        return [prefix]
+//    }
     
     // The cache is syncing if
     // 1. there is an ongoing operation, 

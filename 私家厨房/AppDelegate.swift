@@ -69,6 +69,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
             ZoneLocalCache.share.initialize(container: self.container)
+            MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: CKRecordZone.default())
+            
             ZoneLocalCache.share.fetchChanges(in: .private, completion: { (error) in
                 if error == nil {
                     DispatchQueue.main.async {
@@ -159,10 +161,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         let dict = userInfo as! [String: NSObject]
         guard let notification : CKDatabaseNotification = CKNotification(fromRemoteNotificationDictionary:dict) as? CKDatabaseNotification else { return }
+
         ZoneLocalCache.share.fetchChanges(in: notification.databaseScope) {_ in 
             completionHandler(.newData)
+              print("01start updating UI")
             if application.applicationState == UIApplicationState.active {
                 //update UI
+                print("start updating UI")
                 let tabVC = self.window?.rootViewController as! UITabBarController
                 let nav0 = tabVC.viewControllers?[0] as! UINavigationController
                 guard let viewController = nav0.viewControllers.first as? MealListVC else { return }
