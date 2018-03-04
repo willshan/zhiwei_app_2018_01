@@ -111,8 +111,9 @@ extension CKDatabase {
         let subscription = CKDatabaseSubscription(subscriptionID: subscriptionID)
         
         let notificationInfo = CKNotificationInfo()
-        notificationInfo.shouldBadge = true
-        notificationInfo.alertBody = "Database (\(subscriptionID)) was changed!"
+        notificationInfo.shouldSendContentAvailable = true
+//        notificationInfo.shouldBadge = true
+//        notificationInfo.alertBody = "Database (\(subscriptionID)) was changed!"
         
         subscription.notificationInfo = notificationInfo
         

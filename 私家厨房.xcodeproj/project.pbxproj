@@ -13,6 +13,7 @@
 		BE0D55B01F2A266200F482EA /* Meal+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */; };
 		BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */; };
 		BE10313C1F2789E800DAA003 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE10313B1F2789E800DAA003 /* DataStore.swift */; };
+		BE156E60204C099100033D19 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE156E5F204C099100033D19 /* Reachability.swift */; };
 		BE24A9641F94E9C600BCB339 /* ExtensionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24A9601F94D08900BCB339 /* ExtensionList.swift */; };
 		BE324A862022140000DC778D /* CloudExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE324A852022140000DC778D /* CloudExtension.swift */; };
 		BE3310FD1F2A6D81001E7E3B /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3310FC1F2A6D81001E7E3B /* ImageHelper.swift */; };
@@ -82,6 +83,7 @@
 		BE0D55AE1F2A266200F482EA /* Meal+CoreDataClass.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataClass.swift"; path = "../Meal+CoreDataClass.swift"; sourceTree = "<group>"; };
 		BE0D55AF1F2A266200F482EA /* Meal+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Meal+CoreDataProperties.swift"; path = "../Meal+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		BE10313B1F2789E800DAA003 /* DataStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataStore.swift; sourceTree = "<group>"; };
+		BE156E5F204C099100033D19 /* Reachability.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitError.swift; sourceTree = "<group>"; };
 		BE24A95F1F94C60000BCB339 /* CloudKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitExtensions.swift; sourceTree = "<group>"; };
 		BE24A9601F94D08900BCB339 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				BE8E38EB2045B10900CC12FB /* MealLocalCache.swift */,
 				BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */,
 				BE324A852022140000DC778D /* CloudExtension.swift */,
+				BE156E5F204C099100033D19 /* Reachability.swift */,
 			);
 			name = CloudKit;
 			sourceTree = "<group>";
@@ -506,6 +509,7 @@
 				BE9D0C7E1EB0E53D009FF3D3 /* MealListDataSource.swift in Sources */,
 				BE8A9A881FF53EB900AA324D /* MealListVC.swift in Sources */,
 				BEAD6E731E6B96D9001BF58A /* Spicy.swift in Sources */,
+				BE156E60204C099100033D19 /* Reachability.swift in Sources */,
 				BE8E38EA20459C6900CC12FB /* BaseLocalCache.swift in Sources */,
 				BEB1C35B1EB58EAE00F1D804 /* OrderListDetailCell.swift in Sources */,
 				BE480D811E86BD0400EE9470 /* MealCell.swift in Sources */,

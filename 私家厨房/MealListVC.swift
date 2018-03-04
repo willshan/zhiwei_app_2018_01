@@ -16,6 +16,7 @@ class MealListVC: UIViewController {
     //MARK: -Properties
     
     @IBOutlet weak var firstTableView: UITableView!
+    let reachability = Reachability()!
     
     var stateController : StateController!
     var dataSource : MealListDataSource!
@@ -24,18 +25,32 @@ class MealListVC: UIViewController {
     var searchController : UISearchController!
     var resultsController = UITableViewController()
     var selectedIndexPath : IndexPath!
+    
+    deinit {
+        print("The instance of MealListVC was deinited!!!")
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.mealCacheDidChange, object: nil)
+        // 关闭网络状态消息监听
+        reachability.stopNotifier()
+        // 移除网络状态消息通知
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reachabilityChanged, object: reachability)
+    }
 }
 
 extension MealListVC{
     //MARK: -Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Use the edit button item provided by the table view controller.
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(type(of:self).mealCacheDidChange(_:)),
+                                               name: .mealCacheDidChange,
+                                               object: nil)
+        networkStatusListener()
         
+        // Use the edit button item provided by the table view controller.
         navigationItem.leftBarButtonItem = editButtonItem
         
         setSearchController()
-        
     }
     
     //这一步在unwind之后调用
@@ -123,6 +138,47 @@ extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
 }
 
 extension MealListVC {
+    func networkStatusListener() {
+        // 1、设置网络状态消息监听 2、获得网络Reachability对象
+        NotificationCenter.default.addObserver(self, selector: #selector(self.reachabilityChanged),name: Notification.Name.reachabilityChanged,object: reachability)
+        do{
+            // 3、开启网络状态消息监听
+            try reachability.startNotifier()
+        }catch{
+            print("could not start reachability notifier")
+        }
+    }
+    // 主动检测网络状态
+    @objc func reachabilityChanged(note: NSNotification) {
+        
+        let reachability = note.object as! Reachability // 准备获取网络连接信息
+        
+        if reachability.connection != .none { // 判断网络连接状态
+            print("网络连接：可用")
+            if reachability.connection == .wifi { // 判断网络连接类型
+                print("连接类型：WiFi")
+                // strServerInternetAddrss = getHostAddress_WLAN() // 获取主机IP地址 192.168.31.2 小米路由器
+                // processClientSocket(strServerInternetAddrss)    // 初始化Socket并连接，还得恢复按钮可用
+            } else {
+                print("连接类型：移动网络")
+                // getHostAddrss_GPRS()  // 通过外网获取主机IP地址，并且初始化Socket并建立连接
+            }
+        } else {
+            print("网络连接：不可用")
+            DispatchQueue.main.async { // 不加这句导致界面还没初始化完成就打开警告框，这样不行
+                self.alert_noNetwrok() // 警告框，提示没有网络
+            }
+        }
+    }
+    
+    // 警告框，提示没有连接网络 *********************
+    func alert_noNetwrok() -> Void {
+        let alert = UIAlertController(title: "系统提示", message: "请打开网络连接", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "确定", style: .default, handler: nil)
+        alert.addAction(cancelAction)
+        self.present(alert, animated: true, completion: nil)
+    }
+    
     //update UI
     func updateUI() {
         self.dataSource = MealListDataSource(meals: self.stateController.getAllMeals())
@@ -140,6 +196,65 @@ extension MealListVC {
         self.resultsController.tableView.delegate = self.dataSource
         
         self.firstTableView.reloadData()
+    }
+    @objc func mealCacheDidChange(_ notification: Notification) {
+        // Here we don't want to updateUI which will change the edit status and call dismiss in some cases.
+        // Simply reload the table data.
+        //
+        guard let object = notification.object as? NSDictionary else {
+            updateUI()
+            return
+        }
+        
+        
+        // If the note was deleted, alert the user and go back to the main screen.
+        // MainViewController should get the same notificaiton, so should have updated.
+        //
+        if let recordIDsDeleted = object[NotificationObjectKey.recordIDsDeleted] as? [CKRecordID] {
+            for recordId in recordIDsDeleted {
+                print(recordId.recordName)
+                HandleCoreData.deleteMealWithIdentifier(recordId.recordName)
+                updateUI()
+            }
+        }
+        
+        // If the note was changed, alert the user and refresh the UI.
+        //
+        if let recordsChanged = object[NotificationObjectKey.recordsChanged] as? [CKRecord] {
+            for record in recordsChanged {
+                print(record.recordType)
+                if record.recordType == ICloudPropertyStore.recordType.meal {
+                    let identifier = record["mealIdentifier"] as! String
+                    print("\(identifier)")
+                    
+                    let meals = HandleCoreData.queryDataWithIdentifer(identifier)
+                    if meals.count == 0 {
+                        let _ = HandleCoreData.insertData(meal: nil, record: record, database: nil)
+                    }
+                    else {
+                        HandleCoreData.updateData(meal: nil, record: record)
+                    }
+                    updateUI()
+                    
+                    // Write meladata to disk
+                    // obtain the metadata from the CKRecord
+                    
+                    let data = NSMutableData()
+                    let coder = NSKeyedArchiver.init(forWritingWith: data)
+                    coder.requiresSecureCoding = true
+                    record.encodeSystemFields(with: coder)
+                    
+                    coder.finishEncoding()
+                    
+                    let key = "Record_"+identifier
+                    let url = DataStore().objectURLForKey(key: key)
+                    NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
+                }
+                else {
+                    continue
+                }
+            }
+        }
     }
     
     func saveRecordIniCloud(meal : Meal, uploadImage : UIImage){
