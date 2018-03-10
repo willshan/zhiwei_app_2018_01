@@ -74,18 +74,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
             if zoneID != nil {
                 let zone = CKRecordZone(zoneID: zoneID!)
-                
                 MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: zone)
-                
             }
             else {
                 MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: CKRecordZone.default())
             }
             
-            SharedMealLocalCache.share.initialize(container: self.container, database: self.container.sharedCloudDatabase, zone: CKRecordZone.default())
+            let sharedZoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForSharedCustomZoneID)
+            let sharedZoneID = NSKeyedUnarchiver.unarchiveObject(withFile: sharedZoneIdURL.path) as? CKRecordZoneID
+            if sharedZoneID != nil {
+                let zone = CKRecordZone(zoneID: sharedZoneID!)
+                SharedMealLocalCache.share.initialize(container: self.container, database: self.container.sharedCloudDatabase, zone: zone)
+            }
+            else {
+                SharedMealLocalCache.share.initialize(container: self.container, database: self.container.sharedCloudDatabase, zone: CKRecordZone.default())
+            }
             
             ZoneLocalCache.share.fetchChanges(in: .private, completion: { (error) in })
             ZoneLocalCache.share.fetchChanges(in: .shared, completion: { (error) in })
+            
         }
         
 //        UIApplication.shared.applicationIconBadgeNumber = 0

@@ -212,7 +212,16 @@ final class ZoneLocalCache : BaseLocalCache{
 
                 NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
                 
-                print("+++++++zoneID to be saved is \(zoneID)")
+                print("+++++++private zoneID to be saved is \(zoneID)")
+            }
+            if database.name == "Shared" {
+                let zone = CKRecordZone(zoneID: zoneID)
+                SharedMealLocalCache.share.zone = zone
+                
+                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForSharedCustomZoneID)
+                NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
+                
+                print("+++++++shared zoneID to be saved is \(zoneID)")
             }
 //            guard database.cloudKitDB === MealLocalCache.share.database &&
 //                zoneID == MealLocalCache.share.zone.zoneID else {return}

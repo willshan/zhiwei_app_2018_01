@@ -175,14 +175,14 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         let record = CKRecord(coder: coder)
         coder.finishDecoding()
         
-        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com"),
-                                      CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
+//        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com"),
+//                                      CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
         let shareTitle = meal.mealName
         
         DispatchQueue.main.async {
             ZoneLocalCache.share.container.prepareSharingController(
                 rootRecord: record!, uniqueName: UUID().uuidString, shareTitle: shareTitle,
-                participantLookupInfos: participantLookupInfos, database: ZoneLocalCache.share.databases[1].cloudKitDB) { controller in
+                participantLookupInfos: nil, database: ZoneLocalCache.share.databases[1].cloudKitDB) { controller in
                     
                     self.presentOrAlertOnMainQueue(sharingController: controller)
 //                    controller?.popoverPresentationController?.sourceView = self.navigationItem.titleView

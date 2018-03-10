@@ -230,7 +230,6 @@ extension MealListDataSource {
                 
                 // Insert successfully saved record code
                 print("successfully delete in icloud")
-                return
             }
         }
         if meal.database == "Shared" {
@@ -244,10 +243,10 @@ extension MealListDataSource {
 
                 // Insert successfully saved record code
                 print("successfully delete in icloud")
-                return
             }
         }
-        else {
+        
+        if meal.database != "Private" && meal.database != "Shared" {
             print("Thiss is a bug, because the record to be deleted in not in PrivateDB and SharedDB")
         }
         //option 2:

@@ -14,7 +14,7 @@ final class SharedMealLocalCache: BaseLocalCache {
     var container: CKContainer!
     var database: CKDatabase!
     var zone = CKRecordZone.default()
-    let key = "sharedDB_defaultZone_tokenKey"
+    let key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
     
     var serverChangeToken: CKServerChangeToken? = nil
     
