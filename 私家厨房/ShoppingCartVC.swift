@@ -11,20 +11,21 @@ import UIKit
 class ShoppingCartVC: UIViewController, UITableViewDelegate{
 
     @IBOutlet weak var firstTableView: UITableView!
-    @IBOutlet weak var comment: UITextView!
+
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var catagoryLabel: UILabel!
-    //stackView的上约束
-    @IBOutlet weak var topConstraint: NSLayoutConstraint!
-//    @IBOutlet weak var tableViewHeight: NSLayoutConstraint!
 
-    @IBAction func dismiss2(_ sender: UITapGestureRecognizer) {
-        comment.resignFirstResponder()
-    }
     @IBAction func sentOut(_ sender: UIBarButtonItem) {
-        
         saveToLocal()
     }
+    
+    @IBAction func saveMealList(_ sender: UIButton) {
+    }
+    
+    @IBAction func cancelMealList(_ sender: UIButton) {
+        cancelMealList()
+    }
+    
     
     var stateController : StateController!
     var dataSource: ShoppingCartDataSource!
@@ -41,12 +42,11 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = editButtonItem
-        comment.delegate = self
-        //设置通知
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(keyboardWillChange(_:)),
-                                               name: .UIKeyboardWillChangeFrame, object: nil)
-        comment.delegate = self
+//        comment.delegate = self
+//        //设置通知
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(keyboardWillChange(_:)),
+//                                               name: .UIKeyboardWillChangeFrame, object: nil)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -81,11 +81,7 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
 
         firstTableView.dataSource = dataSource
         firstTableView.delegate = dataSource
-        
-//        tableViewHeight.constant = CGFloat(dataSource.tableViewHeight)
-//        tableViewHeight.constant = 300
-//        print("\(tableViewHeight.constant)")
-        
+
         firstTableView.reloadData()
     }
     
@@ -99,12 +95,48 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
             super.didReceiveMemoryWarning()
             // Dispose of any resources that can be recreated.
         }
+//
+//    deinit {
+//        NotificationCenter.default.removeObserver(self)
+//    }
+}
+extension ShoppingCartVC {
+    func saveMealList() {
+        
+    }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
+    func cancelMealList() {
+        
+        let title = "删除已点菜单?"
+        let message = "确认删除当前日期内所有菜品么?"
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        ac.addAction(cancelAction)
+        
+        let deleteAction = UIAlertAction(title: "删除", style: .destructive, handler: {
+            (action) -> Void in
+            
+            let meals = self.stateController.getSelectedMeals()
+            for meal in meals {
+                HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
+            }
+
+            self.dataSource = ShoppingCartDataSource(selectedMeals: [Meal]())
+
+            self.firstTableView.reloadData()
+            
+            //update shopping cart badge number
+//            self.dataSource.updateShoppingCartIconBadgeNumber(orderedMealCount: 0)
+            //find shopping cart badge
+            let nav0 = self.navigationController
+            let nav0TabBar = nav0?.tabBarItem
+            nav0TabBar?.badgeValue = nil
+
+        })
+        ac.addAction(deleteAction)
+        self.present(ac, animated: true, completion: nil)
     }
 }
-
 extension ShoppingCartVC : DataTransferBackProtocol{
     //MARK: -Actions
     @IBAction func selectMealCatagory(_ sender: UITapGestureRecognizer) {
@@ -133,11 +165,7 @@ extension ShoppingCartVC : DataTransferBackProtocol{
         //save catagory label to icloud
         
     }
-    
-    func dismissKeyBoard(){
-        comment.resignFirstResponder()
-    }
-    
+
     @IBAction func selectDate(_ sender: UITapGestureRecognizer) {
         
         let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
@@ -198,29 +226,29 @@ extension ShoppingCartVC : UITextViewDelegate{
 //        }
 //    }
     
-    //MARK: -Text and keyboard control
-    // 键盘改变，通过键盘出现的通知
-    @objc func keyboardWillChange(_ notification: Notification) {
-        
-        if let userInfo = notification.userInfo,
-            let value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
-            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-            let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UInt {
-            
-            let frame = value.cgRectValue
-            let intersection = frame.intersection(self.view.frame)
-            
-            //self.view.setNeedsLayout()
-            //改变上约束
-            self.topConstraint.constant = -intersection.height
-            
-            UIView.animate(withDuration: duration, delay: 0.0,
-                           options: UIViewAnimationOptions(rawValue: curve), animations: {
-                            
-                            self.view.layoutIfNeeded()
-            }, completion: nil)
-        }
-    }
+//    //MARK: -Text and keyboard control
+//    // 键盘改变，通过键盘出现的通知
+//    @objc func keyboardWillChange(_ notification: Notification) {
+//
+//        if let userInfo = notification.userInfo,
+//            let value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
+//            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
+//            let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UInt {
+//
+//            let frame = value.cgRectValue
+//            let intersection = frame.intersection(self.view.frame)
+//
+//            //self.view.setNeedsLayout()
+//            //改变上约束
+//            self.topConstraint.constant = -intersection.height
+//
+//            UIView.animate(withDuration: duration, delay: 0.0,
+//                           options: UIViewAnimationOptions(rawValue: curve), animations: {
+//
+//                            self.view.layoutIfNeeded()
+//            }, completion: nil)
+//        }
+//    }
 }
 
 extension ShoppingCartVC {

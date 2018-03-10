@@ -28,7 +28,7 @@ class DataStore : NSObject {
 //    }
     
     //save images
-    func setImage(image : UIImage, forKey key: String){
+    func saveImageInDisk(image : UIImage, forKey key: String){
         cache.setObject(image, forKey : key as AnyObject)
         
         let imageURL = objectURLForKey(key: key)
@@ -45,7 +45,7 @@ class DataStore : NSObject {
     
     
     //use images
-    func imageForKey(key : String) -> UIImage? {
+    func getImageForKey(key : String) -> UIImage? {
         
         //如果cache中有这个图片，从cache中取
         if let exitingImage = cache.object(forKey: key as AnyObject) as? UIImage{

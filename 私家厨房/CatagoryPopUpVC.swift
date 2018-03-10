@@ -15,6 +15,9 @@ class CatagoryPopUpVC: UIViewController {
     
     @IBOutlet weak var saveButton: UIButton!
     @IBOutlet weak var catagoryPicker: UIPickerView!
+    @IBAction func cancel(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -23,10 +26,6 @@ class CatagoryPopUpVC: UIViewController {
         catagoryPicker.delegate = self
         
         // Do any additional setup after loading the view.
-    }
-    
-    @IBAction func Cancel(_ sender: UITapGestureRecognizer) {
-        dismiss(animated: true)
     }
     
     @IBAction func dismissPopUP(_ sender: Any) {

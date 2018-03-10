@@ -17,7 +17,7 @@ class StateController {
     fileprivate(set) var orderLists : [OrderListStruct]
     fileprivate(set) var mealOrderList : [IndexPath : OrderedMeal]!
     private let userName = CKCurrentUserDefaultName
-
+    fileprivate(set) var accountStatus = false
     fileprivate(set) var selectedMealsCount : Int
 
     //init(_ mealStorage : MealStorage) {
@@ -34,6 +34,10 @@ class StateController {
     
     func saveMeal(_ meals : [Meal]) {
         self.meals = meals
+    }
+    
+    func changeAccountStatus(_ status : Bool) {
+        self.accountStatus = status
     }
     
     func addMeal(_ meal : Meal){

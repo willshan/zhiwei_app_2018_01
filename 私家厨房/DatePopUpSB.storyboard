@@ -23,7 +23,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sqf-5r-TNA">
-                                <rect key="frame" x="40" y="70" width="240" height="200"/>
+                                <rect key="frame" x="40" y="70" width="240" height="250"/>
                                 <subviews>
                                     <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="date" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="XfZ-zB-aui">
                                         <rect key="frame" x="0.0" y="40" width="240" height="120"/>
@@ -31,42 +31,71 @@
                                             <!--2018-01-04 15:34:06 +0000-->
                                         </date>
                                     </datePicker>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="选择日期" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Puq-TQ-xWR">
+                                        <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="J0z-rQ-Jea"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mqn-XM-gfG">
+                                        <rect key="frame" x="5" y="205" width="230" height="40"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="X6P-Ky-ezo"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                        <state key="normal" title="取消">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="cancel:" destination="ohh-yA-APs" eventType="touchUpInside" id="nDX-Ck-12h"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="geg-su-BCW">
-                                        <rect key="frame" x="0.0" y="160" width="240" height="40"/>
-                                        <color key="backgroundColor" red="0.23195812900000001" green="0.59094517430000004" blue="0.72336632010000002" alpha="0.5" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <rect key="frame" x="5" y="160" width="230" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="40" id="b8J-tp-hGF"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <state key="normal" title="确认">
-                                            <color key="titleColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="dismissPopUP:" destination="ohh-yA-APs" eventType="touchUpInside" id="t7A-aC-5su"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="选择日期" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Puq-TQ-xWR">
-                                        <rect key="frame" x="0.0" y="0.0" width="240" height="40"/>
-                                        <color key="backgroundColor" red="0.88235294119999996" green="0.2173015177" blue="0.65249124930000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="40" id="J0z-rQ-Jea"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="21"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="0wk-yB-p08"/>
-                                    <constraint firstAttribute="height" constant="200" id="3HV-qo-pTp"/>
+                                    <constraint firstAttribute="height" constant="250" id="3HV-qo-pTp"/>
                                     <constraint firstItem="Puq-TQ-xWR" firstAttribute="leading" secondItem="sqf-5r-TNA" secondAttribute="leading" id="4Rf-ni-RH6"/>
-                                    <constraint firstItem="geg-su-BCW" firstAttribute="leading" secondItem="sqf-5r-TNA" secondAttribute="leading" id="5Mg-Zi-kmT"/>
+                                    <constraint firstItem="geg-su-BCW" firstAttribute="leading" secondItem="sqf-5r-TNA" secondAttribute="leading" constant="5" id="5Mg-Zi-kmT"/>
+                                    <constraint firstItem="Mqn-XM-gfG" firstAttribute="top" secondItem="geg-su-BCW" secondAttribute="bottom" constant="5" id="7wA-mU-uYf"/>
                                     <constraint firstItem="XfZ-zB-aui" firstAttribute="top" secondItem="Puq-TQ-xWR" secondAttribute="bottom" id="85J-br-Dtk"/>
-                                    <constraint firstAttribute="trailing" secondItem="geg-su-BCW" secondAttribute="trailing" id="R1V-LO-3hr"/>
-                                    <constraint firstItem="geg-su-BCW" firstAttribute="top" secondItem="XfZ-zB-aui" secondAttribute="bottom" id="Rlj-Pl-1Kl"/>
+                                    <constraint firstItem="geg-su-BCW" firstAttribute="top" secondItem="XfZ-zB-aui" secondAttribute="bottom" id="KBF-2T-SWN"/>
+                                    <constraint firstAttribute="trailing" secondItem="geg-su-BCW" secondAttribute="trailing" constant="5" id="R1V-LO-3hr"/>
                                     <constraint firstItem="Puq-TQ-xWR" firstAttribute="top" secondItem="sqf-5r-TNA" secondAttribute="top" id="UnP-jK-UBB"/>
-                                    <constraint firstAttribute="bottom" secondItem="geg-su-BCW" secondAttribute="bottom" id="gVD-St-BRB"/>
+                                    <constraint firstAttribute="bottom" secondItem="Mqn-XM-gfG" secondAttribute="bottom" constant="5" id="fhm-HH-OUQ"/>
+                                    <constraint firstItem="Mqn-XM-gfG" firstAttribute="leading" secondItem="sqf-5r-TNA" secondAttribute="leading" constant="5" id="gu4-WN-PjA"/>
+                                    <constraint firstAttribute="trailing" secondItem="Mqn-XM-gfG" secondAttribute="trailing" constant="5" id="qYh-nc-iop"/>
                                     <constraint firstAttribute="trailing" secondItem="XfZ-zB-aui" secondAttribute="trailing" id="tOy-pB-6JI"/>
                                     <constraint firstAttribute="trailing" secondItem="Puq-TQ-xWR" secondAttribute="trailing" id="u2J-sh-SeC"/>
                                     <constraint firstItem="XfZ-zB-aui" firstAttribute="leading" secondItem="sqf-5r-TNA" secondAttribute="leading" id="yQV-Kx-kUb"/>
@@ -80,9 +109,6 @@
                             <constraint firstItem="sqf-5r-TNA" firstAttribute="centerX" secondItem="XUe-WB-gwX" secondAttribute="centerX" id="n4E-mM-Kqk"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="XUe-WB-gwX"/>
-                        <connections>
-                            <outletCollection property="gestureRecognizers" destination="QJW-ku-6k4" appends="YES" id="JJn-eV-LRG"/>
-                        </connections>
                     </view>
                     <connections>
                         <outlet property="datePicker" destination="XfZ-zB-aui" id="E3K-WL-b4p"/>
@@ -90,13 +116,8 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xTV-OG-R9r" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="QJW-ku-6k4" userLabel="cancel">
-                    <connections>
-                        <action selector="cancel:" destination="ohh-yA-APs" id="mB5-J2-z2p"/>
-                    </connections>
-                </tapGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="3308" y="813.64317841079469"/>
+            <point key="canvasLocation" x="3307.5" y="813.38028169014081"/>
         </scene>
     </scenes>
 </document>

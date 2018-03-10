@@ -67,11 +67,8 @@
                                 </constraints>
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="18" sectionFooterHeight="18" translatesAutoresizingMaskIntoConstraints="NO" id="YXo-Fz-D2d">
-                                <rect key="frame" x="0.0" y="104" width="320" height="300"/>
+                                <rect key="frame" x="0.0" y="104" width="320" height="335"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="300" id="R0a-R1-Cyj"/>
-                                </constraints>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" accessoryType="checkmark" indentationWidth="10" reuseIdentifier="ShoppingCart" rowHeight="44" id="23c-8H-vrf" customClass="ShoppingCell" customModule="私家厨房" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="18" width="320" height="44"/>
@@ -111,37 +108,50 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="QCb-Cd-PAG">
-                                <rect key="frame" x="0.0" y="404" width="320" height="115"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" spacing="10" translatesAutoresizingMaskIntoConstraints="NO" id="cSg-Vb-DGC">
+                                <rect key="frame" x="26" y="459" width="268" height="40"/>
                                 <subviews>
-                                    <label opaque="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="备注一下" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3oU-FM-FUc">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="30"/>
-                                        <gestureRecognizers/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Mig-NN-D5B">
+                                        <rect key="frame" x="0.0" y="0.0" width="129" height="40"/>
+                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="30" id="4Fh-jW-gl2"/>
+                                            <constraint firstAttribute="height" constant="40" id="1Of-NR-TJS"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
+                                        <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <state key="normal" title="确定">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <outletCollection property="gestureRecognizers" destination="Ze6-XI-Pt2" appends="YES" id="luh-L0-9oe"/>
+                                            <action selector="saveMealList:" destination="am6-st-vbe" eventType="touchUpInside" id="4SR-kx-3yd"/>
+                                            <action selector="saveMealList:" destination="ZvS-BE-RhO" eventType="touchUpInside" id="opC-R1-xsz"/>
                                         </connections>
-                                    </label>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" text="说点什么" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBS-s9-xQM">
-                                        <rect key="frame" x="0.0" y="30" width="320" height="85"/>
-                                        <color key="backgroundColor" white="0.66666666669999997" alpha="0.5" colorSpace="calibratedWhite"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="5q4-Rh-fhU">
+                                        <rect key="frame" x="139" y="0.0" width="129" height="40"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                        <state key="normal" title="取消">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="cancelMealList:" destination="ZvS-BE-RhO" eventType="touchUpInside" id="UdB-I2-DPU"/>
+                                            <action selector="cancelMealList:" destination="am6-st-vbe" eventType="touchUpInside" id="oWc-LQ-O1B"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="dBS-s9-xQM" firstAttribute="leading" secondItem="QCb-Cd-PAG" secondAttribute="leading" id="2oz-PZ-aWt"/>
-                                    <constraint firstAttribute="bottom" secondItem="dBS-s9-xQM" secondAttribute="bottom" id="GtO-Up-IHP"/>
-                                    <constraint firstAttribute="trailing" secondItem="3oU-FM-FUc" secondAttribute="trailing" id="XyM-y2-Py7"/>
-                                    <constraint firstItem="dBS-s9-xQM" firstAttribute="top" secondItem="3oU-FM-FUc" secondAttribute="bottom" id="gwv-31-YKp"/>
-                                    <constraint firstAttribute="trailing" secondItem="dBS-s9-xQM" secondAttribute="trailing" id="kBH-Qa-F7a"/>
-                                    <constraint firstItem="3oU-FM-FUc" firstAttribute="top" secondItem="QCb-Cd-PAG" secondAttribute="top" id="mcG-E4-1el"/>
-                                    <constraint firstItem="3oU-FM-FUc" firstAttribute="leading" secondItem="QCb-Cd-PAG" secondAttribute="leading" id="oRd-gT-FiZ"/>
+                                    <constraint firstItem="5q4-Rh-fhU" firstAttribute="width" secondItem="Mig-NN-D5B" secondAttribute="width" id="Ogf-Pc-Czx"/>
                                 </constraints>
                             </stackView>
                         </subviews>
@@ -149,15 +159,15 @@
                         <gestureRecognizers/>
                         <constraints>
                             <constraint firstItem="eaY-6j-XYc" firstAttribute="leading" secondItem="cZc-1R-1y7" secondAttribute="leading" id="4Oa-e8-gkZ"/>
+                            <constraint firstItem="cSg-Vb-DGC" firstAttribute="top" secondItem="YXo-Fz-D2d" secondAttribute="bottom" constant="20" id="5Db-65-X5Q"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="cSg-Vb-DGC" secondAttribute="trailing" constant="10" id="EG6-IE-qcl"/>
                             <constraint firstItem="eaY-6j-XYc" firstAttribute="top" secondItem="QHf-jC-I94" secondAttribute="bottom" id="IeC-Ju-OYL"/>
-                            <constraint firstItem="QCb-Cd-PAG" firstAttribute="leading" secondItem="cZc-1R-1y7" secondAttribute="leading" id="Qvg-34-f1Z"/>
                             <constraint firstAttribute="trailing" secondItem="eaY-6j-XYc" secondAttribute="trailing" id="SL5-EH-dDf"/>
                             <constraint firstAttribute="trailing" secondItem="YXo-Fz-D2d" secondAttribute="trailing" id="SpQ-8R-5bk"/>
                             <constraint firstItem="YXo-Fz-D2d" firstAttribute="top" secondItem="eaY-6j-XYc" secondAttribute="bottom" id="TcC-ty-brV"/>
-                            <constraint firstAttribute="trailing" secondItem="QCb-Cd-PAG" secondAttribute="trailing" id="YDh-AF-2RN"/>
+                            <constraint firstItem="cSg-Vb-DGC" firstAttribute="leading" secondItem="cZc-1R-1y7" secondAttribute="leadingMargin" constant="10" id="VI0-1U-rvk"/>
                             <constraint firstItem="YXo-Fz-D2d" firstAttribute="leading" secondItem="cZc-1R-1y7" secondAttribute="leading" id="p0I-Ma-nkR"/>
-                            <constraint firstItem="QCb-Cd-PAG" firstAttribute="top" secondItem="YXo-Fz-D2d" secondAttribute="bottom" id="weN-nL-7Tu"/>
-                            <constraint firstItem="3RU-37-0Ho" firstAttribute="top" secondItem="QCb-Cd-PAG" secondAttribute="bottom" id="zxs-gB-mQi"/>
+                            <constraint firstItem="3RU-37-0Ho" firstAttribute="top" secondItem="cSg-Vb-DGC" secondAttribute="bottom" constant="20" id="xfD-ek-pT5"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="今日菜单" id="LmM-Wc-a5u">
@@ -169,13 +179,12 @@
                     </navigationItem>
                     <connections>
                         <outlet property="catagoryLabel" destination="U0E-eR-uCL" id="arb-qx-Pc2"/>
-                        <outlet property="comment" destination="dBS-s9-xQM" id="hsw-hv-r94"/>
                         <outlet property="dateLabel" destination="rQw-Fc-hsY" id="4E5-2p-iYb"/>
                         <outlet property="firstTableView" destination="YXo-Fz-D2d" id="uUv-R2-Cr3"/>
-                        <outlet property="topConstraint" destination="IeC-Ju-OYL" id="Iej-0d-Bhg"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="kKP-CZ-89p" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="am6-st-vbe" userLabel="Exit" sceneMemberID="exit"/>
                 <tapGestureRecognizer id="Wue-5s-OSn" userLabel="catagoryTap">
                     <connections>
                         <action selector="selectMealCatagory:" destination="ZvS-BE-RhO" id="Bjr-eq-6kB"/>
@@ -184,11 +193,6 @@
                 <tapGestureRecognizer id="eTq-GQ-H9Z" userLabel="dateTap">
                     <connections>
                         <action selector="selectDate:" destination="ZvS-BE-RhO" id="sgq-Ml-mSw"/>
-                    </connections>
-                </tapGestureRecognizer>
-                <tapGestureRecognizer id="Ze6-XI-Pt2" userLabel="dismissKeyboard2">
-                    <connections>
-                        <action selector="dismiss2:" destination="ZvS-BE-RhO" id="v6Q-Li-UhH"/>
                     </connections>
                 </tapGestureRecognizer>
             </objects>
@@ -2311,6 +2315,6 @@
         <image name="user" width="126" height="126"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hFJ-12-ugq"/>
+        <segue reference="EzU-HL-aTJ"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -25,5 +25,6 @@ extension Meal {
     @NSManaged public var userName: String
     @NSManaged public var identifier: String
     @NSManaged public var database: String
-
+    @NSManaged public var savedInCloud: Bool
+    @NSManaged public var newMeal: Bool
 }

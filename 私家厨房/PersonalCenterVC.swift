@@ -35,7 +35,7 @@ class PersonalCenterVC: UIViewController {
         button3.layer.cornerRadius = buttonWidth.constant/2
         button4.layer.cornerRadius = buttonWidth.constant/2
         
-        personalPhoto.image = DataStore().imageForKey(key: userName) ?? UIImage(named: AssetNames.defaultPhoto)!
+        personalPhoto.image = DataStore().getImageForKey(key: userName) ?? UIImage(named: AssetNames.defaultPhoto)!
         // Do any additional setup after loading the view.
     }
 
@@ -79,7 +79,7 @@ extension PersonalCenterVC : UIImagePickerControllerDelegate, UINavigationContro
         //photo.image = selectedImage
 
         personalPhoto.image = compressedImage
-        DataStore().setImage(image: compressedImage!, forKey: userName)
+        DataStore().saveImageInDisk(image: compressedImage!, forKey: userName)
         
         // Dismiss the picker.
         dismiss(animated: true, completion: nil)

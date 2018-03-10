@@ -72,7 +72,7 @@ extension OrderListCenterDataSource : UITableViewDataSource {
         var mealPhotos = [UIImage]()
         
         for identifier in photoIdentifers {
-            mealPhotos.append(DataStore().imageForKey(key: identifier)!)
+            mealPhotos.append(DataStore().getImageForKey(key: identifier)!)
         }
         
         self.mealPhotos = mealPhotos

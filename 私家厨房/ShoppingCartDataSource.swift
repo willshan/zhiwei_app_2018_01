@@ -119,11 +119,11 @@ extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
 
         return cell
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        shoppingCartController?.dismissKeyBoard()
-    }
-    
+//
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        shoppingCartController?.dismissKeyBoard()
+//    }
+//
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
@@ -152,7 +152,7 @@ extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
                 self.updateShoppingCartIconBadgeNumber(orderedMealCount: self.selectedMealsCount)
                 
                 //read shoppingCartList from disk
-                var shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+                let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
                 
                 //remove deleted meal from shoppingCartlist
                 var orderedMealIdentifers = self.shoppingCartController!.shoppingCartList!.mealsIdentifiers!

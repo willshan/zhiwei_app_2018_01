@@ -1,21 +1,21 @@
 //
-//  MealLocalCache.swift
+//  SharedMealLocalCache.swift
 //  私家厨房
 //
-//  Created by Will.Shan on 27/02/2018.
+//  Created by Will.Shan on 10/03/2018.
 //  Copyright © 2018 待定. All rights reserved.
 //
-
 import Foundation
 import CloudKit
 
-final class MealLocalCache: BaseLocalCache {
-    static let share = MealLocalCache()
+final class SharedMealLocalCache: BaseLocalCache {
+    static let share = SharedMealLocalCache()
     
     var container: CKContainer!
     var database: CKDatabase!
     var zone = CKRecordZone.default()
-    let key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
+    let key = "sharedDB_defaultZone_tokenKey"
+    
     var serverChangeToken: CKServerChangeToken? = nil
     
     var meals = [Meal]()
@@ -29,9 +29,8 @@ final class MealLocalCache: BaseLocalCache {
             return
         }
         self.container = container
-        
         let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: key)
-        self.serverChangeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken
+        serverChangeToken = NSKeyedUnarchiver.unarchiveObject(withFile: tokenURL.path) as? CKServerChangeToken
         
         switchZone(newDatabase: database, newZone: zone)
     }
@@ -44,7 +43,7 @@ final class MealLocalCache: BaseLocalCache {
         // Use NSMutableDictionary, rather than Swift dictionary
         // because this may be changed in the completion handler.
         //
-        print("Fetching private changed records begining")
+        print("Fetching shared changed records begining")
         let notificationObject = NSMutableDictionary()
         
         let options = CKFetchRecordZoneChangesOptions()
@@ -62,7 +61,7 @@ final class MealLocalCache: BaseLocalCache {
             recordsChanged.append(record)
             
             //单个meal变化即发送
-            notificationObject.setValue([record], forKey: NotificationObjectKey.recordsChanged)
+            notificationObject.setValue([record], forKey: NotificationObjectKey.sharedRecordChanged)
             DispatchQueue.main.async {
                 NotificationCenter.default.post(name: .mealCacheDidChange, object: notificationObject)
             }
@@ -84,16 +83,7 @@ final class MealLocalCache: BaseLocalCache {
         operation.recordZoneChangeTokensUpdatedBlock = {(zoneID, serverChangeToken, clientChangeTokenData) in
             assert(zoneID == self.zone.zoneID)
             self.serverChangeToken = serverChangeToken
-            //save serverChangeToken to disk
-//            var key = ""
-//            if self.container.displayName(of: self.database) == "Private" {
-//           ICloudPropertyStore.changeTokenKey.privateCustomeZone
-//            }
-//
-//            if self.container.displayName(of: self.database) == "Shared" {
-//                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
-//            }
-            
+
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: self.key)
             NSKeyedArchiver.archiveRootObject(serverChangeToken as Any, toFile: tokenURL.path)
         }
@@ -117,15 +107,6 @@ final class MealLocalCache: BaseLocalCache {
             self.serverChangeToken = serverChangeToken
             
             //save serverChangeToken to disk
-//            var key = ""
-//            if self.container.displayName(of: self.database) == "Private" {
-//                key = ICloudPropertyStore.changeTokenKey.privateCustomeZone
-//            }
-//
-//            if self.container.displayName(of: self.database) == "Shared" {
-//                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
-//            }
-//
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: self.key)
             NSKeyedArchiver.archiveRootObject(serverChangeToken as Any, toFile: tokenURL.path)
         }
@@ -134,15 +115,15 @@ final class MealLocalCache: BaseLocalCache {
             
             // Push recordIDsDeleted and recordsChanged into notification payload.
             // 所有的record全部下载后一起更新
-//            notificationObject.setValue(recordIDsDeleted, forKey: NotificationObjectKey.recordIDsDeleted)
-//            notificationObject.setValue(recordsChanged, forKey: NotificationObjectKey.recordsChanged)
-
+            //            notificationObject.setValue(recordIDsDeleted, forKey: NotificationObjectKey.recordIDsDeleted)
+            //            notificationObject.setValue(recordsChanged, forKey: NotificationObjectKey.recordsChanged)
+            
         }
         operation.database = database
         operationQueue.addOperation(operation)
         
         // 所有的record全部下载后一起更新
-//        postNotificationWhenAllOperationsAreFinished(name: .mealCacheDidChange, object: notificationObject)
+        //        postNotificationWhenAllOperationsAreFinished(name: .mealCacheDidChange, object: notificationObject)
     }
     
     
@@ -156,7 +137,7 @@ final class MealLocalCache: BaseLocalCache {
         zone = newZone
         
         if newZone == CKRecordZone.default() {
-//            fetchCurrentZone() // Fetch all records at the very beginning.
+            //            fetchCurrentZone() // Fetch all records at the very beginning.
         }
         else {
             serverChangeToken = nil
@@ -164,4 +145,3 @@ final class MealLocalCache: BaseLocalCache {
         }
     }
 }
-

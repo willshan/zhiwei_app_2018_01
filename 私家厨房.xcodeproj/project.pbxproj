@@ -15,6 +15,7 @@
 		BE10313C1F2789E800DAA003 /* DataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE10313B1F2789E800DAA003 /* DataStore.swift */; };
 		BE156E60204C099100033D19 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE156E5F204C099100033D19 /* Reachability.swift */; };
 		BE24A9641F94E9C600BCB339 /* ExtensionList.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE24A9601F94D08900BCB339 /* ExtensionList.swift */; };
+		BE31A7AE2053BE0100E6E758 /* SharedMealLocalCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE31A7AD2053BE0100E6E758 /* SharedMealLocalCache.swift */; };
 		BE324A862022140000DC778D /* CloudExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE324A852022140000DC778D /* CloudExtension.swift */; };
 		BE3310FD1F2A6D81001E7E3B /* ImageHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE3310FC1F2A6D81001E7E3B /* ImageHelper.swift */; };
 		BE3DDF4A1F263F310013AD47 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = BE3DDF481F263F310013AD47 /* DataModel.xcdatamodeld */; };
@@ -88,6 +89,7 @@
 		BE24A95F1F94C60000BCB339 /* CloudKitExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitExtensions.swift; sourceTree = "<group>"; };
 		BE24A9601F94D08900BCB339 /* ExtensionList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionList.swift; sourceTree = "<group>"; };
 		BE2ACE6620090674001F4F66 /* 私家厨房.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "私家厨房.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BE31A7AD2053BE0100E6E758 /* SharedMealLocalCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedMealLocalCache.swift; sourceTree = "<group>"; };
 		BE324A852022140000DC778D /* CloudExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudExtension.swift; sourceTree = "<group>"; };
 		BE3310FC1F2A6D81001E7E3B /* ImageHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageHelper.swift; sourceTree = "<group>"; };
 		BE3DDF491F263F310013AD47 /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
@@ -175,6 +177,7 @@
 				BE8E38E920459C6900CC12FB /* BaseLocalCache.swift */,
 				BE8D0165201E0D0500C81D92 /* ZoneLocalCache.swift */,
 				BE8E38EB2045B10900CC12FB /* MealLocalCache.swift */,
+				BE31A7AD2053BE0100E6E758 /* SharedMealLocalCache.swift */,
 				BE24A95E1F94C5E800BCB339 /* CloudKitError.swift */,
 				BE324A852022140000DC778D /* CloudExtension.swift */,
 				BE156E5F204C099100033D19 /* Reachability.swift */,
@@ -496,6 +499,7 @@
 				BE08D8371F22F8A4001A93C7 /* PersonalSetVC.swift in Sources */,
 				BE910092200078A200E6C9A8 /* ProtocolList.swift in Sources */,
 				BE8D0163201D5CEB00C81D92 /* CloudKitError.swift in Sources */,
+				BE31A7AE2053BE0100E6E758 /* SharedMealLocalCache.swift in Sources */,
 				BE0D55B11F2A266200F482EA /* Meal+CoreDataProperties.swift in Sources */,
 				BE8E38DC2045940C00CC12FB /* ZoneLocalCache.swift in Sources */,
 				BE7215541F55B9C500067530 /* StructList.swift in Sources */,

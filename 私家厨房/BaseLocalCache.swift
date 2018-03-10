@@ -23,6 +23,7 @@ struct NotificationObjectKey {
     static let reason = "reason"
     static let recordIDsDeleted = "recordIDsDeleted"
     static let recordsChanged = "recordsChanged"
+    static let sharedRecordChanged = "sharedRecordChanged"
     static let newMeal = "newMeal"
 }
 

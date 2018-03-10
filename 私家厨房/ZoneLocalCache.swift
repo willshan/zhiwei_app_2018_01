@@ -214,9 +214,8 @@ final class ZoneLocalCache : BaseLocalCache{
                 
                 print("+++++++zoneID to be saved is \(zoneID)")
             }
-            guard database.cloudKitDB === MealLocalCache.share.database &&
-                zoneID == MealLocalCache.share.zone.zoneID else {return}
-            
+//            guard database.cloudKitDB === MealLocalCache.share.database &&
+//                zoneID == MealLocalCache.share.zone.zoneID else {return}
 //            MealLocalCache.share.fetchChanges()
         }
         
@@ -272,7 +271,12 @@ final class ZoneLocalCache : BaseLocalCache{
             
 //            // Flush in-memory database change token to disk
 //            NSKeyedArchiver.archiveRootObject(database.serverChangeToken as Any, toFile: databaseChangetokenURL.path)
-            MealLocalCache.share.fetchChanges()
+            if database.name == "Private" {
+                MealLocalCache.share.fetchChanges()
+            }
+            if database.name == "Shared" {
+                SharedMealLocalCache.share.fetchChanges()
+            }
             completion(error)
         }
         operation.database = database.cloudKitDB

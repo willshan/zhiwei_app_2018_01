@@ -89,9 +89,6 @@ extension EditMealVC : UITextFieldDelegate, UITextViewDelegate,UIImagePickerCont
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         print("will will appear")
-        if mealType.text != "点击选择" {
-            mealType.backgroundColor = UIColor.white
-        }
         updateSaveButtonState()
     }
     
@@ -235,6 +232,8 @@ extension EditMealVC{
             mealToAdd.spicy = Int64(spicy)
             mealToAdd.userName = CKCurrentUserDefaultName
             mealToAdd.database = "Private"
+            mealToAdd.savedInCloud = false
+            mealToAdd.newMeal = true
             
             //mealToAdd.identifier = HandleCoreData.RandomString()
             mealToAdd.identifier = NSUUID().uuidString

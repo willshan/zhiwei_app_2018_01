@@ -12,6 +12,9 @@ class DatePopUpVC: UIViewController {
 
     @IBOutlet weak var datePicker: UIDatePicker!
     @IBOutlet weak var saveButton: UIButton!
+    @IBAction func cancel(_ sender: UIButton) {
+        dismiss(animated: true)
+    }
     
     var delegate : DataTransferBackProtocol?
     
@@ -19,10 +22,6 @@ class DatePopUpVC: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-    }
-    @IBAction func cancel(_ sender: UITapGestureRecognizer) {
-        
-        dismiss(animated: true)
     }
     
     @IBAction func dismissPopUP(_ sender: Any) {

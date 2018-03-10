@@ -76,11 +76,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 let zone = CKRecordZone(zoneID: zoneID!)
                 
                 MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: zone)
+                
             }
             else {
                 MealLocalCache.share.initialize(container: self.container, database: self.container.privateCloudDatabase, zone: CKRecordZone.default())
             }
-
+            
+            SharedMealLocalCache.share.initialize(container: self.container, database: self.container.sharedCloudDatabase, zone: CKRecordZone.default())
+            
             ZoneLocalCache.share.fetchChanges(in: .private, completion: { (error) in })
             ZoneLocalCache.share.fetchChanges(in: .shared, completion: { (error) in })
         }
@@ -171,6 +174,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if CloudKitError.share.handle(error: error, operation: .accountStatus, alert: true) == nil &&
                 status == CKAccountStatus.available {
                 
+                self.stateController!.changeAccountStatus(true)
+                
                 if let completionHandler = completionHandler {completionHandler()}
                 return
             }
@@ -181,6 +186,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     
                     if CloudKitError.share.handle(error: error, operation: .accountStatus, alert: true) == nil &&
                         status == CKAccountStatus.available {
+                        
+                        self.stateController!.changeAccountStatus(true)
                         
                         if let completionHandler = completionHandler {completionHandler()}
                         return

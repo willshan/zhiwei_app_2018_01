@@ -120,7 +120,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         cell.mealName.text = meal.mealName
         cell.spicy.spicy = Int(meal.spicy)
         cell.spicy.spicyCount = Int(meal.spicy)
-        cell.photo.image = DataStore().imageForKey(key: meal.identifier)
+        cell.photo.image = DataStore().getImageForKey(key: meal.identifier)
         //photos[meal.identifier!] = cell.photo.image
         
         //设置cell的背景和按钮
@@ -230,21 +230,26 @@ extension MealListDataSource {
                 
                 // Insert successfully saved record code
                 print("successfully delete in icloud")
+                return
             }
         }
-//        else {
-//            //delete CKRecord
-//            DatabaseLocalCache.share.sharedDB.delete(withRecordID: record!.recordID) { (recordID, error) in
-//                if error != nil {
-//                    // Insert error handling
-//                    print("failed delete in icloud")
-//                    return
-//                }
-//
-//                // Insert successfully saved record code
-//                print("successfully delete in icloud")
-//            }
-//        }
+        if meal.database == "Shared" {
+            //delete CKRecord
+            ZoneLocalCache.share.databases[2].cloudKitDB.delete(withRecordID: record!.recordID) { (recordID, error) in
+                if error != nil {
+                    // Insert error handling
+                    print("failed delete in icloud")
+                    return
+                }
+
+                // Insert successfully saved record code
+                print("successfully delete in icloud")
+                return
+            }
+        }
+        else {
+            print("Thiss is a bug, because the record to be deleted in not in PrivateDB and SharedDB")
+        }
         //option 2:
 //        // Delete in background
 //        let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)

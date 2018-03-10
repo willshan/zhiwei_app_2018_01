@@ -98,7 +98,7 @@ class HandleCoreData: NSObject {
             let imageAsset = record!["image"] as! CKAsset
             let imageURL = imageAsset.fileURL
             let image = UIImage(contentsOfFile: imageURL.path)
-            DataStore().setImage(image: image!, forKey: record!.recordID.recordName)
+            DataStore().saveImageInDisk(image: image!, forKey: record!.recordID.recordName)
             
             mealToAdd.mealName = record!["mealName"] as! String
             mealToAdd.spicy = record!["spicy"] as! Int64
@@ -114,6 +114,8 @@ class HandleCoreData: NSObject {
             mealToAdd.userName = CKCurrentUserDefaultName
             mealToAdd.identifier = record!["mealIdentifier"] as! String
             mealToAdd.database = database ?? "Private"
+            mealToAdd.savedInCloud = true
+            mealToAdd.newMeal = false
             /*
             let userName : String? = UserDefaults.standard.string(forKey: "user_name")
             let invitationCode = InvitationCodeStorage().invitationCodeForKey(key: "invitationCode", userName: userName!)
@@ -137,7 +139,8 @@ class HandleCoreData: NSObject {
             mealToAdd.userName = meal!.userName
             mealToAdd.identifier = meal?.identifier ?? NSUUID().uuidString
             mealToAdd.database = database ?? "Private"
-
+            mealToAdd.savedInCloud = false
+            mealToAdd.newMeal = true
         }
         
         //保存
@@ -261,7 +264,38 @@ class HandleCoreData: NSObject {
         }
         print("++++++++++Complete queryDataWithIdentifer+++++++++++++++")
         return meals
+    }
+    
+    class func changeNewMeal(_ identifier : String) {
+        //获取数据上下文对象
+        print("++++++++++queryDataWithIdentifer+++++++++++++++")
+        //声明数据的请求
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 10  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
         
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        let predicate = NSPredicate.init(format: "identifier = '\(identifier)'", "")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            //遍历查询的结果
+            for info in fetchedObjects{
+                info.newMeal = false
+                saveContext()
+            }
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete queryDataWithIdentifer+++++++++++++++")
     }
     
     
@@ -283,6 +317,42 @@ class HandleCoreData: NSObject {
         //设置查询条件
         
         let predicate = NSPredicate.init(format: "identifier = '\(identifier)'", "userName = '\(userName)'")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            
+            //遍历查询的结果
+            for info in fetchedObjects{
+                meals.append(info)
+            }
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete queryDataWithIdentiferAndUser+++++++++++++++")
+        return meals
+    }
+    
+    class func queryDataWithSaveStatusAndUser(_ userName : String) -> [Meal] {
+        
+        //获取数据上下文对象
+        print("++++++++++queryDataWithIdentiferAndUser+++++++++++++++")
+        var meals = [Meal]()
+        //声明数据的请求
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 10  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
+        
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        
+        let predicate = NSPredicate.init(format: "savedInCloud = 'false'", "userName = '\(userName)'")
         fetchRequest.predicate = predicate
         
         //查询操作
@@ -357,7 +427,7 @@ class HandleCoreData: NSObject {
                     let imageAsset = record!["image"] as! CKAsset
                     let imageURL = imageAsset.fileURL
                     let image = UIImage(contentsOfFile: imageURL.path)
-                    DataStore().setImage(image: image!, forKey: record!.recordID.recordName)
+                    DataStore().saveImageInDisk(image: image!, forKey: record!.recordID.recordName)
                     
                     mealToAdd.mealName = record!["mealName"] as! String
                     mealToAdd.spicy = record!["spicy"] as! Int64
@@ -457,6 +527,39 @@ class HandleCoreData: NSObject {
         print("++++++++++Complete updateMealSelectionStatus+++++++++++++++")
     }
     
+    class func updateSaveInCloudStatus(identifier : String, savingStatus : Bool){
+        //声明数据的请求
+        print("++++++++++updateSaveInCloudStatus+++++++++++++++")
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 1  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
+        
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        let predicate = NSPredicate.init(format: "identifier = '\(identifier)'", "")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            
+            //遍历查询的结果
+            for meal in fetchedObjects{
+                //icloud status
+                meal.savedInCloud = savingStatus
+                //重新保存
+                saveContext()
+            }
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete updateSaveInCloudStatus+++++++++++++++")
+    }
     
     ////Mark: - Delete data in coreData
     /*

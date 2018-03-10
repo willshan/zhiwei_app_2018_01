@@ -12,10 +12,24 @@ class ShoppingCartList : NSObject, NSCoding{
     var date : Date
     var mealCatagory : String?
     var mealsIdentifiers : [String]?
+    static let dateFormatter : DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        return formatter
+        
+    }()
     
-    //MARK: Archiving Paths
     static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
     static let ArchiveURL = DocumentsDirectory.appendingPathComponent("shoppingCartList")
+    
+//    //MARK: Archiving Paths
+//    class func generateArchiveURL(date : Date, mealCategory : String) -> URL{
+//        let date1 = dateFormatter.string(from: date)
+//        let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+//        let ArchiveURL = DocumentsDirectory.appendingPathComponent("shoppingCartList_"+"\(date1)"+"_\(mealCategory)")
+//        return ArchiveURL
+//    }
     
     //MARK: Types
     struct PropertyKey {

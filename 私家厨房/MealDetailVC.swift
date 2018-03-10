@@ -21,6 +21,7 @@ class MealDetailVC: UIViewController {
     @IBOutlet weak var mealType: UILabel!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     
+    
     var meal: Meal!
     var photoFromOrderMeal : UIImage!
 
@@ -31,7 +32,6 @@ class MealDetailVC: UIViewController {
         return formatter
     }()
 }
-
 
 extension MealDetailVC {
     //MARK: -LifeCycle

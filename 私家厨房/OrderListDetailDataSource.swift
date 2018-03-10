@@ -65,7 +65,7 @@ extension OrderListDetailDataSource : UITableViewDataSource {
         }
         cell.index.text = String(indexPath.row+1)
         cell.mealName.text = orderListDetail.orderList[indexPath.section][indexPath.row].mealName
-        cell.mealPhoto.image = DataStore().imageForKey(key: orderListDetail.orderList[indexPath.section][indexPath.row].mealIdentifier)
+        cell.mealPhoto.image = DataStore().getImageForKey(key: orderListDetail.orderList[indexPath.section][indexPath.row].mealIdentifier)
         cell.mealCount.text = "\(orderListDetail.orderList[indexPath.section][indexPath.row].mealCount)份"
         
         return cell
