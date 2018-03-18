@@ -263,5 +263,4 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
 //        //PFPush.handle(notification.request.content.userInfo)
 //        completionHandler([.alert, .badge, .sound])
     }
-
 }

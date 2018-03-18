@@ -20,6 +20,17 @@ struct OrderListStruct {
     }
 }
 
+struct CollapsibleMeals {
+    var meals : [Meal]
+    var collapsed : Bool
+    
+    init(meals : [Meal], collapsed : Bool){
+        
+        self.meals = meals
+        self.collapsed = collapsed
+    }
+}
+
 struct OrderedMeal {
     var mealName : String
     var mealIdentifier : String

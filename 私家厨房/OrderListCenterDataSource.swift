@@ -34,7 +34,6 @@ extension OrderListCenterDataSource : UITableViewDataSource {
             fatalError("The dequeued cell is not an instance of OrderListCenterCell.")
         }
         cell.date.text = orderLists[indexPath.row].orderTime
-        cell.button1.layer.borderColor = UIColor.red.cgColor
         
         //orderLists已经是按菜种分类过的
         let orderList1 = orderLists[indexPath.row].orderList[0]
@@ -67,7 +66,7 @@ extension OrderListCenterDataSource : UITableViewDataSource {
         else {
             cell.drink.isHidden = false
         }
-        //??????????????从这里开始检查
+
         let photoIdentifers = orderLists[indexPath.row].mealsIdentifiers
         var mealPhotos = [UIImage]()
         
@@ -76,14 +75,7 @@ extension OrderListCenterDataSource : UITableViewDataSource {
         }
         
         self.mealPhotos = mealPhotos
-        if mealPhotos.count <= 5 {
-            cell.etc.isHidden = true
-        }
-        else {
-            cell.etc.isHidden = false
-        }
-        
-        ///????????????
+
         cell.photoCollection.dataSource = self
         
         return cell

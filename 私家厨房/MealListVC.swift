@@ -26,6 +26,7 @@ class MealListVC: UIViewController {
     var searchController : UISearchController!
     var resultsController = UITableViewController()
     var selectedIndexPath : IndexPath!
+    var mealListOpen = true
     
     deinit {
         print("The instance of MealListVC was deinited!!!")
@@ -49,9 +50,30 @@ extension MealListVC{
         networkStatusListener()
         
         // Use the edit button item provided by the table view controller.
-        navigationItem.leftBarButtonItem = editButtonItem
-        
+//        navigationItem.leftBarButtonItem = editButtonItem
+//        var organizeButtonItem : UIBarButtonItem {
+//            return UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(self.openAndCloseMealList(_:)))
+//        }
+//
+//        navigationItem.leftBarButtonItems = [editButtonItem, organizeButtonItem]
+        navigationItem.leftBarButtonItems = [editButtonItem]
         setSearchController()
+        
+        //        dataSource = MealListDataSource(meals: stateController.meals)
+//        dataSource = MealListDataSource(meals: stateController.getAllMeals())
+//        dataSource.mealListVC = self
+//
+//        if stateController.mealOrderList != nil {
+//            dataSource.mealOrderList = stateController.mealOrderList
+//        }
+//
+//        firstTableView.dataSource = dataSource
+//        firstTableView.delegate = dataSource
+//
+//        resultsController.tableView.dataSource = dataSource
+//        searchController.searchResultsUpdater = dataSource
+//        resultsController.tableView.delegate = dataSource
+        
     }
     
     //这一步在unwind之后调用
@@ -62,14 +84,14 @@ extension MealListVC{
         //        dataSource = MealListDataSource(meals: stateController.meals)
         dataSource = MealListDataSource(meals: stateController.getAllMeals())
         dataSource.mealListVC = self
-        
+
         if stateController.mealOrderList != nil {
             dataSource.mealOrderList = stateController.mealOrderList
         }
-        
+
         firstTableView.dataSource = dataSource
         firstTableView.delegate = dataSource
-        
+
         resultsController.tableView.dataSource = dataSource
         searchController.searchResultsUpdater = dataSource
         resultsController.tableView.delegate = dataSource
@@ -77,6 +99,26 @@ extension MealListVC{
         firstTableView.reloadData()
     }
 }
+extension MealListVC {
+    @objc func openAndCloseMealList(_ sender : UIBarButtonItem) {
+        if mealListOpen == true {
+            mealListOpen = false
+            dataSource.mealListBySections[0].collapsed = true
+            dataSource.mealListBySections[1].collapsed = true
+            dataSource.mealListBySections[2].collapsed = true
+            dataSource.mealListBySections[3].collapsed = true
+        }
+        else {
+            mealListOpen = true
+            dataSource.mealListBySections[0].collapsed = false
+            dataSource.mealListBySections[1].collapsed = false
+            dataSource.mealListBySections[2].collapsed = false
+            dataSource.mealListBySections[3].collapsed = false
+        }
+        self.firstTableView.reloadData()
+    }
+}
+
 extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -526,10 +568,10 @@ extension MealListVC {
                 record?.encodeSystemFields(with: coder)
                 coder.finishEncoding()
                 
-                let key = "Record_"+mealRecord.recordID.recordName
+                let key = "Record_"+record!.recordID.recordName
                 let url = DataStore().objectURLForKey(key: key)
                 NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
-                HandleCoreData.updateSaveInCloudStatus(identifier: mealRecord.recordID.recordName, savingStatus: true)
+                HandleCoreData.updateSaveInCloudStatus(identifier: record!.recordID.recordName, savingStatus: true)
             })
         }
         else {
@@ -554,7 +596,7 @@ extension MealListVC {
                         record?.encodeSystemFields(with: coder)
                         coder.finishEncoding()
                         
-                        let key = "Record_"+mealRecord.recordID.recordName
+                        let key = "Record_"+record!.recordID.recordName
                         let url = DataStore().objectURLForKey(key: key)
                         NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                         HandleCoreData.updateSaveInCloudStatus(identifier: mealRecord.recordID.recordName, savingStatus: true)
@@ -581,19 +623,20 @@ extension MealListVC {
             os_log("Adding a new meal.", log: OSLog.default, type: .debug)
             
         case SegueID.showMealDetail:
+            print("cell tapped")
             guard let viewDetailVC = segue.destination as? MealDetailVC else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
             var selectedMeal = Meal()
             print(dataSource.searchedMeals.count)
             if dataSource.searchedMeals.count == 0 {
-                selectedMeal = self.dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row]
+                selectedMeal = self.dataSource.mealListBySections[selectedIndexPath.section].meals[selectedIndexPath.row]
             }
             else {
-                selectedMeal = self.dataSource.searchMealsBySections[selectedIndexPath.section][selectedIndexPath.row]
+                selectedMeal = self.dataSource.searchMealsBySections[selectedIndexPath.section].meals[selectedIndexPath.row]
             }
             
-            print("***************\(selectedMeal)")
+//            print("***************\(selectedMeal)")
             
             viewDetailVC.meal = selectedMeal
             
@@ -626,37 +669,37 @@ extension MealListVC {
             //Determine update meal or add new meal
             if let selectedIndexPath = firstTableView.indexPathForSelectedRow {
                 //Update an existing meal
-                if meal.mealType != dataSource.mealListBySections[selectedIndexPath.section].first?.mealType {
+                if meal.mealType != dataSource.mealListBySections[selectedIndexPath.section].meals.first?.mealType {
                     //移出数据
-                    dataSource.mealListBySections[selectedIndexPath.section].remove(at: selectedIndexPath.row)
+                    dataSource.mealListBySections[selectedIndexPath.section].meals.remove(at: selectedIndexPath.row)
                     //移出表格
                     let indexPath = IndexPath(row: selectedIndexPath.row, section: selectedIndexPath.section)
                     firstTableView.deleteRows(at: [indexPath], with: .automatic)
                     
                     if meal.mealType == "凉菜" {
-                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[0].count, section: 0)
-                        dataSource.mealListBySections[0].append(meal)
+                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[0].meals.count, section: 0)
+                        dataSource.mealListBySections[0].meals.append(meal)
                         firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                     }
                     if meal.mealType == "热菜" {
-                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[1].count, section: 1)
-                        dataSource.mealListBySections[1].append(meal)
+                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[1].meals.count, section: 1)
+                        dataSource.mealListBySections[1].meals.append(meal)
                         firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                     }
                     if meal.mealType == "汤" {
-                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[2].count, section: 2)
-                        dataSource.mealListBySections[2].append(meal)
+                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[2].meals.count, section: 2)
+                        dataSource.mealListBySections[2].meals.append(meal)
                         firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                     }
                     if meal.mealType == "酒水" {
-                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[3].count, section: 3)
-                        dataSource.mealListBySections[3].append(meal)
+                        let newIndexPath = IndexPath(row: dataSource.mealListBySections[3].meals.count, section: 3)
+                        dataSource.mealListBySections[3].meals.append(meal)
                         firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                     }
                 }
                     
                 else {
-                    dataSource.mealListBySections[selectedIndexPath.section][selectedIndexPath.row] = meal
+                    dataSource.mealListBySections[selectedIndexPath.section].meals[selectedIndexPath.row] = meal
                     firstTableView.reloadRows(at: [selectedIndexPath], with: .none)
                 }
                 
@@ -749,7 +792,7 @@ extension MealListVC {
                 //option 2: Fetch CKRecord from icloud and save
 //                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForPrivateCustomZoneID)
 //                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, ownerName: CKCurrentUserDefaultName)
-////                let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID
+
 //                print("the zone id of current meal is \(String(describing: zoneID))")
 //
 //                let recordID = CKRecordID(recordName: meal.identifier, zoneID: zoneID)
@@ -818,23 +861,23 @@ extension MealListVC {
             else {
                 //Add a new meal
                 if meal.mealType == "凉菜" {
-                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[0].count, section: 0)
-                    dataSource.mealListBySections[0].append(meal)
+                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[0].meals.count, section: 0)
+                    dataSource.mealListBySections[0].meals.append(meal)
                     firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
                 if meal.mealType == "热菜" {
-                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[1].count, section: 1)
-                    dataSource.mealListBySections[1].append(meal)
+                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[1].meals.count, section: 1)
+                    dataSource.mealListBySections[1].meals.append(meal)
                     firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
                 if meal.mealType == "汤" {
-                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[2].count, section: 2)
-                    dataSource.mealListBySections[2].append(meal)
+                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[2].meals.count, section: 2)
+                    dataSource.mealListBySections[2].meals.append(meal)
                     firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
                 if meal.mealType == "酒水" {
-                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[3].count, section: 3)
-                    dataSource.mealListBySections[3].append(meal)
+                    let newIndexPath = IndexPath(row: dataSource.mealListBySections[3].meals.count, section: 3)
+                    dataSource.mealListBySections[3].meals.append(meal)
                     firstTableView.insertRows(at: [newIndexPath], with: .automatic)
                 }
                 //MARK: Save new meal to iCloud

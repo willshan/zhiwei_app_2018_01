@@ -299,6 +299,7 @@ extension CKContainer {
             // Fetch CKShare record if the root record has alreaad shared.
             //
             print("share was already exited")
+            
             let fetchRecordsOp = CKFetchRecordsOperation(recordIDs: [shareRef.recordID])
             fetchRecordsOp.fetchRecordsCompletionBlock = {recordsByRecordID, error in
                 

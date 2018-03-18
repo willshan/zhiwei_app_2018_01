@@ -18,8 +18,6 @@ class OrderListCenterCell: UITableViewCell {
     @IBOutlet weak var drink: UILabel!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var photoCollection: UICollectionView!
-    @IBOutlet weak var etc: UILabel!
-    @IBOutlet weak var button1: UIButton!
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)

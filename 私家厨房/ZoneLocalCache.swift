@@ -330,24 +330,6 @@ extension ZoneLocalCache {
         }
             //creat custom zone for sharedDB
         else {
-            //            guard self.createdShareZone == false else {return}
-            //            // Fetch any changes from the server that happened while the app wasn't running
-            //            let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForSharedCustomZoneID)
-            //            let zoneID = NSKeyedUnarchiver.unarchiveObject(withFile: zoneIdURL.path) as? CKRecordZoneID ?? CKRecordZoneID(zoneName: zoneName, ownerName: CKCurrentUserDefaultName)
-            //            let shareCustomZone = CKRecordZone(zoneID: zoneID)
-            //            let createZoneOperation = CKModifyRecordZonesOperation(recordZonesToSave: [shareCustomZone], recordZoneIDsToDelete: [] )
-            //
-            //            createZoneOperation.modifyRecordZonesCompletionBlock = { (zones, zoneIDs, error) in
-            //                if (error == nil) {
-            //                    self.createdShareZone = true
-            //                    ICloudPropertyStore.setICloudPropertyForKey(property: self.createdShareZone, forKey: ICloudPropertyStore.keyForCreatedShareZone)
-            //                }
-            //                completion(error)
-            //            }
-            //
-            //            createZoneOperation.database = database
-            //            createZoneOperation.qualityOfService = .userInitiated
-            //            operationQueue.addOperation(createZoneOperation)
         }
     }
 }

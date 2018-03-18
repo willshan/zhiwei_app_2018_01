@@ -120,7 +120,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         if let sharingController = sharingController {
             DispatchQueue.main.async {
                 sharingController.delegate = self
-                sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
+//                sharingController.popoverPresentationController?.sourceView = self.navigationItem.titleView
                 sharingController.availablePermissions = [.allowPublic, .allowPrivate, .allowReadOnly, .allowReadWrite]
                 self.present(sharingController, animated: true) {
                     self.spinner.stopAnimating()
@@ -177,12 +177,16 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         
 //        let participantLookupInfos = [CKUserIdentityLookupInfo(emailAddress: "willshan.ws@hotmail.com"),
 //                                      CKUserIdentityLookupInfo(phoneNumber: "1234567890")]
-        let shareTitle = meal.mealName
+        let shareTitle = "\(meal.mealName) 与您共享"
         
         DispatchQueue.main.async {
             ZoneLocalCache.share.container.prepareSharingController(
                 rootRecord: record!, uniqueName: UUID().uuidString, shareTitle: shareTitle,
-                participantLookupInfos: nil, database: ZoneLocalCache.share.databases[1].cloudKitDB) { controller in
+                participantLookupInfos: nil, database: MealLocalCache.share.database) { controller in
+                    
+                    if let popover = controller?.popoverPresentationController {
+                        popover.barButtonItem = sender
+                    }
                     
                     self.presentOrAlertOnMainQueue(sharingController: controller)
 //                    controller?.popoverPresentationController?.sourceView = self.navigationItem.titleView

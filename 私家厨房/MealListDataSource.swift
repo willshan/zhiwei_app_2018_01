@@ -14,10 +14,12 @@ class MealListDataSource : NSObject {
     //MARK: -Properties
     //meals是实际tableview中用到的数据
     var meals : [Meal]?
-    var mealListBySections : [[Meal]]
+    var mealListBySections : [CollapsibleMeals]
+    var searchMealsBySections : [CollapsibleMeals]
+    
     var mealListVC : MealListVC!
     var searchedMeals = [Meal]()
-    var searchMealsBySections : [[Meal]]
+    
     var orderedMealIdentifers = [String]()
     
     //OrderedMeal是一个struct，用来记录mealName和mealCount
@@ -26,13 +28,12 @@ class MealListDataSource : NSObject {
     init(meals: [Meal]?) {
         self.meals = meals
         
-        self.mealListBySections = [[Meal]]()
-        self.searchMealsBySections = [[Meal]]()
+        self.mealListBySections = [CollapsibleMeals]()
+        self.searchMealsBySections = [CollapsibleMeals]()
         super.init()
         
         if self.meals != nil {
             self.updateMealListBySections()
-            
         }
         else {
             self.meals = []
@@ -80,23 +81,59 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if tableView == mealListVC.firstTableView
+//        {
+//            return mealListBySections[section].meals.first?.mealType
+//        }else {
+//            return searchMealsBySections[section].meals.first?.mealType
+//        }
+//    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
+        
         if tableView == mealListVC.firstTableView
         {
-            return mealListBySections[section].first?.mealType
+            header.titleLabel.text = mealListBySections[section].meals.first?.mealType
+            header.setCollapsed(mealListBySections[section].collapsed)
+            
         }else {
-            return searchMealsBySections[section].first?.mealType
+            header.titleLabel.text = searchMealsBySections[section].meals.first?.mealType
         }
+        
+        header.arrowLabel.text = "∨"
+        header.section = section
+        header.delegate = self
+        if mealListBySections[section].meals.count == 0 {
+            header.isHidden = true
+        }
+        
+        return header
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if mealListBySections[section].meals.count == 0 {
+            return 0
+        }
+        else {
+            return 44.0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 1.0
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
         if tableView == mealListVC.firstTableView
         {
-            return mealListBySections[section].count
+            return mealListBySections[section].collapsed ? 0 : mealListBySections[section].meals.count
         }
         else {
-            return searchMealsBySections[section].count
+            return searchMealsBySections[section].meals.count
         }
     }
     
@@ -112,9 +149,9 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         // Fetches the appropriate meal for the data source layout.
         var meal = Meal()
         if tableView == mealListVC.firstTableView {
-            meal = mealListBySections[indexPath.section][indexPath.row]
+            meal = mealListBySections[indexPath.section].meals[indexPath.row]
         }else {
-            meal = searchMealsBySections[indexPath.section][indexPath.row]
+            meal = searchMealsBySections[indexPath.section].meals[indexPath.row]
         }
         
         cell.mealName.text = meal.mealName
@@ -164,7 +201,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
             // mealList.mealList.remove(at: indexPath.row)
             print("调用删除公式")
             
-            let meal = mealListBySections[indexPath.section][indexPath.row]
+            let meal = mealListBySections[indexPath.section].meals[indexPath.row]
             let title = "删除 \(meal.mealName)?"
             let message = "确认删除这道菜么?"
             let ac = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
@@ -174,7 +211,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
             let deleteAction = UIAlertAction(title: "删除", style: .destructive, handler: {
                 (action) -> Void in
                 
-                self.mealListBySections[indexPath.section].remove(at: indexPath.row)
+                self.mealListBySections[indexPath.section].meals.remove(at: indexPath.row)
 
                 print("selected meal was removed")
                 
@@ -182,7 +219,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
                 
                 tableView.deleteRows(at: [indexPath], with: .fade)
                 
-                //数据都在本地，因此无须在服务器删除
+                //数据在服务器删除
                 self.deleteMealInServer(meal)
                 
                 //Delete meal in stateController
@@ -204,6 +241,23 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
+//
+// MARK: - Section Header Delegate
+//
+extension MealListDataSource: CollapsibleTableViewHeaderDelegate {
+    
+    func toggleSection(_ header: CollapsibleTableViewHeader, section: Int) {
+        let collapsed = !mealListBySections[section].collapsed
+        
+        // Toggle collapse
+        mealListBySections[section].collapsed = collapsed
+        header.setCollapsed(collapsed)
+        
+        mealListVC.firstTableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
+    }
+    
+}
+
 
 extension MealListDataSource {
     //MARK: -Delete data in server
@@ -274,7 +328,7 @@ extension MealListDataSource {
     //MARK: -Actions
     @objc func addToShoppingCart(_ sender : UIButton) {
         
-        print("data source selected")
+        print("addToShoppingCart tapped \(sender.state)")
 
         let contentView = sender.superview
      
@@ -297,9 +351,9 @@ extension MealListDataSource {
         
         var meal = Meal()
         if tableView == mealListVC.firstTableView {
-            meal = mealListBySections[index!.section][index!.row]
+            meal = mealListBySections[index!.section].meals[index!.row]
         }else {
-            meal = searchMealsBySections[index!.section][index!.row]
+            meal = searchMealsBySections[index!.section].meals[index!.row]
         }
         
         //update meal selection status in coredata
@@ -344,59 +398,87 @@ extension MealListDataSource {
 
     //更新数据
     func updateMealListBySections(){
-        var coldDishes = [Meal]()
-        var hotDishes = [Meal]()
-        var soup = [Meal]()
-        var drink = [Meal]()
+        var coldDishes = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var hotDishes = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var soup = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var drink = CollapsibleMeals(meals: [Meal](), collapsed: false)
         
+//        var mealsBySections = [CollapsibleMeals]()
         for meal in meals! {
             if meal.mealType == "凉菜" {
-                coldDishes.append(meal)
+                coldDishes.meals.append(meal)
             }
             if meal.mealType == "热菜" {
-                hotDishes.append(meal)
+                hotDishes.meals.append(meal)
             }
             if meal.mealType == "汤" {
-                soup.append(meal)
+                soup.meals.append(meal)
             }
             if meal.mealType == "酒水" {
-                drink.append(meal)
+                drink.meals.append(meal)
             }
         }
-        mealListBySections = [coldDishes,hotDishes,soup,drink]
+//        if coldDishes.meals.count != 0 {
+//            mealsBySections.append(coldDishes)
+//        }
+//        if hotDishes.meals.count != 0 {
+//            mealsBySections.append(hotDishes)
+//        }
+//        if soup.meals.count != 0 {
+//            mealsBySections.append(soup)
+//        }
+//        if drink.meals.count != 0 {
+//            mealsBySections.append(drink)
+//        }
+//        mealListBySections = mealsBySections
+        mealListBySections = [coldDishes,hotDishes, soup, drink]
     }
 
     func updateSearchedMealListBySections(){
-        var coldDishes = [Meal]()
-        var hotDishes = [Meal]()
-        var soup = [Meal]()
-        var drink = [Meal]()
+        
+        var coldDishes = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var hotDishes = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var soup = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var drink = CollapsibleMeals(meals: [Meal](), collapsed: false)
+        var mealsBySections = [CollapsibleMeals]()
         
         for meal in searchedMeals {
             if meal.mealType == "凉菜" {
-                coldDishes.append(meal)
+                coldDishes.meals.append(meal)
             }
             if meal.mealType == "热菜" {
-                hotDishes.append(meal)
+                hotDishes.meals.append(meal)
             }
             if meal.mealType == "汤" {
-                soup.append(meal)
+                soup.meals.append(meal)
             }
             if meal.mealType == "酒水" {
-                drink.append(meal)
+                drink.meals.append(meal)
             }
         }
-        searchMealsBySections = [coldDishes,hotDishes,soup,drink]
+        if coldDishes.meals.count != 0 {
+            mealsBySections.append(coldDishes)
+        }
+        if hotDishes.meals.count != 0 {
+            mealsBySections.append(hotDishes)
+        }
+        if soup.meals.count != 0 {
+            mealsBySections.append(soup)
+        }
+        if drink.meals.count != 0 {
+            mealsBySections.append(drink)
+        }
+        
+        searchMealsBySections = mealsBySections
     }
     
     //更新数据
     func updateMeals(){
-        let coldDishes = mealListBySections[0]
-        let hotDishes = mealListBySections[1]
-        let soup = mealListBySections[2]
-        let drink = mealListBySections[3]
-        
-        meals = coldDishes + hotDishes + soup + drink
+        var meals = [Meal]()
+        for meal in mealListBySections {
+            meals = meals + meal.meals
+        }
+        self.meals = meals
     }
     
     func updateShoppingCartIconBadgeNumber(orderedMealCount : Int) {
