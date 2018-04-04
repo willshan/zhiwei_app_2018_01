@@ -10,10 +10,10 @@ import UIKit
 
 class OrderListCenterDataSource : NSObject {
     //菜名
-    var orderLists : [OrderListStruct]!
+    var reservedMealsHistoy : [ReservedMeals]!
     var mealPhotos = [UIImage]()
-    init(orderList: [OrderListStruct]) {
-        self.orderLists = orderList
+    init(_ reservedMealsHistoy: [ReservedMeals]) {
+        self.reservedMealsHistoy = reservedMealsHistoy
     }
 }
 
@@ -24,7 +24,7 @@ extension OrderListCenterDataSource : UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return orderLists.count
+        return reservedMealsHistoy.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -33,44 +33,13 @@ extension OrderListCenterDataSource : UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellIdentifier, for: indexPath) as? OrderListCenterCell  else {
             fatalError("The dequeued cell is not an instance of OrderListCenterCell.")
         }
-        cell.date.text = orderLists[indexPath.row].orderTime
+        cell.date.text = reservedMealsHistoy[indexPath.row].date + "  " + reservedMealsHistoy[indexPath.row].mealCatagory
         
-        //orderLists已经是按菜种分类过的
-        let orderList1 = orderLists[indexPath.row].orderList[0]
-        let orderList2 = orderLists[indexPath.row].orderList[1]
-        let orderList3 = orderLists[indexPath.row].orderList[2]
-        let orderList4 = orderLists[indexPath.row].orderList[3]
-        
-        var dishesCount1 = 0
-        for meal in orderList1 {
-            dishesCount1 += meal.mealCount
-        }
-        var dishesCount2 = 0
-        for meal in orderList2 {
-            dishesCount2 += meal.mealCount
-        }
-        var dishesCount3 = 0
-        for meal in orderList3 {
-            dishesCount3 += meal.mealCount
-        }
-        var dishesCount4 = 0
-        for meal in orderList4 {
-            dishesCount4 += meal.mealCount
-        }
-        
-        cell.dishes.text = "点了\(dishesCount1+dishesCount2+dishesCount3)道菜"
-        cell.drink.text = "还有\(dishesCount4)瓶饮料"
-        if dishesCount4 == 0 {
-            cell.drink.isHidden = true
-        }
-        else {
-            cell.drink.isHidden = false
-        }
-
-        let photoIdentifers = orderLists[indexPath.row].mealsIdentifiers
+        let photoIdentifers = reservedMealsHistoy[indexPath.row].mealsIdentifiers
         var mealPhotos = [UIImage]()
         
-        for identifier in photoIdentifers {
+        cell.dishes.text = "共预定\(photoIdentifers!.count)道菜"
+        for identifier in photoIdentifers! {
             mealPhotos.append(DataStore().getImageForKey(key: identifier)!)
         }
         

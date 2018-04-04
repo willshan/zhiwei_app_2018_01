@@ -293,7 +293,7 @@ extension MealListVC {
                     coder.finishEncoding()
                     
                     let key = "Record_"+identifier
-                    let url = DataStore().objectURLForKey(key: key)
+                    let url = DataStore.objectURLForKey(key: key)
                     NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                 }
                 else {
@@ -334,7 +334,7 @@ extension MealListVC {
                     coder.finishEncoding()
                     
                     let key = "Record_"+identifier
-                    let url = DataStore().objectURLForKey(key: key)
+                    let url = DataStore.objectURLForKey(key: key)
                     NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                 }
                 else {
@@ -380,7 +380,7 @@ extension MealListVC {
                     mealRecord["cellSelected"] = Int64(0) as CKRecordValue
                     mealRecord["comment"] = meal.comment! as NSString
                     
-                    let URL = DataStore().objectURLForKey(key: meal.identifier)
+                    let URL = DataStore.objectURLForKey(key: meal.identifier)
                     let imageAsset = CKAsset(fileURL: URL)
                     mealRecord["image"] = imageAsset
                     
@@ -411,7 +411,7 @@ extension MealListVC {
                             coder.finishEncoding()
                             
                             let key = "Record_"+mealRecord.recordID.recordName
-                            let url = DataStore().objectURLForKey(key: key)
+                            let url = DataStore.objectURLForKey(key: key)
                             NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                             
                             HandleCoreData.changeNewMeal(meal.identifier)
@@ -440,7 +440,7 @@ extension MealListVC {
                                     coder.finishEncoding()
                                     
                                     let key = "Record_"+mealRecord.recordID.recordName
-                                    let url = DataStore().objectURLForKey(key: key)
+                                    let url = DataStore.objectURLForKey(key: key)
                                     NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                                     HandleCoreData.updateSaveInCloudStatus(identifier: mealRecord.recordID.recordName, savingStatus: true)
                                 })
@@ -463,7 +463,7 @@ extension MealListVC {
                             record!["cellSelected"] = Int64(0) as CKRecordValue
                             record!["comment"] = meal.comment! as NSString
                             
-                            let URL = DataStore().objectURLForKey(key: meal.identifier)
+                            let URL = DataStore.objectURLForKey(key: meal.identifier)
                             let imageAsset = CKAsset(fileURL: URL)
                             record!["image"] = imageAsset
                             
@@ -493,7 +493,7 @@ extension MealListVC {
                                 coder.finishEncoding()
                                 
                                 let key = "Record_"+meal.identifier
-                                let url = DataStore().objectURLForKey(key: key)
+                                let url = DataStore.objectURLForKey(key: key)
                                 NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                                 
                                 HandleCoreData.updateSaveInCloudStatus(identifier: meal.identifier, savingStatus: true)
@@ -536,7 +536,7 @@ extension MealListVC {
         mealRecord["cellSelected"] = Int64(0) as CKRecordValue
         mealRecord["comment"] = meal.comment! as NSString
         
-        let URL = DataStore().objectURLForKey(key: mealRecord.recordID.recordName)
+        let URL = DataStore.objectURLForKey(key: mealRecord.recordID.recordName)
         let imageAsset = CKAsset(fileURL: URL)
         mealRecord["image"] = imageAsset
         
@@ -569,7 +569,7 @@ extension MealListVC {
                 coder.finishEncoding()
                 
                 let key = "Record_"+record!.recordID.recordName
-                let url = DataStore().objectURLForKey(key: key)
+                let url = DataStore.objectURLForKey(key: key)
                 NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                 HandleCoreData.updateSaveInCloudStatus(identifier: record!.recordID.recordName, savingStatus: true)
             })
@@ -597,7 +597,7 @@ extension MealListVC {
                         coder.finishEncoding()
                         
                         let key = "Record_"+record!.recordID.recordName
-                        let url = DataStore().objectURLForKey(key: key)
+                        let url = DataStore.objectURLForKey(key: key)
                         NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                         HandleCoreData.updateSaveInCloudStatus(identifier: mealRecord.recordID.recordName, savingStatus: true)
                     })
@@ -715,7 +715,7 @@ extension MealListVC {
                 }
                 
                 let key = "Record_"+meal.identifier
-                let url = DataStore().objectURLForKey(key: key)
+                let url = DataStore.objectURLForKey(key: key)
                 let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
                 let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
                 coder.requiresSecureCoding = true
@@ -725,7 +725,7 @@ extension MealListVC {
                 //Update CKRecord
                 record!["comment"] = meal.comment! as NSString
                 if photochanged == true {
-                    let URL = DataStore().objectURLForKey(key: meal.identifier)
+                    let URL = DataStore.objectURLForKey(key: meal.identifier)
                     let imageAsset = CKAsset(fileURL: URL)
                     record!["image"] = imageAsset
                 }
@@ -754,7 +754,7 @@ extension MealListVC {
                         coder.finishEncoding()
                         
                         let key = "Record_"+meal.identifier
-                        let url = DataStore().objectURLForKey(key: key)
+                        let url = DataStore.objectURLForKey(key: key)
                         NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                         
                         HandleCoreData.updateSaveInCloudStatus(identifier: meal.identifier, savingStatus: true)
@@ -782,7 +782,7 @@ extension MealListVC {
                         coder.finishEncoding()
                         
                         let key = "Record_"+meal.identifier
-                        let url = DataStore().objectURLForKey(key: key)
+                        let url = DataStore.objectURLForKey(key: key)
                         NSKeyedArchiver.archiveRootObject(data as Any, toFile: url.path)
                         
                         HandleCoreData.updateSaveInCloudStatus(identifier: meal.identifier, savingStatus: true)

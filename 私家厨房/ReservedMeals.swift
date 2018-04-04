@@ -7,30 +7,12 @@
 //
 import Foundation
 
-class ShoppingCartList : NSObject, NSCoding{
+class ReservedMeals : NSObject, NSCoding{
     
-    var date : Date
-    var mealCatagory : String?
+    var date : String
+    var mealCatagory : String
     var mealsIdentifiers : [String]?
-    static let dateFormatter : DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        return formatter
-        
-    }()
-    
-    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("shoppingCartList")
-    
-//    //MARK: Archiving Paths
-//    class func generateArchiveURL(date : Date, mealCategory : String) -> URL{
-//        let date1 = dateFormatter.string(from: date)
-//        let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
-//        let ArchiveURL = DocumentsDirectory.appendingPathComponent("shoppingCartList_"+"\(date1)"+"_\(mealCategory)")
-//        return ArchiveURL
-//    }
-    
+
     //MARK: Types
     struct PropertyKey {
         static let date = "date"
@@ -39,7 +21,7 @@ class ShoppingCartList : NSObject, NSCoding{
     }
     
     //MARK: Initialization
-    init?(date: Date, mealCatagory: String?, mealsIdentifiers: [String]?) {
+    init?(_ date: String, _ mealCatagory: String, _ mealsIdentifiers: [String]?) {
         // Initialize stored properties.
         self.date = date
         self.mealCatagory = mealCatagory
@@ -56,15 +38,15 @@ class ShoppingCartList : NSObject, NSCoding{
     
     required convenience init?(coder aDecoder: NSCoder) {
         // The name is required. If we cannot decode a name string, the initializer should fail.
-        let date = aDecoder.decodeObject(forKey: PropertyKey.date) as! Date
+        let date = aDecoder.decodeObject(forKey: PropertyKey.date) as! String
         
         // Because photo is an optional property of Meal, just use conditional cast.
-        let mealCatagory = aDecoder.decodeObject(forKey: PropertyKey.mealCatagory) as? String
+        let mealCatagory = aDecoder.decodeObject(forKey: PropertyKey.mealCatagory) as! String
         
         let mealsIdentifiers = aDecoder.decodeObject(forKey: PropertyKey.mealsIdentifiers) as? [String]
         
         // Must call designated initializer.
-        self.init(date: date, mealCatagory: mealCatagory, mealsIdentifiers: mealsIdentifiers)
+        self.init(date, mealCatagory, mealsIdentifiers)
 
     }
 }

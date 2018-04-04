@@ -168,7 +168,7 @@ extension MealDetailVC : UICloudSharingControllerDelegate{
         // Option 1: set up the CKRecord with its metadata
         // used record meta data stored in disk to get root record ID
         let key = "Record_"+meal.identifier
-        let url = DataStore().objectURLForKey(key: key)
+        let url = DataStore.objectURLForKey(key: key)
         let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
         let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
         coder.requiresSecureCoding = true

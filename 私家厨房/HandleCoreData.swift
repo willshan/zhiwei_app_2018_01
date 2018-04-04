@@ -26,6 +26,7 @@ class HandleCoreData: NSObject {
     }()
 	//define context
 	static let context = persistentContainer.viewContext
+    static let userName = CKCurrentUserDefaultName
     
     //save to context
     class func saveContext() {
@@ -485,6 +486,40 @@ class HandleCoreData: NSObject {
             fatalError("查询错误： \(nserror), \(nserror.userInfo)")
         }
         print("++++++++++Complete updateMealIdentifer+++++++++++++++")
+    }
+    
+    class func clearAllMealSelectionStatus(){
+        //声明数据的请求
+        print("++++++++++updateMealSelectionStatus+++++++++++++++")
+        let fetchRequest:NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchRequest.fetchLimit = 1000  //限制查询结果的数量
+        fetchRequest.fetchOffset = 0  //查询的偏移量
+        
+        //声明一个实体结构
+        let EntityName = "Meal"
+        let entity:NSEntityDescription? = NSEntityDescription.entity(forEntityName: EntityName, in: context)
+        fetchRequest.entity = entity
+        
+        //设置查询条件
+        let predicate = NSPredicate.init(format: "userName = '\(self.userName)'", "")
+        fetchRequest.predicate = predicate
+        
+        //查询操作
+        do{
+            let fetchedObjects = try context.fetch(fetchRequest) as! [Meal]
+            
+            //遍历查询的结果
+            for meal in fetchedObjects{
+                //修改identifer
+                meal.cellSelected = false
+            }
+            //重新保存
+            saveContext()
+        }catch {
+            let nserror = error as NSError
+            fatalError("查询错误： \(nserror), \(nserror.userInfo)")
+        }
+        print("++++++++++Complete clearAllMealSelectionStatus+++++++++++++++")
     }
     
     class func updateMealSelectionStatus(identifier : String){

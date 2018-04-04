@@ -14,22 +14,40 @@ class StateController {
     
     fileprivate(set) var meals : [Meal]?
     fileprivate(set) var selectedMeals : [Meal]?
-    fileprivate(set) var orderLists : [OrderListStruct]
     fileprivate(set) var mealOrderList : [IndexPath : OrderedMeal]!
     private let userName = CKCurrentUserDefaultName
     fileprivate(set) var accountStatus = false
-    fileprivate(set) var selectedMealsCount : Int
-
-    //init(_ mealStorage : MealStorage) {
+//    fileprivate(set) var selectedMealsCount : Int
+    fileprivate(set) var reservedMeals : ReservedMeals?
+    fileprivate(set) var reservedMealsHistory : [ReservedMeals]?
+    
     init() {
         print("+++++CKCurrentUserDefaultName is \(userName)+++++")
         self.meals = HandleCoreData.queryDataWithUserName(userName)
         self.selectedMeals = HandleCoreData.querySelectedMealsWithUserName(userName)
-        self.orderLists = [OrderListStruct]()
+//        self.orderLists = [OrderListStruct]()
         self.mealOrderList = [IndexPath : OrderedMeal]()
-        self.selectedMealsCount = selectedMeals?.count ?? 0
-        
+//        self.selectedMealsCount = selectedMeals?.count ?? 0
+        self.reservedMealsHistory = readReservedMealsHistoryFromDisk()
         print("+++++stateController initiation completed++++++")
+    }
+    func saveReservedMeals(_ reservedMeals : ReservedMeals?) {
+        self.reservedMeals = reservedMeals
+    }
+    
+    func readReservedMealsHistoryFromDisk() -> [ReservedMeals]? {
+        let key = "reservedMealsHistory"
+        let archiveURL = DataStore.objectURLForKey(key: key)
+        var reservedMealsHistory = [ReservedMeals]()
+        if let historyList = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL.path) as? [String] {
+            for list in historyList {
+                let archiveURL1 = DataStore.objectURLForKey(key: list)
+                let reservedMeals = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL1.path) as! ReservedMeals
+                reservedMealsHistory.append(reservedMeals)
+            }
+        }
+        print("从硬盘读取到\(reservedMealsHistory.count)个预定数据！")
+        return reservedMealsHistory
     }
     
     func saveMeal(_ meals : [Meal]) {
@@ -44,18 +62,10 @@ class StateController {
         self.meals?.append(meal)
     }
     
-    func addOrderList(_ orderTime : String, _ orderList : [[OrderedMeal]], _ mealsIdentifiers : [String]){
-        self.orderLists.append(OrderListStruct(orderTime, orderList, mealsIdentifiers))
-    }
-    
-    func loadOrderList() -> [OrderListStruct]{
-        return orderLists
-    }
-    
     func countOrderedMealCount()-> Int {
         let meals = HandleCoreData.querySelectedMealsWithUserName(userName)
         return meals.count
-	}
+    }
 	
     func saveMealOrderList(_ mealOrderList:[IndexPath : OrderedMeal]) {
         self.mealOrderList = mealOrderList

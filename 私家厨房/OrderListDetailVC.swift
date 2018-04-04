@@ -13,12 +13,12 @@ class OrderListDetailVC: UIViewController {
     @IBOutlet weak var orderTime: UILabel!
     @IBOutlet weak var thirdTable: UITableView!
     
-    var orderListDetail : OrderListStruct!
+    var orderListDetail : ReservedMeals!
     var dataSource : OrderListDetailDataSource!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        orderTime.text = orderListDetail.orderTime
+        orderTime.text = orderListDetail.date + "  " + orderListDetail.mealCatagory
         dataSource = OrderListDetailDataSource(orderListDetail: orderListDetail)
         thirdTable.dataSource = dataSource
     }

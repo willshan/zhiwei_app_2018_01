@@ -41,8 +41,8 @@ class MealListDataSource : NSObject {
         }
         
         //get orderedMealIdentifers from disk
-        let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
-        orderedMealIdentifers = shoppingCartList?.mealsIdentifiers ?? [String]()
+//        let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
+//        orderedMealIdentifers = shoppingCartList?.mealsIdentifiers ?? [String]()
     }
 }
 
@@ -264,7 +264,7 @@ extension MealListDataSource {
     func deleteMealInServer(_ meal : Meal) {
         //option 1: use metadata in local
         let key = "Record_"+meal.identifier
-        let url = DataStore().objectURLForKey(key: key)
+        let url = DataStore.objectURLForKey(key: key)
         let meladata = NSKeyedUnarchiver.unarchiveObject(withFile: url.path) as? NSMutableData
         let coder = NSKeyedUnarchiver(forReadingWith: meladata! as Data)
         coder.requiresSecureCoding = true
@@ -376,18 +376,6 @@ extension MealListDataSource {
                     break
                 }
             }
-        }
-        //read shoppingCartList from disk
-        var shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
-        if shoppingCartList == nil {
-            //save shoppingCartList to disk
-            shoppingCartList = ShoppingCartList(date: Date(), mealCatagory: "晚餐", mealsIdentifiers: orderedMealIdentifers)
-            NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
-        }
-        else {
-            //save shoppingCartList to disk
-            shoppingCartList?.mealsIdentifiers = orderedMealIdentifers
-            NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
         }
  
         //update shopping cart badge number

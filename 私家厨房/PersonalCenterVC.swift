@@ -105,14 +105,13 @@ extension PersonalCenterVC {
         super.prepare(for: segue, sender: sender)
         
         switch(segue.identifier ?? "") {
-        case SegueID.showOrderListDetail:
+        case SegueID.orderListCenter:
             guard let orderListCenterController = segue.destination as? OrderListCenterVC else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
-            orderListCenterController.orderList = stateController.loadOrderList()
-            
+            orderListCenterController.reservedMealsHistory = stateController.reservedMealsHistory
+
             print("即将传递数据到orderListCenter")
-            print("传递的数据为\(String(describing: orderListCenterController.orderList))")
            
         case SegueID.showFamilyList:
             print("Show family list")
@@ -123,27 +122,6 @@ extension PersonalCenterVC {
         default:
             fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
         }
-    }
-    
-    //unwindSegue from orderList
-    @IBAction func exit(sender : UIStoryboardSegue){
-        let sourceViewController = sender.source as? OrderListVC
-        let mealListBySections = sourceViewController?.mealListBySections
-		//将刚刚下的订单加入到历史订单中
-        stateController.addOrderList((sourceViewController?.orderTime.text)!, mealListBySections!, (sourceViewController?.photosIdentifiers)!)
-		//将购物车中的内容清空
-        stateController.removeMealOrderList()
-        //将菜单中的按钮全变为“加入菜单”
-        for meal in stateController.meals! {
-            meal.cellSelected = false
-        }
-        print("Link to personal center")
-        //将图标数量设为nil
-        let nav3 = self.navigationController
-        //let tabNav = UITabBarController()
-        let tabNav = nav3?.tabBarController
-        let nav1 = tabNav?.viewControllers?[1]
-        nav1?.tabBarItem.badgeValue = nil
     }
 }
 

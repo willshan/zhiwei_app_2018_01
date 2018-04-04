@@ -14,13 +14,15 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
 
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var catagoryLabel: UILabel!
-
+    @IBOutlet weak var reserveButton: UIButton!
+    @IBOutlet weak var cancelButton: UIButton!
+    
     @IBAction func sentOut(_ sender: UIBarButtonItem) {
         saveToLocal()
     }
     
     @IBAction func saveMealList(_ sender: UIButton) {
-        
+        saveMealList()
     }
     
     @IBAction func cancelMealList(_ sender: UIButton) {
@@ -30,52 +32,26 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
     
     var stateController : StateController!
     var dataSource: ShoppingCartDataSource!
-    var shoppingCartList : ShoppingCartList?
-    
-    let dateFormatter : DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .none
-        return formatter
-        
-    }()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.leftBarButtonItem = editButtonItem
-//        comment.delegate = self
-//        //设置通知
-//        NotificationCenter.default.addObserver(self,
-//                                               selector: #selector(keyboardWillChange(_:)),
-//                                               name: .UIKeyboardWillChangeFrame, object: nil)
+        
+        if stateController.reservedMeals != nil {
+            dateLabel.text = stateController.reservedMeals?.date
+            catagoryLabel.text = stateController.reservedMeals?.mealCatagory
+        }
+        
+        updateReserveButton()
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-
+        
         print("view appear in shoppingCart vc")
         
-        //get date and catagory informaton from disk
-        shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
-        if shoppingCartList != nil
-        {
-            dateLabel.text = dateFormatter.string(from: shoppingCartList!.date)
-            catagoryLabel.text = shoppingCartList!.mealCatagory ?? "晚餐"
-        }
-        else {
-            print("++++++++shoppingCartList is nil")
-        }
-//        let dateFormatter : DateFormatter = {
-//            let formatter = DateFormatter()
-//            formatter.dateStyle = .none
-//            formatter.timeStyle = .short
-//            return formatter
-//
-//        }()
-//
-//        let time = NSDate()
-//
-//        let time1 = dateFormatter.string(from: time as Date!)
+        updateReserveButtonWhenSwithingVC()
         
         dataSource = ShoppingCartDataSource(selectedMeals: stateController.getSelectedMeals())
         dataSource.shoppingCartController = self
@@ -104,6 +80,65 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
 extension ShoppingCartVC {
     func saveMealList() {
         
+        let title = "保存已点菜单?"
+        let message = "确认保存当前日期内所有菜品么?"
+        let ac = UIAlertController(title: title, message: message, preferredStyle: .actionSheet)
+        let cancelAction = UIAlertAction(title: "取消", style: .cancel, handler: nil)
+        ac.addAction(cancelAction)
+        
+        let deleteAction = UIAlertAction(title: "保存", style: .destructive, handler: {
+            (action) -> Void in
+            
+            let meals = self.stateController.getSelectedMeals()
+            var mealIdentifers = [String]()
+            for meal in meals {
+                HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
+                mealIdentifers.append(meal.identifier)
+            }
+            
+            self.dataSource = ShoppingCartDataSource(selectedMeals: [Meal]())
+            
+            self.firstTableView.reloadData()
+            
+
+            //update shopping cart badge number
+            let nav0 = self.navigationController
+            let nav0TabBar = nav0?.tabBarItem
+            nav0TabBar?.badgeValue = nil
+            
+            //save resverd meals to disk
+            self.stateController.saveReservedMeals(nil)
+            
+            let reserveMeals = ReservedMeals(self.dateLabel.text!, self.catagoryLabel.text!, mealIdentifers)
+            let key = self.dateLabel.text!+self.catagoryLabel.text!
+            let archiveURL = DataStore.objectURLForKey(key: key)
+            
+            NSKeyedArchiver.archiveRootObject(reserveMeals as Any, toFile: archiveURL.path)
+            
+            //update reservedMealsHistory in disk
+            let key0 = "reservedMealsHistory"
+            let archiveURL0 = DataStore.objectURLForKey(key: key0)
+            
+            if var historyList = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL0.path) as? [String] {
+                if historyList.index(of: key) == nil {
+                    historyList.append(key)
+                    NSKeyedArchiver.archiveRootObject(historyList, toFile: archiveURL0.path)
+                    print("保存预定到硬盘成功！！！")
+                }
+                print("共预定了\(historyList)")
+            }
+            else {
+                NSKeyedArchiver.archiveRootObject([key], toFile: archiveURL0.path)
+                print("第一次保存预定到硬盘成功！！！")
+            }
+            
+            self.dateLabel.text = "选择日期"
+            self.catagoryLabel.text = "选择餐类"
+            self.updateReserveButton()
+            
+        })
+        ac.addAction(deleteAction)
+        self.present(ac, animated: true, completion: nil)
     }
     
     func cancelMealList() {
@@ -118,6 +153,7 @@ extension ShoppingCartVC {
             (action) -> Void in
             
             let meals = self.stateController.getSelectedMeals()
+  
             for meal in meals {
                 HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
             }
@@ -127,11 +163,39 @@ extension ShoppingCartVC {
             self.firstTableView.reloadData()
             
             //update shopping cart badge number
-//            self.dataSource.updateShoppingCartIconBadgeNumber(orderedMealCount: 0)
-            //find shopping cart badge
             let nav0 = self.navigationController
             let nav0TabBar = nav0?.tabBarItem
             nav0TabBar?.badgeValue = nil
+
+            //remove resveredMeals in disk
+            //update reservedMealsHistory in disk
+            let key = self.dateLabel.text!+self.catagoryLabel.text!
+            let archiveURL = DataStore.objectURLForKey(key: key)
+            
+            let fileManager = FileManager.default
+            if fileManager.fileExists(atPath: archiveURL.path) {
+                do {
+                    try! fileManager.removeItem(atPath: archiveURL.path)
+                }
+                let key0 = "reservedMealsHistory"
+                let archiveURL0 = DataStore.objectURLForKey(key: key0)
+                
+                if var historyList = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL0.path) as? [String] {
+                    for list in historyList {
+                        if list == key {
+                            let index = historyList.index(of: list)
+                            historyList.remove(at: index!)
+                            break
+                        }
+                    }
+                    NSKeyedArchiver.archiveRootObject(historyList, toFile: archiveURL0.path)
+                }
+            }
+            
+            self.dateLabel.text = "选择日期"
+            self.catagoryLabel.text = "选择餐类"
+            self.stateController.saveReservedMeals(nil)
+            self.updateReserveButton()
 
         })
         ac.addAction(deleteAction)
@@ -153,17 +217,7 @@ extension ShoppingCartVC : DataTransferBackProtocol{
     func stringTransferBack(string: String) {
         catagoryLabel.text = string
         
-        //save catagory label to disk
-        //save datelabel to disk
-        if shoppingCartList != nil {
-            shoppingCartList?.mealCatagory = string
-        }
-        else {
-            shoppingCartList = ShoppingCartList(date: Date(), mealCatagory: string, mealsIdentifiers: nil)
-        }
-
-        NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
-        //save catagory label to icloud
+        updateReserveButton()
         
     }
 
@@ -179,28 +233,10 @@ extension ShoppingCartVC : DataTransferBackProtocol{
     func dateTransferBack(date: Date) {
         print("dataTransferBack was running")
         
-        dateLabel.text = dateFormatter.string(from: date)
+        let dateString = MainVC.dateConvertString(date: date)
+        dateLabel.text = dateString
         
-//        let dateFormatter : DateFormatter = {
-//            let formatter = DateFormatter()
-//            formatter.dateStyle = .medium
-//            formatter.timeStyle = .none
-//            return formatter
-//
-//        }()
-        
-//        //save datelabel to disk
-        if shoppingCartList != nil {
-            shoppingCartList?.date = date
-        }
-        else {
-            shoppingCartList = ShoppingCartList(date: date, mealCatagory: nil, mealsIdentifiers: nil)
-        }
-
-        NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
-        
-        //save datelabel to icloud
-        
+        updateReserveButton()
     }
 }
 
@@ -216,46 +252,75 @@ extension ShoppingCartVC : UITextViewDelegate{
             navigationItem.leftBarButtonItem?.title = "Edit"
         }
     }
-    //MARK: UITextViewDelegate
-//    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-//        if text == "\n" {
-//            comment.resignFirstResponder()
-//            return false
-//        }
-//        else {
-//            return true
-//        }
-//    }
-    
-//    //MARK: -Text and keyboard control
-//    // 键盘改变，通过键盘出现的通知
-//    @objc func keyboardWillChange(_ notification: Notification) {
-//
-//        if let userInfo = notification.userInfo,
-//            let value = userInfo[UIKeyboardFrameEndUserInfoKey] as? NSValue,
-//            let duration = userInfo[UIKeyboardAnimationDurationUserInfoKey] as? Double,
-//            let curve = userInfo[UIKeyboardAnimationCurveUserInfoKey] as? UInt {
-//
-//            let frame = value.cgRectValue
-//            let intersection = frame.intersection(self.view.frame)
-//
-//            //self.view.setNeedsLayout()
-//            //改变上约束
-//            self.topConstraint.constant = -intersection.height
-//
-//            UIView.animate(withDuration: duration, delay: 0.0,
-//                           options: UIViewAnimationOptions(rawValue: curve), animations: {
-//
-//                            self.view.layoutIfNeeded()
-//            }, completion: nil)
-//        }
-//    }
 }
 
 extension ShoppingCartVC {
+    
+    func updateReserveButton() {
+        if dateLabel.text == "选择日期" || catagoryLabel.text == "选择餐类" {
+            reserveButton.isEnabled = false
+            cancelButton.isEnabled = false
+            reserveButton.backgroundColor = UIColor.lightGray
+            cancelButton.backgroundColor = UIColor.lightGray
+        }
+        else {
+            
+
+            //load resvedMeals from disk if existing
+            print("Prepare loading reservedMeals from disk")
+            let key = self.dateLabel.text!+self.catagoryLabel.text!
+
+            let archiveURL = DataStore.objectURLForKey(key: key)
+            if let reserveMeals = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL.path) as? ReservedMeals {
+                print("Loading reservedMeals from disk")
+                let mealIdentifers = reserveMeals.mealsIdentifiers
+                
+                var meals = [Meal]()
+                //更新MealListVC到对应状态
+                HandleCoreData.clearAllMealSelectionStatus()
+                
+                for mealID in mealIdentifers! {
+                    print("\(mealID)")
+                    HandleCoreData.updateMealSelectionStatus(identifier: mealID)
+                    
+                    let meal = HandleCoreData.queryDataWithIdentifer(mealID)
+                    meals.append(meal.first!)
+                }
+                self.dataSource = ShoppingCartDataSource(selectedMeals: meals)
+                self.firstTableView.dataSource = self.dataSource
+                self.firstTableView.delegate = self.dataSource
+                self.dataSource.shoppingCartController = self
+                self.dataSource.updateShoppingCartIconBadgeNumber(orderedMealCount: meals.count)
+                self.firstTableView.reloadData()
+
+                if meals.count != 0 {
+                    reserveButton.isEnabled = true
+                    cancelButton.isEnabled = true
+                    reserveButton.backgroundColor = UIColor.blue
+                    cancelButton.backgroundColor = UIColor.blue
+                }
+            }
+        }
+    }
+    
+    func updateReserveButtonWhenSwithingVC() {
+        let selectedMeals = stateController.getSelectedMeals()
+        if dateLabel.text == "选择日期" || catagoryLabel.text == "选择餐类" || selectedMeals.count == 0 {
+            reserveButton.isEnabled = false
+            cancelButton.isEnabled = false
+            reserveButton.backgroundColor = UIColor.lightGray
+            cancelButton.backgroundColor = UIColor.lightGray
+        }
+        else {
+            reserveButton.isEnabled = true
+            cancelButton.isEnabled = true
+            reserveButton.backgroundColor = UIColor.blue
+            cancelButton.backgroundColor = UIColor.blue
+        }
+    }
+    
     func saveToLocal() {
         //截屏
-        
         let screenRect = UIScreen.main.bounds
         UIGraphicsBeginImageContext(screenRect.size)
         let ctx:CGContext = UIGraphicsGetCurrentContext()!

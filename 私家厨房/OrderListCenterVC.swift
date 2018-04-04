@@ -11,17 +11,17 @@ import os.log
 
 class OrderListCenterVC: UITableViewController {
     
-    var orderList : [OrderListStruct]?
+    var reservedMealsHistory : [ReservedMeals]?
     var dataSource : OrderListCenterDataSource!
 
     override func viewDidLoad() {
-        navigationItem.title = "订单中心"
+        navigationItem.title = "预定查看"
         super.viewDidLoad()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        dataSource = OrderListCenterDataSource(orderList: orderList!)
+        dataSource = OrderListCenterDataSource(reservedMealsHistory!)
         tableView.dataSource = dataSource
         
         self.navigationController?.tabBarController?.tabBar.isHidden = true
@@ -57,8 +57,8 @@ extension OrderListCenterVC {
             guard let indexPath = tableView.indexPath(for: selectedMealCell) else {
                 fatalError("The selected cell is not being displayed by the table")
             }
-            let selectedOrderList = dataSource.orderLists[indexPath.row]
-            orderListDetailController.orderListDetail = selectedOrderList
+            let reservedMeals = dataSource.reservedMealsHistoy[indexPath.row]
+            orderListDetailController.orderListDetail = reservedMeals
             
         default:
             print("return to orderMeacontroller")

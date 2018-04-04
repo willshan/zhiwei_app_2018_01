@@ -15,7 +15,6 @@ class OrderListCenterCell: UITableViewCell {
         // Initialization code
     }
     @IBOutlet weak var dishes: UILabel!
-    @IBOutlet weak var drink: UILabel!
     @IBOutlet weak var date: UILabel!
     @IBOutlet weak var photoCollection: UICollectionView!
 

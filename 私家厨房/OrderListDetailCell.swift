@@ -12,7 +12,6 @@ class OrderListDetailCell: UITableViewCell {
 
     @IBOutlet weak var index: UILabel!
     @IBOutlet weak var mealName: UILabel!
-    @IBOutlet weak var mealCount: UILabel!
     @IBOutlet weak var mealPhoto: UIImageView!
     
     override func awakeFromNib() {

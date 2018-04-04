@@ -39,7 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            }
 //        }
         application.registerForRemoteNotifications()
-
+        
+        let stateController = StateController()
+        self.stateController = stateController
+/*
         //
         let rootViewController = self.window!.rootViewController as! UITabBarController
         let stateController = StateController()
@@ -65,7 +68,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         personalCenterController.stateController = stateController
 
         self.stateController = stateController
-        
+        */
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
             ZoneLocalCache.share.initialize(container: self.container)
@@ -94,7 +97,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             ZoneLocalCache.share.fetchChanges(in: .shared, completion: { (error) in })
             
         }
-        
+ 
 //        UIApplication.shared.applicationIconBadgeNumber = 0
         return true
     }

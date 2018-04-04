@@ -13,11 +13,15 @@ class DataStore : NSObject {
     
     let cache = NSCache<AnyObject, AnyObject>()
     
-    func objectURLForKey(key : String)-> URL {
+    class func objectURLForKey(key : String)-> URL {
         let documentsDirectories = FileManager().urls(for: .documentDirectory, in: .userDomainMask)
         let documentDirectory = documentsDirectories.first!
         return documentDirectory.appendingPathComponent(key)
     }
+    
+//    static let DocumentsDirectory = FileManager().urls(for: .documentDirectory, in: .userDomainMask).first!
+//    static let ArchiveURL = DocumentsDirectory.appendingPathComponent("shoppingCartList")
+    
     //save Metadata of CKRecord
 //    func setMetadataOfRecord(record : CKRecord, forKey key : String){
 //        cache.setObject(record, forKey : key as AnyObject)
@@ -31,7 +35,7 @@ class DataStore : NSObject {
     func saveImageInDisk(image : UIImage, forKey key: String){
         cache.setObject(image, forKey : key as AnyObject)
         
-        let imageURL = objectURLForKey(key: key)
+        let imageURL = DataStore.objectURLForKey(key: key)
         
         if let data = UIImageJPEGRepresentation(image, 0.5) {
             do {
@@ -52,7 +56,7 @@ class DataStore : NSObject {
             return exitingImage
         }
         
-        let imageURL = objectURLForKey(key: key)
+        let imageURL = DataStore.objectURLForKey(key: key)
         guard let imageFromDisk = UIImage(contentsOfFile: imageURL.path) else {
             return nil
         }
@@ -69,7 +73,7 @@ class DataStore : NSObject {
         //从cache中删除
         cache.removeObject(forKey: key as AnyObject)
         
-        let imageURL = objectURLForKey(key: key)
+        let imageURL = DataStore.objectURLForKey(key: key)
         
         do {
             //从fileSystem中删除

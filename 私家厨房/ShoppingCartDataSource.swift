@@ -41,25 +41,7 @@ class ShoppingCartDataSource : NSObject {
             }
         }
         mealListBySections = [coldDishes, hotDishes, soup, drink]
-        //Get tableView height
-//        tableViewHeight = selectedMealsCount*44
-//        var tableHeaderCount = 0
-//        if coldDishes.count != 0 {
-//            tableHeaderCount = tableHeaderCount + 1
-//        }
-//        if hotDishes.count != 0 {
-//            tableHeaderCount = tableHeaderCount + 1
-//        }
-//        if soup.count != 0 {
-//            tableHeaderCount = tableHeaderCount + 1
-//        }
-//        if drink.count != 0 {
-//            tableHeaderCount = tableHeaderCount + 1
-//        }
-//        tableViewHeight = tableViewHeight + tableHeaderCount*18
-//        if tableViewHeight < 250 {
-//            tableViewHeight = 250
-//        }
+
     }
 }
 
@@ -150,23 +132,6 @@ extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
                 HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
                 self.selectedMealsCount = self.selectedMealsCount - 1
                 self.updateShoppingCartIconBadgeNumber(orderedMealCount: self.selectedMealsCount)
-                
-                //read shoppingCartList from disk
-                let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
-                
-                //remove deleted meal from shoppingCartlist
-                var orderedMealIdentifers = self.shoppingCartController!.shoppingCartList!.mealsIdentifiers!
-                for i in 0..<orderedMealIdentifers.count {
-                    if orderedMealIdentifers[i] == meal.identifier {
-                        orderedMealIdentifers.remove(at: i)
-                        break
-                    }
-                }
-
-                //save shoppingCartList to disk
-                shoppingCartList?.mealsIdentifiers = orderedMealIdentifers
-                NSKeyedArchiver.archiveRootObject(shoppingCartList, toFile: ShoppingCartList.ArchiveURL.path)
-                
             })
             ac.addAction(deleteAction)
             shoppingCartController?.present(ac, animated: true, completion: nil)
