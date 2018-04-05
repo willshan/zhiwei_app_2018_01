@@ -835,7 +835,7 @@
                                             <constraint firstAttribute="height" constant="68" id="O2O-kO-9vD"/>
                                             <constraint firstAttribute="width" constant="68" id="vgf-Mq-A8f"/>
                                         </constraints>
-                                        <state key="normal" title="我的订单"/>
+                                        <state key="normal" title="预定菜单"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="34"/>
@@ -876,8 +876,8 @@
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="H8G-Gy-WsG">
                                         <rect key="frame" x="232.5" y="0.0" width="67.5" height="68"/>
-                                        <color key="backgroundColor" red="0.99607843139999996" green="0.74509803919999995" blue="0.3294117647" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <state key="normal" title="预定菜单"/>
+                                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <state key="normal" title="未开放"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="34"/>
@@ -1195,8 +1195,7 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="saveMealList:" destination="am6-st-vbe" eventType="touchUpInside" id="U4v-Kg-1os"/>
-                                            <action selector="saveMealList:" destination="ZvS-BE-RhO" eventType="touchUpInside" id="f9a-5P-puG"/>
+                                            <segue destination="qr1-nX-BXt" kind="unwind" unwindAction="unwindToShoppingCartVCWithSender:" id="ZxH-iw-qcg"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W8j-Pj-ydo">
@@ -1212,8 +1211,7 @@
                                             <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="cancelMealList:" destination="am6-st-vbe" eventType="touchUpInside" id="PBd-7K-uGt"/>
-                                            <action selector="cancelMealList:" destination="ZvS-BE-RhO" eventType="touchUpInside" id="qs4-Fz-Pok"/>
+                                            <action selector="deleteReservedMeals:" destination="bwe-rB-kM3" eventType="touchUpInside" id="hJy-py-iay"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -1243,6 +1241,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uy5-pg-OOc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="qr1-nX-BXt" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="3875.625" y="2332.394366197183"/>
         </scene>
@@ -1836,13 +1835,16 @@
                                 <rect key="frame" x="36" y="94" width="248" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="菜单名称：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uoC-aX-Ub7">
-                                        <rect key="frame" x="0.0" y="0.0" width="87" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="90" id="LZu-RF-7jO"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="私家厨房" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5XK-aH-Q3B">
-                                        <rect key="frame" x="87" y="0.0" width="161" height="30"/>
+                                        <rect key="frame" x="90" y="0.0" width="158" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1853,13 +1855,36 @@
                                 <rect key="frame" x="36" y="144" width="248" height="30"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="厨师名称：" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6Qb-zx-Ji7">
-                                        <rect key="frame" x="0.0" y="0.0" width="87" height="30"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="90" id="1y3-Qy-S7z"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="老妈" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FWe-gi-2u3">
-                                        <rect key="frame" x="87" y="0.0" width="161" height="30"/>
+                                        <rect key="frame" x="90" y="0.0" width="158" height="30"/>
+                                        <nil key="textColor"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                </subviews>
+                            </stackView>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4bw-x9-3bY">
+                                <rect key="frame" x="36" y="194" width="248" height="30"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="昵        称：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FXb-sZ-VMb">
+                                        <rect key="frame" x="0.0" y="0.0" width="90" height="30"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="90" id="j3b-Yd-5Wf"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="执戟郎中" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="BPj-Bh-5BG">
+                                        <rect key="frame" x="90" y="0.0" width="158" height="30"/>
                                         <nil key="textColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
@@ -1870,10 +1895,13 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <gestureRecognizers/>
                         <constraints>
+                            <constraint firstItem="4bw-x9-3bY" firstAttribute="width" secondItem="cfY-ZP-pei" secondAttribute="width" id="A1a-Gw-xiS"/>
                             <constraint firstItem="OMt-gX-Ksp" firstAttribute="leading" secondItem="sKz-3v-2Ib" secondAttribute="leadingMargin" constant="20" id="K4P-T4-QcY"/>
                             <constraint firstItem="cfY-ZP-pei" firstAttribute="top" secondItem="OMt-gX-Ksp" secondAttribute="bottom" constant="20" id="Tr5-oI-YHa"/>
                             <constraint firstItem="cfY-ZP-pei" firstAttribute="width" secondItem="OMt-gX-Ksp" secondAttribute="width" id="VhX-5f-Pig"/>
                             <constraint firstItem="cfY-ZP-pei" firstAttribute="leading" secondItem="OMt-gX-Ksp" secondAttribute="leading" id="gS2-QX-K4f"/>
+                            <constraint firstItem="4bw-x9-3bY" firstAttribute="top" secondItem="cfY-ZP-pei" secondAttribute="bottom" constant="20" id="mGF-tt-TN7"/>
+                            <constraint firstItem="4bw-x9-3bY" firstAttribute="leading" secondItem="cfY-ZP-pei" secondAttribute="leading" id="qix-DL-lDM"/>
                             <constraint firstItem="OMt-gX-Ksp" firstAttribute="top" secondItem="IhG-fF-6cM" secondAttribute="bottom" constant="30" id="vNA-VT-2nd"/>
                             <constraint firstAttribute="trailingMargin" secondItem="OMt-gX-Ksp" secondAttribute="trailing" constant="20" id="yMb-vK-43c"/>
                         </constraints>

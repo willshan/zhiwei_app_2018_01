@@ -26,20 +26,23 @@ class MealListDataSource : NSObject {
     var mealOrderList = [IndexPath : OrderedMeal]()
  
     init(meals: [Meal]?) {
-        self.meals = meals
+        
+        self.meals = meals ?? []
         
         self.mealListBySections = [CollapsibleMeals]()
         self.searchMealsBySections = [CollapsibleMeals]()
         super.init()
         
-        if self.meals != nil {
-            self.updateMealListBySections()
-        }
-        else {
-            self.meals = []
-            self.updateMealListBySections()
-        }
+        self.updateMealListBySections()
         
+//        if self.meals != nil {
+//            self.updateMealListBySections()
+//        }
+//        else {
+//            self.meals = []
+//            self.updateMealListBySections()
+//        }
+//
         //get orderedMealIdentifers from disk
 //        let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
 //        orderedMealIdentifers = shoppingCartList?.mealsIdentifiers ?? [String]()
@@ -93,6 +96,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         
         let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
+        header.arrowLabel.text = "∨"
         
         if tableView == mealListVC.firstTableView
         {
@@ -102,8 +106,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }else {
             header.titleLabel.text = searchMealsBySections[section].meals.first?.mealType
         }
-        
-        header.arrowLabel.text = "∨"
+
         header.section = section
         header.delegate = self
         if mealListBySections[section].meals.count == 0 {
@@ -150,8 +153,10 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         var meal = Meal()
         if tableView == mealListVC.firstTableView {
             meal = mealListBySections[indexPath.section].meals[indexPath.row]
+            print("tap from first table")
         }else {
             meal = searchMealsBySections[indexPath.section].meals[indexPath.row]
+            print("tap from search table")
         }
         
         cell.mealName.text = meal.mealName
@@ -165,8 +170,7 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         cell.order?.setTitle("加入菜单", for: .normal)
         cell.order?.setTitle("已加入", for: .selected)
         cell.order?.addTarget(self, action: #selector(addToShoppingCart(_:)), for: .touchUpInside)
-//    #selector(MealDetailVC.editMeal(_:))
-        //print("设定单元格")
+        
         return cell
     }
     
@@ -406,19 +410,6 @@ extension MealListDataSource {
                 drink.meals.append(meal)
             }
         }
-//        if coldDishes.meals.count != 0 {
-//            mealsBySections.append(coldDishes)
-//        }
-//        if hotDishes.meals.count != 0 {
-//            mealsBySections.append(hotDishes)
-//        }
-//        if soup.meals.count != 0 {
-//            mealsBySections.append(soup)
-//        }
-//        if drink.meals.count != 0 {
-//            mealsBySections.append(drink)
-//        }
-//        mealListBySections = mealsBySections
         mealListBySections = [coldDishes,hotDishes, soup, drink]
     }
 

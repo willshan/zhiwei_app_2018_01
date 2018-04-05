@@ -12,6 +12,7 @@ import CloudKit
 extension Notification.Name {
     static let zoneCacheDidChange = Notification.Name("zoneCacheDidChange")
     static let mealCacheDidChange = Notification.Name("mealCacheDidChange")
+    static let reservedMealsDeleted = Notification.Name("reservedMealsDeleted")
 }
 
 enum NotificationReason {
@@ -25,6 +26,7 @@ struct NotificationObjectKey {
     static let recordsChanged = "recordsChanged"
     static let sharedRecordChanged = "sharedRecordChanged"
     static let newMeal = "newMeal"
+    static let reservedMealsDeleted = "reservedMealsDeleted"
 }
 
 class BaseLocalCache {

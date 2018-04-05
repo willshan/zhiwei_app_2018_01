@@ -46,6 +46,10 @@ class StateController {
                 reservedMealsHistory.append(reservedMeals)
             }
         }
+        reservedMealsHistory.sort { (meals1, meals2) -> Bool in
+            return (meals1.date + meals1.mealCatagory) > (meals2.date + meals2.mealCatagory)
+        }
+        
         print("从硬盘读取到\(reservedMealsHistory.count)个预定数据！")
         return reservedMealsHistory
     }

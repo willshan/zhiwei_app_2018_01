@@ -26,7 +26,7 @@ class MealListVC: UIViewController {
     var searchController : UISearchController!
     var resultsController = UITableViewController()
     var selectedIndexPath : IndexPath!
-    var mealListOpen = true
+//    var mealListOpen = true
     
     deinit {
         print("The instance of MealListVC was deinited!!!")
@@ -81,7 +81,6 @@ extension MealListVC{
         super.viewWillAppear(true)
         print("view will appear in OrderMealVC")
         
-        //        dataSource = MealListDataSource(meals: stateController.meals)
         dataSource = MealListDataSource(meals: stateController.getAllMeals())
         dataSource.mealListVC = self
 
@@ -99,25 +98,25 @@ extension MealListVC{
         firstTableView.reloadData()
     }
 }
-extension MealListVC {
-    @objc func openAndCloseMealList(_ sender : UIBarButtonItem) {
-        if mealListOpen == true {
-            mealListOpen = false
-            dataSource.mealListBySections[0].collapsed = true
-            dataSource.mealListBySections[1].collapsed = true
-            dataSource.mealListBySections[2].collapsed = true
-            dataSource.mealListBySections[3].collapsed = true
-        }
-        else {
-            mealListOpen = true
-            dataSource.mealListBySections[0].collapsed = false
-            dataSource.mealListBySections[1].collapsed = false
-            dataSource.mealListBySections[2].collapsed = false
-            dataSource.mealListBySections[3].collapsed = false
-        }
-        self.firstTableView.reloadData()
-    }
-}
+//extension MealListVC {
+//    @objc func openAndCloseMealList(_ sender : UIBarButtonItem) {
+//        if mealListOpen == true {
+//            mealListOpen = false
+//            dataSource.mealListBySections[0].collapsed = true
+//            dataSource.mealListBySections[1].collapsed = true
+//            dataSource.mealListBySections[2].collapsed = true
+//            dataSource.mealListBySections[3].collapsed = true
+//        }
+//        else {
+//            mealListOpen = true
+//            dataSource.mealListBySections[0].collapsed = false
+//            dataSource.mealListBySections[1].collapsed = false
+//            dataSource.mealListBySections[2].collapsed = false
+//            dataSource.mealListBySections[3].collapsed = false
+//        }
+//        self.firstTableView.reloadData()
+//    }
+//}
 
 extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
     
@@ -652,11 +651,7 @@ extension MealListVC {
         
         self.navigationController?.tabBarController?.tabBar.isHidden = false
     }
-    
-    @IBAction func unwindFromOrderCenter(sender: UIStoryboardSegue) {
-        return
-    }
-    
+
     @IBAction func unwindToMealList(sender: UIStoryboardSegue) {
         print("transfered data to orderMeal")
         if let sourceViewController = sender.source as? EditMealVC, let meal = sourceViewController.meal{

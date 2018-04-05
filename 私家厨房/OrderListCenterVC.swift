@@ -15,15 +15,20 @@ class OrderListCenterVC: UITableViewController {
     var dataSource : OrderListCenterDataSource!
 
     override func viewDidLoad() {
-        navigationItem.title = "预定查看"
         super.viewDidLoad()
+        navigationItem.title = "预定查看"
+        //Add notificaton listener
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(type(of:self).reservedMealsDeleted(_:)),
+                                               name: .reservedMealsDeleted,
+                                               object: nil)
+        
+        dataSource = OrderListCenterDataSource(reservedMealsHistory!)
+        tableView.dataSource = dataSource
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        dataSource = OrderListCenterDataSource(reservedMealsHistory!)
-        tableView.dataSource = dataSource
-        
         self.navigationController?.tabBarController?.tabBar.isHidden = true
         
     }
@@ -33,9 +38,18 @@ class OrderListCenterVC: UITableViewController {
         
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    deinit {
+        print("The instance of OrderListCenterVC was deinited!!!")
+        
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reservedMealsDeleted, object: nil)
+    }
+}
+extension OrderListCenterVC {
+    @objc func reservedMealsDeleted(_ notification: Notification) {
+        let stateController = StateController()
+        dataSource = OrderListCenterDataSource(stateController.readReservedMealsHistoryFromDisk()!)
+        tableView.dataSource = dataSource
+        tableView.reloadData()
     }
 }
 

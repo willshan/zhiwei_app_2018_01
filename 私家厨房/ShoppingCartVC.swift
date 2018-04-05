@@ -72,10 +72,10 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
             super.didReceiveMemoryWarning()
             // Dispose of any resources that can be recreated.
         }
-//
-//    deinit {
-//        NotificationCenter.default.removeObserver(self)
-//    }
+
+    deinit {
+        print("instance shoppingCartVC was deinited")
+    }
 }
 extension ShoppingCartVC {
     func saveMealList() {
@@ -131,6 +131,7 @@ extension ShoppingCartVC {
                 NSKeyedArchiver.archiveRootObject([key], toFile: archiveURL0.path)
                 print("第一次保存预定到硬盘成功！！！")
             }
+            
             
             self.dateLabel.text = "选择日期"
             self.catagoryLabel.text = "选择餐类"
@@ -189,6 +190,8 @@ extension ShoppingCartVC {
                         }
                     }
                     NSKeyedArchiver.archiveRootObject(historyList, toFile: archiveURL0.path)
+                    //send out notification for updating orderlistcenter
+                    NotificationCenter.default.post(name: .reservedMealsDeleted, object: nil)
                 }
             }
             
@@ -258,14 +261,10 @@ extension ShoppingCartVC {
     
     func updateReserveButton() {
         if dateLabel.text == "选择日期" || catagoryLabel.text == "选择餐类" {
-            reserveButton.isEnabled = false
-            cancelButton.isEnabled = false
-            reserveButton.backgroundColor = UIColor.lightGray
-            cancelButton.backgroundColor = UIColor.lightGray
+            disableButton()
         }
         else {
             
-
             //load resvedMeals from disk if existing
             print("Prepare loading reservedMeals from disk")
             let key = self.dateLabel.text!+self.catagoryLabel.text!
@@ -294,28 +293,37 @@ extension ShoppingCartVC {
                 self.firstTableView.reloadData()
 
                 if meals.count != 0 {
-                    reserveButton.isEnabled = true
-                    cancelButton.isEnabled = true
-                    reserveButton.backgroundColor = UIColor.blue
-                    cancelButton.backgroundColor = UIColor.blue
+                    enableButton()
+                }
+            }
+            else {
+                if stateController.getSelectedMeals().count != 0 {
+                    enableButton()
                 }
             }
         }
     }
     
+    func disableButton() {
+        reserveButton.isEnabled = false
+        cancelButton.isEnabled = false
+        reserveButton.backgroundColor = UIColor.lightGray
+        cancelButton.backgroundColor = UIColor.lightGray
+    }
+    func enableButton() {
+        reserveButton.isEnabled = true
+        cancelButton.isEnabled = true
+        reserveButton.backgroundColor = UIColor.blue
+        cancelButton.backgroundColor = UIColor.blue
+    }
+    
     func updateReserveButtonWhenSwithingVC() {
         let selectedMeals = stateController.getSelectedMeals()
         if dateLabel.text == "选择日期" || catagoryLabel.text == "选择餐类" || selectedMeals.count == 0 {
-            reserveButton.isEnabled = false
-            cancelButton.isEnabled = false
-            reserveButton.backgroundColor = UIColor.lightGray
-            cancelButton.backgroundColor = UIColor.lightGray
+            disableButton()
         }
         else {
-            reserveButton.isEnabled = true
-            cancelButton.isEnabled = true
-            reserveButton.backgroundColor = UIColor.blue
-            cancelButton.backgroundColor = UIColor.blue
+            enableButton()
         }
     }
     
@@ -352,4 +360,32 @@ extension ShoppingCartVC {
     }
 }
 
+extension ShoppingCartVC {
+    
+    @IBAction func unwindToShoppingCartVC(sender: UIStoryboardSegue) {
+//        判断 shoppingCartVC instance是否已经存在，
+//        当dateLabel为nil时，说明instance还未建立，此时viewDidLoad()，viewWillAppear(false)还未运行过，该func调用后，viewDidLoad()，viewWillAppear(false)会运行一次
+//        当dateLabel不为nil时，说明instance已经建立，此时viewDidLoad()，viewWillAppear(false)已经运行过，该func调用后，只有viewWillAppear(false)会运行一次
+        let sourceViewController = sender.source as? OrderListDetailVC
+        let reservedMeals = sourceViewController?.orderListDetail
+        
+        //如果是Navigation的形式，则释放popViewController
+        if let owningNavigationController = sourceViewController?.navigationController{
+            owningNavigationController.popViewController(animated: true)
+        }
+        
+        if self.dateLabel == nil {
+            print("label is nil")
+            stateController.saveReservedMeals(reservedMeals)
+            
+        }
+        else {
+            stateController.saveReservedMeals(reservedMeals)
+            viewDidLoad()
+//            viewWillAppear(false)
+        }
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+
+}
 

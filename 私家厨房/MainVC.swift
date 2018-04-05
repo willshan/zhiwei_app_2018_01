@@ -80,10 +80,10 @@ class MainVC: UIViewController {
         nav1.tabBarItem.image = UIImage(named: AssetNames.shoppingCart)
         nav1.title = "已点"
         
-        //tab2
-        let nav2 = UINavigationController()
-        nav2.tabBarItem.image = UIImage(named: AssetNames.message)
-        nav2.title = "消息"
+//        //tab2
+//        let nav2 = UINavigationController()
+//        nav2.tabBarItem.image = UIImage(named: AssetNames.message)
+//        nav2.title = "消息"
         
         //tab3
         let personalCenterController = mainStoryboard.instantiateViewController(withIdentifier: StoryboardID.personalCenterVC) as! PersonalCenterVC
@@ -93,7 +93,7 @@ class MainVC: UIViewController {
         nav3.title = "个人"
         
         let rootViewController = UITabBarController()
-        let viewControllerArray = [nav0, nav1, nav2, nav3]
+        let viewControllerArray = [nav0, nav1, nav3]
         rootViewController.viewControllers = viewControllerArray
         
         appDelegate.window?.rootViewController = rootViewController

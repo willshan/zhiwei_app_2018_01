@@ -37,7 +37,6 @@ struct CollapsibleMeals {
     var collapsed : Bool
     
     init(meals : [Meal], collapsed : Bool){
-        
         self.meals = meals
         self.collapsed = collapsed
     }

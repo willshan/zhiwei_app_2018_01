@@ -109,7 +109,7 @@ extension PersonalCenterVC {
             guard let orderListCenterController = segue.destination as? OrderListCenterVC else {
                 fatalError("Unexpected destination: \(segue.destination)")
             }
-            orderListCenterController.reservedMealsHistory = stateController.reservedMealsHistory
+            orderListCenterController.reservedMealsHistory = stateController.readReservedMealsHistoryFromDisk()
 
             print("即将传递数据到orderListCenter")
            
