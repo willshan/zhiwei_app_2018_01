@@ -34,18 +34,6 @@ class MealListDataSource : NSObject {
         super.init()
         
         self.updateMealListBySections()
-        
-//        if self.meals != nil {
-//            self.updateMealListBySections()
-//        }
-//        else {
-//            self.meals = []
-//            self.updateMealListBySections()
-//        }
-//
-        //get orderedMealIdentifers from disk
-//        let shoppingCartList = NSKeyedUnarchiver.unarchiveObject(withFile: ShoppingCartList.ArchiveURL.path) as? ShoppingCartList
-//        orderedMealIdentifers = shoppingCartList?.mealsIdentifiers ?? [String]()
     }
 }
 
@@ -84,36 +72,13 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        if tableView == mealListVC.firstTableView
-//        {
-//            return mealListBySections[section].meals.first?.mealType
-//        }else {
-//            return searchMealsBySections[section].meals.first?.mealType
-//        }
-//    }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
-        header.arrowLabel.text = "∨"
-        
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if tableView == mealListVC.firstTableView
         {
-            header.titleLabel.text = mealListBySections[section].meals.first?.mealType
-            header.setCollapsed(mealListBySections[section].collapsed)
-            
+            return mealListBySections[section].meals.first?.mealType
         }else {
-            header.titleLabel.text = searchMealsBySections[section].meals.first?.mealType
+            return searchMealsBySections[section].meals.first?.mealType
         }
-
-        header.section = section
-        header.delegate = self
-        if mealListBySections[section].meals.count == 0 {
-            header.isHidden = true
-        }
-        
-        return header
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -180,12 +145,6 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         
         if tableView == mealListVC.firstTableView
         {
-// 只有segue才能传递数据，下面这个传递方法是行不通的。
-//                        let mealDetailVC = MealDetailVC(nibName: "MealDetailVC", bundle: nil)
-//                        mealDetailVC.meal = selectedMeal
-//                        mealDetailVC.photoFromOrderMeal = pic
-//                        self.mealListVC.navigationController?.pushViewController(mealDetailVC, animated: false)
-
             self.mealListVC.selectedIndexPath = indexPath
             self.mealListVC.performSegue(withIdentifier: SegueID.showMealDetail, sender: nil)
 
@@ -245,23 +204,6 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }
     }
 }
-//
-// MARK: - Section Header Delegate
-//
-extension MealListDataSource: CollapsibleTableViewHeaderDelegate {
-    
-    func toggleSection(_ header: CollapsibleTableViewHeader, section: Int) {
-        let collapsed = !mealListBySections[section].collapsed
-        
-        // Toggle collapse
-        mealListBySections[section].collapsed = collapsed
-        header.setCollapsed(collapsed)
-        
-        mealListVC.firstTableView.reloadSections(NSIndexSet(index: section) as IndexSet, with: .automatic)
-    }
-    
-}
-
 
 extension MealListDataSource {
     //MARK: -Delete data in server
