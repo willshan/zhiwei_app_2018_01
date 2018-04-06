@@ -17,9 +17,10 @@ class CollapsibleTableViewHeader: UITableViewHeaderFooterView {
     override init(reuseIdentifier: String?) {
         super.init(reuseIdentifier: reuseIdentifier)
         
+        contentView.layer.cornerRadius = 5
         // Content View
 //        contentView.backgroundColor = UIColor(hex: 0x2E3944)
-        contentView.backgroundColor = UIColor.lightGray
+        contentView.backgroundColor = UIColor(hex: 0x767BFF)
         
         let marginGuide = contentView.layoutMarginsGuide
         

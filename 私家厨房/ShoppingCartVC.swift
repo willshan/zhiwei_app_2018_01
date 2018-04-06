@@ -283,7 +283,9 @@ extension ShoppingCartVC {
                     HandleCoreData.updateMealSelectionStatus(identifier: mealID)
                     
                     let meal = HandleCoreData.queryDataWithIdentifer(mealID)
-                    meals.append(meal.first!)
+                    if meal.count > 0 {
+                        meals.append(meal.first!)
+                    }
                 }
                 self.dataSource = ShoppingCartDataSource(selectedMeals: meals)
                 self.firstTableView.dataSource = self.dataSource

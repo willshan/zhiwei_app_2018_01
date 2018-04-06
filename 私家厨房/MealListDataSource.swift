@@ -72,13 +72,34 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+//        if tableView == mealListVC.firstTableView
+//        {
+//            return mealListBySections[section].meals.first?.mealType
+//        }else {
+//            return searchMealsBySections[section].meals.first?.mealType
+//        }
+//    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header") as? CollapsibleTableViewHeader ?? CollapsibleTableViewHeader(reuseIdentifier: "header")
+        
         if tableView == mealListVC.firstTableView
         {
-            return mealListBySections[section].meals.first?.mealType
+            header.titleLabel.text = mealListBySections[section].meals.first?.mealType
+            
         }else {
-            return searchMealsBySections[section].meals.first?.mealType
+            header.titleLabel.text = searchMealsBySections[section].meals.first?.mealType
         }
+        
+        header.section = section
+        
+        if mealListBySections[section].meals.count == 0 {
+            header.isHidden = true
+        }
+        
+        return header
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {

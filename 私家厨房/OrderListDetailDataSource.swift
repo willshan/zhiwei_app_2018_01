@@ -33,9 +33,10 @@ extension OrderListDetailDataSource : UITableViewDataSource {
             fatalError("The dequeued cell is not an instance of OrderListCenterCell.")
         }
         cell.index.text = String(indexPath.row+1)
-        let meal = HandleCoreData.queryDataWithIdentifer(orderListDetail.mealsIdentifiers![indexPath.row]).first!
-        cell.mealName.text = meal.mealName
-        cell.mealPhoto.image = DataStore().getImageForKey(key: meal.identifier)
+        let identifer = orderListDetail.mealsIdentifiers![indexPath.row]
+        let meal = HandleCoreData.queryDataWithIdentifer(identifer).first
+        cell.mealName.text = meal?.mealName ?? "菜品已被删除"
+        cell.mealPhoto.image = DataStore().getImageForKey(key: identifer) ?? UIImage(named: AssetNames.defaultPhoto)!
         
         return cell
     }
