@@ -127,7 +127,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
-    
     func applicationWillResignActive(_ application: UIApplication) {
         print("app will resign active")
 
