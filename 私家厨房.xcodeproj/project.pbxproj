@@ -13,6 +13,10 @@
 		84D3583720727FB90001640E /* OrderListDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE72155D1F55BA3100067530 /* OrderListDetailVC.swift */; };
 		84D3583820727FBB0001640E /* OrderListDetailDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB1C3581EB58E9600F1D804 /* OrderListDetailDataSource.swift */; };
 		84E524DF206BE0CC003BEAC8 /* MainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84E524DE206BE0CC003BEAC8 /* MainVC.swift */; };
+		A7374FB4207859FE0067D934 /* CalenderPopUpSB.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A7374FB2207859FD0067D934 /* CalenderPopUpSB.storyboard */; };
+		A7374FB620785A070067D934 /* CalenderPopUpVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7374FB520785A070067D934 /* CalenderPopUpVC.swift */; };
+		A7374FB720785A1F0067D934 /* CVCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A72048092077BC0200F04E54 /* CVCalendar.framework */; };
+		A7374FB820785A1F0067D934 /* CVCalendar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A72048092077BC0200F04E54 /* CVCalendar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A7F2245220761E5300A8E1AA /* CollapsibleTableViewHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE9D8AEA2055269100B7991D /* CollapsibleTableViewHeader.swift */; };
 		BE087B351F2F73610005128B /* EditMealVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE087B341F2F73610005128B /* EditMealVC.swift */; };
 		BE08D8371F22F8A4001A93C7 /* PersonalSetVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE08D8361F22F8A4001A93C7 /* PersonalSetVC.swift */; };
@@ -65,6 +69,23 @@
 		BEEDFBBD1EACC9A4001E5E17 /* StateController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEEDFBBC1EACC9A4001E5E17 /* StateController.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A72048082077BC0200F04E54 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A72048042077BC0100F04E54 /* CVCalendar.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 45D9D8B31C5006AA006673B2;
+			remoteInfo = CVCalendar;
+		};
+		A7374FB920785A1F0067D934 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A72048042077BC0100F04E54 /* CVCalendar.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 45D9D8B21C5006AA006673B2;
+			remoteInfo = CVCalendar;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		BEB00BAE1F3A0698009DD2CE /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -72,6 +93,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				A7374FB820785A1F0067D934 /* CVCalendar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,6 +106,9 @@
 		84E524E2206BECDF003BEAC8 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SignUpViewController.swift; path = Obsoleted/SignUpViewController.swift; sourceTree = "<group>"; };
 		84E524E4206BECEA003BEAC8 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Obsoleted/LoginViewController.swift; sourceTree = "<group>"; };
 		84E524E6206BECF4003BEAC8 /* LogOutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogOutViewController.swift; path = Obsoleted/LogOutViewController.swift; sourceTree = "<group>"; };
+		A72048042077BC0100F04E54 /* CVCalendar.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = CVCalendar.xcodeproj; path = "../../Downloads/CVCalendar-master/CVCalendar.xcodeproj"; sourceTree = "<group>"; };
+		A7374FB2207859FD0067D934 /* CalenderPopUpSB.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CalenderPopUpSB.storyboard; sourceTree = "<group>"; };
+		A7374FB520785A070067D934 /* CalenderPopUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalenderPopUpVC.swift; sourceTree = "<group>"; };
 		BE002872204AA5DE00886B79 /* DatabaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseLocalCache.swift; sourceTree = "<group>"; };
 		BE087B341F2F73610005128B /* EditMealVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMealVC.swift; sourceTree = "<group>"; };
 		BE08D8361F22F8A4001A93C7 /* PersonalSetVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalSetVC.swift; sourceTree = "<group>"; };
@@ -151,12 +176,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEE709512010403900C7873B /* CloudKit.framework in Frameworks */,
+				A7374FB720785A1F0067D934 /* CVCalendar.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A72048052077BC0100F04E54 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A72048092077BC0200F04E54 /* CVCalendar.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		BE08D8381F22F8B0001A93C7 /* PersonalSet */ = {
 			isa = PBXGroup;
 			children = (
@@ -333,6 +367,8 @@
 				BE91009520025EDE00E6C9A8 /* DatePopUpSB.storyboard */,
 				BE91008F200068BA00E6C9A8 /* CatagoryPopUpVC.swift */,
 				BE9100932000B66200E6C9A8 /* CatagoryPopUpSB.storyboard */,
+				A7374FB520785A070067D934 /* CalenderPopUpVC.swift */,
+				A7374FB2207859FD0067D934 /* CalenderPopUpSB.storyboard */,
 			);
 			name = "Popup VC";
 			sourceTree = "<group>";
@@ -349,6 +385,7 @@
 		BEAD6E501E6AA1A4001BF58A = {
 			isa = PBXGroup;
 			children = (
+				A72048042077BC0100F04E54 /* CVCalendar.xcodeproj */,
 				BEAD6E5B1E6AA1A5001BF58A /* 私家厨房 */,
 				BE2ACE6620090674001F4F66 /* 私家厨房.app */,
 				BE2ACE67200909E8001F4F66 /* Frameworks */,
@@ -427,6 +464,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				A7374FBA20785A1F0067D934 /* PBXTargetDependency */,
 			);
 			name = "私家厨房";
 			productName = "私家厨房";
@@ -472,6 +510,12 @@
 			mainGroup = BEAD6E501E6AA1A4001BF58A;
 			productRefGroup = BEAD6E501E6AA1A4001BF58A;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = A72048052077BC0100F04E54 /* Products */;
+					ProjectRef = A72048042077BC0100F04E54 /* CVCalendar.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				BEAD6E581E6AA1A4001BF58A /* 私家厨房 */,
@@ -479,11 +523,22 @@
 		};
 /* End PBXProject section */
 
+/* Begin PBXReferenceProxy section */
+		A72048092077BC0200F04E54 /* CVCalendar.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = CVCalendar.framework;
+			remoteRef = A72048082077BC0200F04E54 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
 /* Begin PBXResourcesBuildPhase section */
 		BEAD6E571E6AA1A4001BF58A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7374FB4207859FE0067D934 /* CalenderPopUpSB.storyboard in Resources */,
 				BE9047CE1FFD401400282B0F /* MealDetailVC.xib in Resources */,
 				BEB143861E744697008D8921 /* Main.storyboard in Resources */,
 				BE4EB5201FF6805200129999 /* MealCell.xib in Resources */,
@@ -501,6 +556,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A7374FB620785A070067D934 /* CalenderPopUpVC.swift in Sources */,
 				BE7036FF1FFE83400003F9FB /* DatePopUpVC.swift in Sources */,
 				BE72156A1F55BAB900067530 /* ShoppingCell.swift in Sources */,
 				BE3310FD1F2A6D81001E7E3B /* ImageHelper.swift in Sources */,
@@ -553,6 +609,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A7374FBA20785A1F0067D934 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = CVCalendar;
+			targetProxy = A7374FB920785A1F0067D934 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		BEB143841E744697008D8921 /* Main.storyboard */ = {
@@ -688,6 +752,7 @@
 		BEAD6E6C1E6AA1A5001BF58A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "私家厨房/私家厨房.entitlements";
@@ -722,6 +787,7 @@
 		BEAD6E6D1E6AA1A5001BF58A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = "私家厨房/私家厨房.entitlements";

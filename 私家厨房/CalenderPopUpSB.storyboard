@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="syW-2b-Aps">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Calender Pop UpVC-->
+        <scene sceneID="w9N-0Z-S2l">
+            <objects>
+                <viewController id="syW-2b-Aps" customClass="CalenderPopUpVC" customModule="私家厨房" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NTf-3E-Oc3">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wsi-Bh-TGj" userLabel="Calender menu" customClass="CVCalendarMenuView" customModule="CVCalendar">
+                                <rect key="frame" x="0.0" y="25" width="375" height="40"/>
+                                <color key="backgroundColor" red="0.62297074440149025" green="1" blue="0.47435172842319651" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="kMM-3X-f4M"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dD4-P1-5Ew" userLabel="Calender" customClass="CVCalendarView" customModule="CVCalendar">
+                                <rect key="frame" x="0.0" y="75" width="375" height="200"/>
+                                <color key="backgroundColor" red="0.53714858890005257" green="0.80053479785825099" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="200" id="gGa-Kp-1C4"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="dD4-P1-5Ew" firstAttribute="leading" secondItem="QqT-0k-NSh" secondAttribute="leading" id="0yi-1X-T2L"/>
+                            <constraint firstItem="dD4-P1-5Ew" firstAttribute="top" secondItem="wsi-Bh-TGj" secondAttribute="bottom" constant="10" id="9Ca-c2-xhx"/>
+                            <constraint firstItem="dD4-P1-5Ew" firstAttribute="centerX" secondItem="NTf-3E-Oc3" secondAttribute="centerX" id="Flx-lo-QWK"/>
+                            <constraint firstItem="wsi-Bh-TGj" firstAttribute="centerX" secondItem="NTf-3E-Oc3" secondAttribute="centerX" id="GZ7-C4-dEs"/>
+                            <constraint firstItem="QqT-0k-NSh" firstAttribute="trailing" secondItem="wsi-Bh-TGj" secondAttribute="trailing" id="HOa-9y-NjC"/>
+                            <constraint firstItem="wsi-Bh-TGj" firstAttribute="top" secondItem="QqT-0k-NSh" secondAttribute="top" constant="5" id="bAd-bg-KPN"/>
+                            <constraint firstItem="wsi-Bh-TGj" firstAttribute="leading" secondItem="QqT-0k-NSh" secondAttribute="leading" id="cUx-Vr-uig"/>
+                            <constraint firstItem="QqT-0k-NSh" firstAttribute="trailing" secondItem="dD4-P1-5Ew" secondAttribute="trailing" id="pPT-fh-kpB"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="QqT-0k-NSh"/>
+                    </view>
+                    <connections>
+                        <outlet property="calendarView" destination="dD4-P1-5Ew" id="55O-WK-gv8"/>
+                        <outlet property="menuView" destination="wsi-Bh-TGj" id="FOE-kF-dTZ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MiO-Ge-5DR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-156" y="152"/>
+        </scene>
+    </scenes>
+</document>

@@ -71,6 +71,7 @@ struct StoryboardID {
     static let main = "Main"
     static let datePopUpSB = "DatePopUpSB"
     static let catagoryPopUpSB = "CatagoryPopUpSB"
+    static let calenderPopUpSB = "CalenderPopUpSB"
     static let mealListVC = "MealListVC"
     static let viewDetailVC = "MealDetailVC"
     static let editMealDetailVC = "EditMealDetailVC"

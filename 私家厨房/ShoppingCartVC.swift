@@ -226,11 +226,15 @@ extension ShoppingCartVC : DataTransferBackProtocol{
 
     @IBAction func selectDate(_ sender: UITapGestureRecognizer) {
         
-        let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
-        let popUpVC = storyBoard.instantiateInitialViewController()! as! DatePopUpVC
+//        let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
+//        let popUpVC = storyBoard.instantiateInitialViewController()! as! DatePopUpVC
+//        popUpVC.delegate = self
+//
+//        self.present(popUpVC, animated: true)
+        let storyBoard = UIStoryboard(name: StoryboardID.calenderPopUpSB, bundle: nil)
+        let popUpVC = storyBoard.instantiateInitialViewController()! as! CalenderPopUpVC
         popUpVC.delegate = self
-        
-        self.present(popUpVC, animated: true)
+        self.navigationController?.pushViewController(popUpVC, animated: true)
     }
     
     func dateTransferBack(date: Date) {

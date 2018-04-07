@@ -34,9 +34,9 @@ class MainVC: UIViewController {
     }
     
     static func dateConvertString(date:Date, dateFormat:String="yyyy-MM-dd") -> String {
-        let timeZone = TimeZone.init(identifier: "UTC")
+//        let timeZone = TimeZone.init(identifier: "UTC")
         let formatter = DateFormatter()
-        formatter.timeZone = timeZone
+//        formatter.timeZone = timeZone
         formatter.locale = Locale.init(identifier: "zh_CN")
         formatter.dateFormat = dateFormat
         let date = formatter.string(from: date)
@@ -142,11 +142,17 @@ extension MainVC : DataTransferBackProtocol{
     
     @IBAction func selectDate(_ sender: UITapGestureRecognizer) {
         
-        let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
-        let popUpVC = storyBoard.instantiateInitialViewController()! as! DatePopUpVC
-        popUpVC.delegate = self
+//        let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
+//        let popUpVC = storyBoard.instantiateInitialViewController()! as! DatePopUpVC
+//        popUpVC.delegate = self
+//
+//
+//        self.present(popUpVC, animated: true)
         
-        self.present(popUpVC, animated: true)
+        let storyBoard = UIStoryboard(name: StoryboardID.calenderPopUpSB, bundle: nil)
+        let popUpVC = storyBoard.instantiateInitialViewController()! as! CalenderPopUpVC
+        popUpVC.delegate = self
+        self.navigationController?.pushViewController(popUpVC, animated: true)
     }
     
     func stringTransferBack(string: String) {
