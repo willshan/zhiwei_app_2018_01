@@ -335,15 +335,30 @@ extension ShoppingCartVC {
     
     func saveToLocal() {
         //截屏
+        /*参考代码，来源百度
+        guard frame.size.height > 0 && frame.size.width > 0 else {
+
+            return nil
+        }
+
+        UIGraphicsBeginImageContextWithOptions(frame.size, false, 0)
+        layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+
+        return image
+ */
         let screenRect = UIScreen.main.bounds
-        UIGraphicsBeginImageContext(screenRect.size)
+
+        UIGraphicsBeginImageContextWithOptions(screenRect.size, false, 0) //该方法截屏清晰度高
+
+//        UIGraphicsBeginImageContext(screenRect.size) //该方法截屏清晰度不高
         let ctx:CGContext = UIGraphicsGetCurrentContext()!
         self.view.layer.render(in: ctx)
         let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext();
-        
+        UIGraphicsEndImageContext()
+
         let activityController = UIActivityViewController(activityItems: [image as Any], applicationActivities: nil)
-        
         self.present(activityController, animated: true)
 //        保存相册
 //        UIImageWriteToSavedPhotosAlbum(image!, self, #selector(image(image:didFinishSavingWithError:contextInfo:)), nil)
