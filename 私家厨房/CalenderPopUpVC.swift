@@ -16,31 +16,46 @@ class CalenderPopUpVC: UIViewController {
     
     var currentCalendar: Calendar!
     var delegate : DataTransferBackProtocol?
+    var date : Date?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        currentCalendar = Calendar.init(identifier: .chinese)
+        currentCalendar = Calendar.init(identifier: .gregorian)
         self.title = CVDate(date: Date(), calendar: currentCalendar).globalDescription
+        
+        var todayButtonItem : UIBarButtonItem {
+            return UIBarButtonItem(title: "今天", style: .plain, target: self, action: #selector(self.todayButtonTapped))
+        }
+        
+        self.navigationItem.rightBarButtonItem = todayButtonItem
         
         //星期菜单栏代理
         self.menuView.menuViewDelegate = self
         
         //日历代理
         self.calendarView.calendarDelegate = self
-        
     }
     
     //今天按钮点击
-    @IBAction func todayButtonTapped(_ sender: AnyObject) {
+    @objc func todayButtonTapped() {
         let today = Date()
         self.calendarView.toggleViewWithDate(today)
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    //确定按钮点击
+    @IBAction func confirmButtonTapped(_ sender: AnyObject) {
+        
+        let today = Date()
+        let date = self.date ?? today
+        delegate?.dateTransferBack!(date: date)
+        
+        //dismiss current VC
+        if let owningNavigationController = self.navigationController{
+            owningNavigationController.popViewController(animated: true)
+        }
     }
+    
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -82,13 +97,7 @@ extension CalenderPopUpVC: CVCalendarViewDelegate,CVCalendarMenuViewDelegate {
     func didSelectDayView(_ dayView: CVCalendarDayView, animationDidFinish: Bool) {
         //获取日期
         let date = dayView.date.convertedDate()!
-        
-        delegate?.dateTransferBack!(date: date)
-        
-        //dismiss current VC
-        if let owningNavigationController = self.navigationController{
-            owningNavigationController.popViewController(animated: true)
-        }
+        self.date = date
 /*
         // 创建一个日期格式器
         let dformatter = DateFormatter()

@@ -32,17 +32,40 @@
                                     <constraint firstAttribute="height" constant="200" id="gGa-Kp-1C4"/>
                                 </constraints>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J6m-nd-k8I">
+                                <rect key="frame" x="20" y="305" width="335" height="50"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="DKA-6p-qtI"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                <state key="normal" title="确认">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="confirmButtonTapped:" destination="syW-2b-Aps" eventType="touchUpInside" id="9fW-pc-yHt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="dD4-P1-5Ew" firstAttribute="leading" secondItem="QqT-0k-NSh" secondAttribute="leading" id="0yi-1X-T2L"/>
                             <constraint firstItem="dD4-P1-5Ew" firstAttribute="top" secondItem="wsi-Bh-TGj" secondAttribute="bottom" constant="10" id="9Ca-c2-xhx"/>
+                            <constraint firstItem="QqT-0k-NSh" firstAttribute="trailing" secondItem="J6m-nd-k8I" secondAttribute="trailing" constant="20" id="DWw-Ms-QlM"/>
                             <constraint firstItem="dD4-P1-5Ew" firstAttribute="centerX" secondItem="NTf-3E-Oc3" secondAttribute="centerX" id="Flx-lo-QWK"/>
                             <constraint firstItem="wsi-Bh-TGj" firstAttribute="centerX" secondItem="NTf-3E-Oc3" secondAttribute="centerX" id="GZ7-C4-dEs"/>
                             <constraint firstItem="QqT-0k-NSh" firstAttribute="trailing" secondItem="wsi-Bh-TGj" secondAttribute="trailing" id="HOa-9y-NjC"/>
                             <constraint firstItem="wsi-Bh-TGj" firstAttribute="top" secondItem="QqT-0k-NSh" secondAttribute="top" constant="5" id="bAd-bg-KPN"/>
                             <constraint firstItem="wsi-Bh-TGj" firstAttribute="leading" secondItem="QqT-0k-NSh" secondAttribute="leading" id="cUx-Vr-uig"/>
                             <constraint firstItem="QqT-0k-NSh" firstAttribute="trailing" secondItem="dD4-P1-5Ew" secondAttribute="trailing" id="pPT-fh-kpB"/>
+                            <constraint firstItem="J6m-nd-k8I" firstAttribute="leading" secondItem="QqT-0k-NSh" secondAttribute="leading" constant="20" id="r9r-TD-Jpp"/>
+                            <constraint firstItem="J6m-nd-k8I" firstAttribute="top" secondItem="dD4-P1-5Ew" secondAttribute="bottom" constant="30" id="rwz-mj-4D8"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="QqT-0k-NSh"/>
                     </view>
