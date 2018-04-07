@@ -139,10 +139,10 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
         var meal = Meal()
         if tableView == mealListVC.firstTableView {
             meal = mealListBySections[indexPath.section].meals[indexPath.row]
-            print("tap from first table")
+
         }else {
             meal = searchMealsBySections[indexPath.section].meals[indexPath.row]
-            print("tap from search table")
+
         }
         
         cell.mealName.text = meal.mealName

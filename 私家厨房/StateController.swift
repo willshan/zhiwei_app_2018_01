@@ -80,12 +80,20 @@ class StateController {
     }
     
     func getSelectedMeals() -> [Meal] {
-        let meals = HandleCoreData.querySelectedMealsWithUserName(userName)
+        var meals = HandleCoreData.querySelectedMealsWithUserName(userName)
+        meals.sort { (meal1, meal2) -> Bool in
+            return meal1.mealName > meal2.mealName
+        }
         return meals
     }
     
     func getAllMeals() -> [Meal] {
-        let meals = HandleCoreData.queryDataWithUserName(userName)
+        var meals = HandleCoreData.queryDataWithUserName(userName)
+        
+        meals.sort { (meal1, meal2) -> Bool in
+            return meal1.mealName > meal2.mealName
+        }
+        
         return meals
     }
 }
