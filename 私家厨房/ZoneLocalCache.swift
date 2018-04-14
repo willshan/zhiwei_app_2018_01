@@ -57,16 +57,25 @@ final class ZoneLocalCache : BaseLocalCache{
             Database(cloudKitDB: container.sharedCloudDatabase, container: container)
         ]
         
-        //creat custon zone for private database
+        //creat custon zone for "Meals"
         self.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.privateCustomZoneName, database: databases[1]) { (error) in
-            if error == nil {print(":-) creat private custom zone successfully")}
+            if error == nil {print(":-) creat zone_Meals successfully")}
             else {
-                print(":-( failed creat private custom zone")
+                print(":-( failed creat zone_Meals")
             }
             self.fetchChanges(in: .private, completion: { (_) in
             })
         }
 
+        //creat custon zone for "ReservedMeals"
+        self.creatCustomZone(zoneName: ICloudPropertyStore.zoneName.reservedMealsZoneName, database: databases[1]) { (error) in
+            if error == nil {print(":-) creat private zone_ReservedMeals successfully")}
+            else {
+                print(":-( failed creat zone_ReservedMeals")
+            }
+            self.fetchChanges(in: .private, completion: { (_) in
+            })
+        }
         //Use CKDatabaseSubscription to sync the changes on
         //sharedDB and custom zones of privateDB
 //        Option 1:
@@ -212,8 +221,17 @@ final class ZoneLocalCache : BaseLocalCache{
 
                 NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
                 
-                print("+++++++private zoneID to be saved is \(zoneID)")
+                print("+++++++Meals zoneID to be saved is \(zoneID)")
             }
+            
+            if zoneID.zoneName == ICloudPropertyStore.zoneName.reservedMealsZoneName {
+                let zoneIdURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: ICloudPropertyStore.keyForReservedMealsZoneID)
+                
+                NSKeyedArchiver.archiveRootObject(zoneID, toFile: zoneIdURL.path)
+                
+                print("+++++++ReservedMeals zoneID to be saved is \(zoneID)")
+            }
+            
             if database.name == "Shared" {
                 let zone = CKRecordZone(zoneID: zoneID)
                 SharedMealLocalCache.share.zone = zone
@@ -223,9 +241,6 @@ final class ZoneLocalCache : BaseLocalCache{
                 
                 print("+++++++shared zoneID to be saved is \(zoneID)")
             }
-//            guard database.cloudKitDB === MealLocalCache.share.database &&
-//                zoneID == MealLocalCache.share.zone.zoneID else {return}
-//            MealLocalCache.share.fetchChanges()
         }
         
         operation.recordZoneWithIDWasDeletedBlock = { (zoneID) in
@@ -235,9 +250,6 @@ final class ZoneLocalCache : BaseLocalCache{
         
         operation.changeTokenUpdatedBlock = { (serverChangeToken) in
             // Flush zone deletions for this database to disk
-            
-            //            NSKeyedArchiver.archiveRootObject(token, toFile: databaseChangetokenURL.path)
-            //            print("After update, \(databaseTokenKey) database change token is \(token)")
             // Write this new database change token to memory
             database.serverChangeToken = serverChangeToken
         }
@@ -257,29 +269,7 @@ final class ZoneLocalCache : BaseLocalCache{
             print("Completed update, \(databaseTokenKey) database change token is \(String(describing: serverChangeToken))")
             
             guard moreComing == false else {return}
-        
-//            let newZoneIDs = zoneIDsChanged.filter() {zoneID in
-//                let index = database.zones.index(where: { zone in zone.zoneID == zoneID})
-//                return index == nil ? true : false
-//            }
-//
-//            guard newZoneIDs.count > 0 else {return}
-//
-//            let fetchZonesOp = CKFetchRecordZonesOperation(recordZoneIDs: newZoneIDs)
-//            fetchZonesOp.fetchRecordZonesCompletionBlock = { results, error in
-//
-//                guard CloudKitError.share.handle(error: error, operation: .fetchRecords) == nil,
-//                    let zoneDictionary = results else {return}
-//
-//                for (_, zone) in zoneDictionary { database.zones.append(zone) }
-//                database.zones.sort(){ $0.zoneID.zoneName < $1.zoneID.zoneName }
-//            }
-//
-//            fetchZonesOp.database = database.cloudKitDB
-//            self.operationQueue.addOperation(fetchZonesOp)
-            
-//            // Flush in-memory database change token to disk
-//            NSKeyedArchiver.archiveRootObject(database.serverChangeToken as Any, toFile: databaseChangetokenURL.path)
+
             if database.name == "Private" {
                 MealLocalCache.share.fetchChanges()
             }
@@ -327,9 +317,6 @@ extension ZoneLocalCache {
             createZoneOperation.database = database.cloudKitDB
             createZoneOperation.qualityOfService = .userInitiated
             operationQueue.addOperation(createZoneOperation)
-        }
-            //creat custom zone for sharedDB
-        else {
         }
     }
 }

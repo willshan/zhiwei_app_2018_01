@@ -84,15 +84,6 @@ final class MealLocalCache: BaseLocalCache {
         operation.recordZoneChangeTokensUpdatedBlock = {(zoneID, serverChangeToken, clientChangeTokenData) in
             assert(zoneID == self.zone.zoneID)
             self.serverChangeToken = serverChangeToken
-            //save serverChangeToken to disk
-//            var key = ""
-//            if self.container.displayName(of: self.database) == "Private" {
-//           ICloudPropertyStore.changeTokenKey.privateCustomeZone
-//            }
-//
-//            if self.container.displayName(of: self.database) == "Shared" {
-//                key = ICloudPropertyStore.changeTokenKey.sharedCustomeZone
-//            }
             
             let tokenURL = ICloudPropertyStore.URLofiCloudPropertyForKey(key: self.key)
             NSKeyedArchiver.archiveRootObject(serverChangeToken as Any, toFile: tokenURL.path)

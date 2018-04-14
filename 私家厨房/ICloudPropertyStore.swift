@@ -16,15 +16,18 @@ class ICloudPropertyStore : NSObject{
     static let keyForSubscribedToPrivateChanges = "setSubscribedToPrivateChanges"
     static let keyForSubscribedToSharedChanges = "setSubscribedToSharedChanges"
     static let keyForPrivateCustomZoneID = "private_zoneID_Meals"
+    static let keyForReservedMealsZoneID = "private_zoneID_ReservedMeals"
     static let keyForSharedCustomZoneID = "shared_zoneID_Meals"
     
     struct zoneName {
         static let privateCustomZoneName = "Meals"
         static let sharedCustomZoneName = "SharedMeals"
+        static let reservedMealsZoneName = "ReservedMeals"
     }
     struct recordType {
         static let meal = "Meal"
         static let share = "cloudkit.share"
+        static let reservedMeals = "ReservedMeals"
     }
     struct changeTokenKey {
         static let privateDB = "privateDBChangeToken"
