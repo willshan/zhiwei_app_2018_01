@@ -1,0 +1,6 @@
+module Pods_____ [system] {
+  umbrella header "Pods-私家厨房-umbrella.h"
+
+  export *
+  module * { export * }
+}

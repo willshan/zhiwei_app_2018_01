@@ -7,9 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		28327C85F3FBBD7623050B6E /* libPods-私家厨房.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 324C510D9A9F3543ECE64CA4 /* libPods-私家厨房.a */; };
 		8413917D206936D200C5A205 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8413917C206936D200C5A205 /* LaunchScreen.storyboard */; };
-		846EAC442082454B007E7CC2 /* CVCalendar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 846EAC432082454B007E7CC2 /* CVCalendar.framework */; };
-		846EAC4620824563007E7CC2 /* CVCalendar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 846EAC432082454B007E7CC2 /* CVCalendar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		84D3583520727DC00001640E /* OrderListCenterVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE7215481F55B8C800067530 /* OrderListCenterVC.swift */; };
 		84D3583620727DCE0001640E /* OrderListCenterDataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB1C3511EB4E65C00F1D804 /* OrderListCenterDataSource.swift */; };
 		84D3583720727FB90001640E /* OrderListDetailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE72155D1F55BA3100067530 /* OrderListDetailVC.swift */; };
@@ -76,7 +75,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				846EAC4620824563007E7CC2 /* CVCalendar.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,14 +82,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		324C510D9A9F3543ECE64CA4 /* libPods-私家厨房.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-私家厨房.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8413917C206936D200C5A205 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
-		846EAC432082454B007E7CC2 /* CVCalendar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = CVCalendar.framework; sourceTree = "<group>"; };
 		84E524DE206BE0CC003BEAC8 /* MainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainVC.swift; sourceTree = "<group>"; };
 		84E524E2206BECDF003BEAC8 /* SignUpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SignUpViewController.swift; path = Obsoleted/SignUpViewController.swift; sourceTree = "<group>"; };
 		84E524E4206BECEA003BEAC8 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LoginViewController.swift; path = Obsoleted/LoginViewController.swift; sourceTree = "<group>"; };
 		84E524E6206BECF4003BEAC8 /* LogOutViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = LogOutViewController.swift; path = Obsoleted/LogOutViewController.swift; sourceTree = "<group>"; };
 		A7374FB2207859FD0067D934 /* CalenderPopUpSB.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = CalenderPopUpSB.storyboard; sourceTree = "<group>"; };
 		A7374FB520785A070067D934 /* CalenderPopUpVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalenderPopUpVC.swift; sourceTree = "<group>"; };
+		B93DB84E33F851E8978F593D /* Pods-私家厨房.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-私家厨房.release.xcconfig"; path = "Pods/Target Support Files/Pods-私家厨房/Pods-私家厨房.release.xcconfig"; sourceTree = "<group>"; };
 		BE002872204AA5DE00886B79 /* DatabaseLocalCache.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DatabaseLocalCache.swift; sourceTree = "<group>"; };
 		BE087B341F2F73610005128B /* EditMealVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditMealVC.swift; sourceTree = "<group>"; };
 		BE08D8361F22F8A4001A93C7 /* PersonalSetVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalSetVC.swift; sourceTree = "<group>"; };
@@ -151,6 +150,7 @@
 		BEE7094F2010403600C7873B /* 私家厨房.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "私家厨房.entitlements"; sourceTree = "<group>"; };
 		BEE709502010403900C7873B /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		BEEDFBBC1EACC9A4001E5E17 /* StateController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StateController.swift; sourceTree = "<group>"; };
+		E0D76AC97BD6FC2C88E976E4 /* Pods-私家厨房.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-私家厨房.debug.xcconfig"; path = "Pods/Target Support Files/Pods-私家厨房/Pods-私家厨房.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,7 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				BEE709512010403900C7873B /* CloudKit.framework in Frameworks */,
-				846EAC442082454B007E7CC2 /* CVCalendar.framework in Frameworks */,
+				28327C85F3FBBD7623050B6E /* libPods-私家厨房.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -205,8 +205,8 @@
 		BE2ACE67200909E8001F4F66 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				846EAC432082454B007E7CC2 /* CVCalendar.framework */,
 				BEE709502010403900C7873B /* CloudKit.framework */,
+				324C510D9A9F3543ECE64CA4 /* libPods-私家厨房.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -364,6 +364,7 @@
 				BEAD6E5B1E6AA1A5001BF58A /* 私家厨房 */,
 				BE2ACE6620090674001F4F66 /* 私家厨房.app */,
 				BE2ACE67200909E8001F4F66 /* Frameworks */,
+				EEF0E261EA0D874C53EC0844 /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -424,6 +425,15 @@
 			name = Tab2;
 			sourceTree = "<group>";
 		};
+		EEF0E261EA0D874C53EC0844 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				E0D76AC97BD6FC2C88E976E4 /* Pods-私家厨房.debug.xcconfig */,
+				B93DB84E33F851E8978F593D /* Pods-私家厨房.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -431,6 +441,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = BEAD6E6B1E6AA1A5001BF58A /* Build configuration list for PBXNativeTarget "私家厨房" */;
 			buildPhases = (
+				E635240EFE82191A48348773 /* [CP] Check Pods Manifest.lock */,
 				BEAD6E551E6AA1A4001BF58A /* Sources */,
 				BEAD6E561E6AA1A4001BF58A /* Frameworks */,
 				BEAD6E571E6AA1A4001BF58A /* Resources */,
@@ -508,6 +519,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E635240EFE82191A48348773 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-私家厨房-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		BEAD6E551E6AA1A4001BF58A /* Sources */ = {
@@ -701,6 +733,7 @@
 		};
 		BEAD6E6C1E6AA1A5001BF58A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E0D76AC97BD6FC2C88E976E4 /* Pods-私家厨房.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -736,6 +769,7 @@
 		};
 		BEAD6E6D1E6AA1A5001BF58A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B93DB84E33F851E8978F593D /* Pods-私家厨房.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
