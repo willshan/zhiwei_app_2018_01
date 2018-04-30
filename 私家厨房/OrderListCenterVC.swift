@@ -15,6 +15,7 @@ class OrderListCenterVC: UITableViewController {
     var dataSource : OrderListCenterDataSource!
 
     override func viewDidLoad() {
+        
         super.viewDidLoad()
         navigationItem.title = "预定查看"
         //Add notificaton listener
@@ -22,6 +23,7 @@ class OrderListCenterVC: UITableViewController {
                                                selector: #selector(type(of:self).reservedMealsDeleted(_:)),
                                                name: .reservedMealsDeleted,
                                                object: nil)
+        reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()
         
         dataSource = OrderListCenterDataSource(reservedMealsHistory!)
         tableView.dataSource = dataSource
@@ -29,7 +31,6 @@ class OrderListCenterVC: UITableViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
-        self.navigationController?.tabBarController?.tabBar.isHidden = true
         
     }
     
@@ -46,8 +47,7 @@ class OrderListCenterVC: UITableViewController {
 }
 extension OrderListCenterVC {
     @objc func reservedMealsDeleted(_ notification: Notification) {
-        let stateController = StateController()
-        dataSource = OrderListCenterDataSource(stateController.readReservedMealsHistoryFromDisk()!)
+        dataSource = OrderListCenterDataSource(StateController.share.readReservedMealsHistoryFromDisk()!)
         tableView.dataSource = dataSource
         tableView.reloadData()
     }

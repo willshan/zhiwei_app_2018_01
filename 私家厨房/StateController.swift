@@ -10,7 +10,9 @@ import UIKit
 import CoreData
 import CloudKit
 
-class StateController {
+final class StateController {
+    
+    static let share = StateController()
     
     fileprivate(set) var meals : [Meal]?
     fileprivate(set) var selectedMeals : [Meal]?
@@ -21,7 +23,9 @@ class StateController {
     fileprivate(set) var reservedMeals : ReservedMeals?
     fileprivate(set) var reservedMealsHistory : [ReservedMeals]?
     
-    init() {
+    private init() {}
+    
+    func initialize() {
         print("+++++CKCurrentUserDefaultName is \(userName)+++++")
         self.meals = HandleCoreData.queryDataWithUserName(userName)
         self.selectedMeals = HandleCoreData.querySelectedMealsWithUserName(userName)

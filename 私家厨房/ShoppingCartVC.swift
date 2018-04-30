@@ -28,18 +28,16 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
     @IBAction func cancelMealList(_ sender: UIButton) {
         cancelMealList()
     }
-    
-    
-    var stateController : StateController!
+
     var dataSource: ShoppingCartDataSource!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = editButtonItem
+//        navigationItem.leftBarButtonItem = editButtonItem
         
-        if stateController.reservedMeals != nil {
-            dateLabel.text = stateController.reservedMeals?.date
-            catagoryLabel.text = stateController.reservedMeals?.mealCatagory
+        if StateController.share.reservedMeals != nil {
+            dateLabel.text = StateController.share.reservedMeals?.date
+            catagoryLabel.text = StateController.share.reservedMeals?.mealCatagory
         }
         
         updateReserveButton()
@@ -53,7 +51,7 @@ class ShoppingCartVC: UIViewController, UITableViewDelegate{
         
         updateReserveButtonWhenSwithingVC()
         
-        dataSource = ShoppingCartDataSource(selectedMeals: stateController.getSelectedMeals())
+        dataSource = ShoppingCartDataSource(selectedMeals: StateController.share.getSelectedMeals())
         dataSource.shoppingCartController = self
 
         firstTableView.dataSource = dataSource
@@ -89,25 +87,15 @@ extension ShoppingCartVC {
         let deleteAction = UIAlertAction(title: "保存", style: .destructive, handler: {
             (action) -> Void in
             
-            let meals = self.stateController.getSelectedMeals()
+            let meals = StateController.share.getSelectedMeals()
             var mealIdentifers = [String]()
             for meal in meals {
                 HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
                 mealIdentifers.append(meal.identifier)
             }
             
-            self.dataSource = ShoppingCartDataSource(selectedMeals: [Meal]())
-            
-            self.firstTableView.reloadData()
-            
-
-            //update shopping cart badge number
-            let nav0 = self.navigationController
-            let nav0TabBar = nav0?.tabBarItem
-            nav0TabBar?.badgeValue = nil
-            
             //save resverd meals to disk
-            self.stateController.saveReservedMeals(nil)
+            StateController.share.saveReservedMeals(nil)
             
             let reserveMeals = ReservedMeals(self.dateLabel.text!, self.catagoryLabel.text!, mealIdentifers)
             let key = self.dateLabel.text!+self.catagoryLabel.text!
@@ -132,10 +120,22 @@ extension ShoppingCartVC {
                 print("第一次保存预定到硬盘成功！！！")
             }
             
-            
             self.dateLabel.text = "选择日期"
             self.catagoryLabel.text = "选择餐类"
             self.updateReserveButton()
+            
+            let storyBoard = UIStoryboard(name: "Main", bundle: nil)
+            let popUpVC = storyBoard.instantiateViewController(withIdentifier: StoryboardID.orderListVC) as! OrderListVC
+            popUpVC.mealListBySections = self.dataSource.mealListBySections
+            print("\(self.dataSource.mealListBySections)")
+            UIView.animate(withDuration: 0.6) {
+                self.present(popUpVC, animated: false, completion: nil)
+            }
+            
+//            self.navigationController?.pushViewController(popUpVC, animated: true)
+            
+//            self.dataSource = ShoppingCartDataSource(selectedMeals: [Meal]())
+//            self.firstTableView.reloadData()
             
         })
         ac.addAction(deleteAction)
@@ -153,7 +153,7 @@ extension ShoppingCartVC {
         let deleteAction = UIAlertAction(title: "删除", style: .destructive, handler: {
             (action) -> Void in
             
-            let meals = self.stateController.getSelectedMeals()
+            let meals = StateController.share.getSelectedMeals()
   
             for meal in meals {
                 HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
@@ -197,7 +197,7 @@ extension ShoppingCartVC {
             
             self.dateLabel.text = "选择日期"
             self.catagoryLabel.text = "选择餐类"
-            self.stateController.saveReservedMeals(nil)
+            StateController.share.saveReservedMeals(nil)
             self.updateReserveButton()
 
         })
@@ -268,7 +268,6 @@ extension ShoppingCartVC {
             disableButton()
         }
         else {
-            
             //load resvedMeals from disk if existing
             print("Prepare loading reservedMeals from disk")
             let key = self.dateLabel.text!+self.catagoryLabel.text!
@@ -295,7 +294,6 @@ extension ShoppingCartVC {
                 self.firstTableView.dataSource = self.dataSource
                 self.firstTableView.delegate = self.dataSource
                 self.dataSource.shoppingCartController = self
-                self.dataSource.updateShoppingCartIconBadgeNumber(orderedMealCount: meals.count)
                 self.firstTableView.reloadData()
 
                 if meals.count != 0 {
@@ -303,7 +301,7 @@ extension ShoppingCartVC {
                 }
             }
             else {
-                if stateController.getSelectedMeals().count != 0 {
+                if StateController.share.getSelectedMeals().count != 0 {
                     enableButton()
                 }
             }
@@ -324,7 +322,7 @@ extension ShoppingCartVC {
     }
     
     func updateReserveButtonWhenSwithingVC() {
-        let selectedMeals = stateController.getSelectedMeals()
+        let selectedMeals = StateController.share.getSelectedMeals()
         if dateLabel.text == "选择日期" || catagoryLabel.text == "选择餐类" || selectedMeals.count == 0 {
             disableButton()
         }
@@ -397,16 +395,31 @@ extension ShoppingCartVC {
         
         if self.dateLabel == nil {
             print("label is nil")
-            stateController.saveReservedMeals(reservedMeals)
+            StateController.share.saveReservedMeals(reservedMeals)
             
         }
         else {
-            stateController.saveReservedMeals(reservedMeals)
+            StateController.share.saveReservedMeals(reservedMeals)
             viewDidLoad()
 //            viewWillAppear(false)
         }
         self.navigationController?.tabBarController?.tabBar.isHidden = false
     }
-
 }
 
+//extension ShoppingCartVC {
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        super.prepare(for: segue, sender: sender)
+//
+//        switch(segue.identifier ?? "") {
+//        case SegueID.confirmReservedMeals:
+//            guard let orderListVC = segue.destination as? OrderListVC else {
+//                fatalError("Unexpected destination: \(segue.destination)")
+//            }
+//            orderListVC.mealListBySections = dataSource.mealListBySections
+//
+//        default:
+//            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+//        }
+//    }
+//}

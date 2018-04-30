@@ -12,7 +12,7 @@ class OrderListCell: UITableViewCell {
 
     @IBOutlet weak var index: UILabel!
     @IBOutlet weak var mealName: UILabel!
-    @IBOutlet weak var mealCount: UILabel!
+
     
     
     override func awakeFromNib() {

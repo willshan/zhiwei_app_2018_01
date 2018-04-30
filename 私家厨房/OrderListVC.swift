@@ -14,7 +14,7 @@ class OrderListVC: UIViewController, UITableViewDelegate {
     @IBOutlet weak var secondTableView: UITableView!
     
     fileprivate var dataSource: OrderListDataSource!
-    var mealListBySections : [[OrderedMeal]]!
+    var mealListBySections : [[Meal]]!
     var photosIdentifiers : [String]!
 
     override func viewDidLoad() {

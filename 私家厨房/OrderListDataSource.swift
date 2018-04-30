@@ -10,9 +10,9 @@ import UIKit
 
 class OrderListDataSource : NSObject {
     //菜名
-    var mealListBySections : [[OrderedMeal]]
+    var mealListBySections : [[Meal]]
     
-    init(mealListBySections: [[OrderedMeal]]) {
+    init(mealListBySections: [[Meal]]) {
         self.mealListBySections = mealListBySections
     }
 }
@@ -65,8 +65,7 @@ extension OrderListDataSource : UITableViewDataSource {
         }
         cell.index.text = String(indexPath.row+1)
         cell.mealName.text = mealListBySections[indexPath.section][indexPath.row].mealName
-        cell.mealCount.text = "\(mealListBySections[indexPath.section][indexPath.row].mealCount)份"
-        
+
         return cell
     }
 }

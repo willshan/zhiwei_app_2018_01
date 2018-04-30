@@ -16,9 +16,23 @@ class MealListVC: UIViewController {
     //MARK: -Properties
     
     @IBOutlet weak var firstTableView: UITableView!
+    @IBOutlet weak var shoppingIcon: UIButton!
+    
+    var numberLablel = UILabel()
+//    var badgeNumber = 0 {
+//        didSet {
+//            print("didSet was runing")
+//            if Int(numberLablel.text!)! == 0 {
+//                numberLablel.isHidden = true
+//            }
+//            else {
+//                numberLablel.isHidden = false
+//            }
+//        }
+//    }
+    
     let reachability = Reachability()!
     
-    var stateController : StateController!
     var dataSource : MealListDataSource!
     private let userName = CKCurrentUserDefaultName
     
@@ -43,49 +57,30 @@ extension MealListVC{
     //MARK: -Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        //给shopping icon添加数字标签
+        setBadgeLabel()
+        shoppingIcon.addSubview(numberLablel)
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(type(of:self).mealCacheDidChange(_:)),
                                                name: .mealCacheDidChange,
                                                object: nil)
+        //监听网络状态
         networkStatusListener()
-        
-        // Use the edit button item provided by the table view controller.
-//        navigationItem.leftBarButtonItem = editButtonItem
-//        var organizeButtonItem : UIBarButtonItem {
-//            return UIBarButtonItem(barButtonSystemItem: .organize, target: self, action: #selector(self.openAndCloseMealList(_:)))
-//        }
-//
-//        navigationItem.leftBarButtonItems = [editButtonItem, organizeButtonItem]
-        navigationItem.leftBarButtonItems = [editButtonItem]
+        //设置搜索控制器
         setSearchController()
-        
-        //        dataSource = MealListDataSource(meals: stateController.meals)
-//        dataSource = MealListDataSource(meals: stateController.getAllMeals())
-//        dataSource.mealListVC = self
-//
-//        if stateController.mealOrderList != nil {
-//            dataSource.mealOrderList = stateController.mealOrderList
-//        }
-//
-//        firstTableView.dataSource = dataSource
-//        firstTableView.delegate = dataSource
-//
-//        resultsController.tableView.dataSource = dataSource
-//        searchController.searchResultsUpdater = dataSource
-//        resultsController.tableView.delegate = dataSource
-        
     }
     
     //这一步在unwind之后调用
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         print("view will appear in OrderMealVC")
-        
-        dataSource = MealListDataSource(meals: stateController.getAllMeals())
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+        dataSource = MealListDataSource(meals: StateController.share.getAllMeals())
         dataSource.mealListVC = self
 
-        if stateController.mealOrderList != nil {
-            dataSource.mealOrderList = stateController.mealOrderList
+        if StateController.share.mealOrderList != nil {
+            dataSource.mealOrderList = StateController.share.mealOrderList
         }
 
         firstTableView.dataSource = dataSource
@@ -120,22 +115,30 @@ extension MealListVC{
 
 extension MealListVC : UISearchControllerDelegate, UISearchBarDelegate {
     
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        if navigationItem.leftBarButtonItem?.title == "Edit" {
-            firstTableView.setEditing(true, animated: false)
-            navigationItem.leftBarButtonItem?.title = "Done"
-        }
-        else {
-            firstTableView.setEditing(false, animated: false)
-            navigationItem.leftBarButtonItem?.title = "Edit"
-        }
+//    override func setEditing(_ editing: Bool, animated: Bool) {
+//        if navigationItem.leftBarButtonItem?.title == "Edit" {
+//            firstTableView.setEditing(true, animated: false)
+//            navigationItem.leftBarButtonItem?.title = "Done"
+//        }
+//        else {
+//            firstTableView.setEditing(false, animated: false)
+//            navigationItem.leftBarButtonItem?.title = "Edit"
+//        }
+//    }
+    func setBadgeLabel() {
+        let height : CGFloat = 18.0
+        numberLablel.frame = CGRect(x: 40, y: 6, width: height, height: height)
+        numberLablel.backgroundColor = UIColor.red
+        numberLablel.textColor = UIColor.white
+        numberLablel.font = UIFont.boldSystemFont(ofSize: 10)
+        numberLablel.textAlignment = NSTextAlignment.center
+        numberLablel.layer.cornerRadius = height/2
+        numberLablel.layer.masksToBounds = true
     }
     
     func setSearchController() {
         if #available(iOS 11.0, *) {
             print("setting searchController")
-            navigationController?.navigationBar.prefersLargeTitles = true
-            navigationItem.largeTitleDisplayMode = .never
             
             let nib = UINib(nibName: "MealCell", bundle: nil)
             firstTableView.register(nib, forCellReuseIdentifier: "MealCell")
@@ -225,11 +228,11 @@ extension MealListVC {
     
     //update UI
     func updateUI() {
-        self.dataSource = MealListDataSource(meals: self.stateController.getAllMeals())
+        self.dataSource = MealListDataSource(meals: StateController.share.getAllMeals())
         self.dataSource.mealListVC = self
         
-        if self.stateController.mealOrderList != nil {
-            self.dataSource.mealOrderList = self.stateController.mealOrderList
+        if StateController.share.mealOrderList != nil {
+            self.dataSource.mealOrderList = StateController.share.mealOrderList
         }
         
         self.firstTableView.dataSource = self.dataSource
@@ -347,7 +350,7 @@ extension MealListVC {
         let meals = HandleCoreData.queryDataWithSaveStatusAndUser(userName)
         
         //Creat custom Zone and Save CKRecord
-        if stateController.accountStatus == false {
+        if StateController.share.accountStatus == false {
             let alert = UIAlertController(title: "iCloud账户不可用",
                                           message: "请确认已登录iCloud并开启iCloud Drive",
                                           preferredStyle: .alert)
@@ -508,7 +511,7 @@ extension MealListVC {
     func saveRecordIniCloud(meal : Meal, uploadImage : UIImage){
         //define
         //Creat custom Zone and Save CKRecord
-        if stateController.accountStatus == false {
+        if StateController.share.accountStatus == false {
             let alert = UIAlertController(title: "iCloud账户不可用",
                                           message: "请确认已登录iCloud并开启iCloud Drive",
                                           preferredStyle: .alert)
@@ -617,6 +620,10 @@ extension MealListVC {
         super.prepare(for: segue, sender: sender)
         
         switch(segue.identifier ?? "") {
+        case SegueID.showReservedMeals:
+            guard let confirmVC = segue.destination as? ShoppingCartVC else {
+                fatalError("Unexpected destination: \(segue.destination)")
+            }
             
         case SegueID.addNewMeal:
             os_log("Adding a new meal.", log: OSLog.default, type: .debug)
@@ -634,8 +641,6 @@ extension MealListVC {
             else {
                 selectedMeal = self.dataSource.searchMealsBySections[selectedIndexPath.section].meals[selectedIndexPath.row]
             }
-            
-//            print("***************\(selectedMeal)")
             
             viewDetailVC.meal = selectedMeal
             
@@ -705,7 +710,7 @@ extension MealListVC {
                     self.saveRecordIniCloud(meal: meal, uploadImage: uploadImage!)
                     // Save the meals to stateControler
                     dataSource.updateMeals()
-                    stateController?.saveMeal(dataSource.meals!)
+                    StateController.share.saveMeal(dataSource.meals!)
                     return
                 }
                 
@@ -886,7 +891,7 @@ extension MealListVC {
             
             // Save the meals to stateControler
             dataSource.updateMeals()
-            stateController?.saveMeal(dataSource.meals!)
+            StateController.share.saveMeal(dataSource.meals!)
         }
     }
 }

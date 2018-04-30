@@ -207,14 +207,10 @@ extension MealListDataSource : UITableViewDataSource, UITableViewDelegate {
                 self.deleteMealInServer(meal)
                 
                 //Delete meal in stateController
-                self.mealListVC?.stateController.saveMeal(self.meals!) //added
+                StateController.share.saveMeal(self.meals!) //added
                 
                 //Delete meal in coredata
                 HandleCoreData.deleteMealWithIdentifier(meal.identifier)
-                
-                //update shopping cart badge number
-                let orderedMealCount = self.mealListVC?.stateController.countOrderedMealCount()
-                self.updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
                 
             })
             ac.addAction(deleteAction)
@@ -344,10 +340,8 @@ extension MealListDataSource {
                 }
             }
         }
- 
-        //update shopping cart badge number
-        let orderedMealCount = mealListVC?.stateController.countOrderedMealCount()
-        updateShoppingCartIconBadgeNumber(orderedMealCount: orderedMealCount!)
+        let number = StateController.share.getSelectedMeals().count
+        self.updateShoppingCartIconBadgeNumber(orderedMealCount: number)
     }
     
 
@@ -424,16 +418,8 @@ extension MealListDataSource {
     }
     
     func updateShoppingCartIconBadgeNumber(orderedMealCount : Int) {
-        //find shopping cart badge
-        let nav0 = mealListVC?.navigationController
-        let tabNav = nav0?.tabBarController
-        let nav1TabBar = tabNav?.viewControllers?[1].tabBarItem
-        if orderedMealCount == 0 {
-            nav1TabBar?.badgeValue = nil
-        }
-        else {
-            nav1TabBar?.badgeValue = "\(orderedMealCount)"
-        }
+        //find shopping icon badge
+        self.mealListVC.numberLablel.text = String(orderedMealCount)
     }
 }
 

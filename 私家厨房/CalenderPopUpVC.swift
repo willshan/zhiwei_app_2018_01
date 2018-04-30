@@ -36,6 +36,10 @@ class CalenderPopUpVC: UIViewController {
         //日历代理
         self.calendarView.calendarDelegate = self
     }
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+    }
     
     //今天按钮点击
     @objc func todayButtonTapped() {

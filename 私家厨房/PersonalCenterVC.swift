@@ -105,13 +105,13 @@ extension PersonalCenterVC {
         super.prepare(for: segue, sender: sender)
         
         switch(segue.identifier ?? "") {
-        case SegueID.orderListCenter:
-            guard let orderListCenterController = segue.destination as? OrderListCenterVC else {
-                fatalError("Unexpected destination: \(segue.destination)")
-            }
-            orderListCenterController.reservedMealsHistory = stateController.readReservedMealsHistoryFromDisk()
-
-            print("即将传递数据到orderListCenter")
+//        case SegueID.orderListCenter:
+//            guard let orderListCenterController = segue.destination as? OrderListCenterVC else {
+//                fatalError("Unexpected destination: \(segue.destination)")
+//            }
+//            orderListCenterController.reservedMealsHistory = stateController.readReservedMealsHistoryFromDisk()
+//
+//            print("即将传递数据到orderListCenter")
            
         case SegueID.showFamilyList:
             print("Show family list")

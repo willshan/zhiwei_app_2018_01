@@ -23,6 +23,15 @@ class OrderListDetailVC: UIViewController {
         thirdTable.dataSource = dataSource
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(false)
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(false)
+//        self.view.layoutIfNeeded()
+    }
     override func viewWillDisappear(_ animated: Bool) {
         print("OrderListDetailVC will disappear")
 

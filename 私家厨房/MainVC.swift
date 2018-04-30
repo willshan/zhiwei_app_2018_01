@@ -11,7 +11,6 @@ import UIKit
 class MainVC: UIViewController {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var stateController : StateController!
     
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var catagoryLabel: UILabel!
@@ -21,22 +20,42 @@ class MainVC: UIViewController {
     
     @IBAction func reserveMeals(_ sender: UIButton) {
         reservedMeals = ReservedMeals(dateLabel.text!, catagoryLabel.text!, nil)
-        stateController.saveReservedMeals(reservedMeals)
-        
+        StateController.share.saveReservedMeals(reservedMeals)
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
         self.loadSavedMealList()
-        self.presentTabNavigationVC()
-        
     }
     
     @IBAction func check(_ sender: UIButton) {
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
         self.loadSavedMealList()
-        self.presentTabNavigationVC()
     }
-    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        updateReserveButton()
+        // Do any additional setup after loading the view.
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
+    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(true)
+//        self.navigationController?.tabBarController?.tabBar.isHidden = false
+//    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+}
+
+extension MainVC {
     static func dateConvertString(date:Date, dateFormat:String="yyyy-MM-dd") -> String {
-//        let timeZone = TimeZone.init(identifier: "UTC")
+        //        let timeZone = TimeZone.init(identifier: "UTC")
         let formatter = DateFormatter()
-//        formatter.timeZone = timeZone
+        //        formatter.timeZone = timeZone
         formatter.locale = Locale.init(identifier: "zh_CN")
         formatter.dateFormat = dateFormat
         let date = formatter.string(from: date)
@@ -44,7 +63,6 @@ class MainVC: UIViewController {
     }
     
     func loadSavedMealList() {
-        
         HandleCoreData.clearAllMealSelectionStatus()
         
         let key = self.dateLabel.text!+self.catagoryLabel.text!
@@ -58,64 +76,6 @@ class MainVC: UIViewController {
         }
     }
     
-    func presentTabNavigationVC() {
-        let mainStoryboard = UIStoryboard(name: "Main", bundle: nil)
-        
-        //tab0
-        let orderMealController = mainStoryboard.instantiateViewController(withIdentifier: StoryboardID.mealListVC) as! MealListVC
-        orderMealController.stateController = stateController
-        let nav0 = UINavigationController(rootViewController: orderMealController)
-        nav0.tabBarItem.image = UIImage(named: AssetNames.menu)
-        nav0.title = "菜单"
-        
-        //tab1
-        let shoppingCartController = mainStoryboard.instantiateViewController(withIdentifier: StoryboardID.shoppingCartVC) as! ShoppingCartVC
-        shoppingCartController.stateController = stateController
-        let nav1 = UINavigationController(rootViewController: shoppingCartController)
-        
-        let selectedMealsCount = stateController?.getSelectedMeals().count
-        if selectedMealsCount != 0 {
-            nav1.tabBarItem.badgeValue = "\(selectedMealsCount!)"
-        }
-        nav1.tabBarItem.image = UIImage(named: AssetNames.shoppingCart)
-        nav1.title = "已点"
-        
-//        //tab2
-//        let nav2 = UINavigationController()
-//        nav2.tabBarItem.image = UIImage(named: AssetNames.message)
-//        nav2.title = "消息"
-        
-        //tab3
-        let personalCenterController = mainStoryboard.instantiateViewController(withIdentifier: StoryboardID.personalCenterVC) as! PersonalCenterVC
-        personalCenterController.stateController = stateController
-        let nav3 = UINavigationController(rootViewController: personalCenterController)
-        nav3.tabBarItem.image = UIImage(named: AssetNames.personalCenter)
-        nav3.title = "个人"
-        
-        let rootViewController = UITabBarController()
-        let viewControllerArray = [nav0, nav1, nav3]
-        rootViewController.viewControllers = viewControllerArray
-        
-        appDelegate.window?.rootViewController = rootViewController
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        stateController = appDelegate.stateController
-        
-        updateReserveButton()
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-}
-
-extension MainVC {
-
     func updateReserveButton() {
         if dateLabel.text == "日期" || catagoryLabel.text == "餐类" {
             reserveButton.isEnabled = false
@@ -126,9 +86,26 @@ extension MainVC {
             reserveButton.backgroundColor = UIColor(hex: 0x928CFF)
         }
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        switch(segue.identifier ?? "") {
+            
+        case SegueID.reserveMeals:
+            print("reserveMeals tapped")
+            
+        case SegueID.checkMealsList:
+            print("checkMealsList tapped")
+
+        default:
+            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
+        }
+    }
 }
 
 extension MainVC : DataTransferBackProtocol{
+    
     //MARK: -Actions
     @IBAction func selectMealCatagory(_ sender: UITapGestureRecognizer) {
         
@@ -142,16 +119,16 @@ extension MainVC : DataTransferBackProtocol{
     
     @IBAction func selectDate(_ sender: UITapGestureRecognizer) {
         
-//        let storyBoard = UIStoryboard(name: StoryboardID.datePopUpSB, bundle: nil)
-//        let popUpVC = storyBoard.instantiateInitialViewController()! as! DatePopUpVC
-//        popUpVC.delegate = self
-
-//        self.present(popUpVC, animated: true)
-        
         let storyBoard = UIStoryboard(name: StoryboardID.calenderPopUpSB, bundle: nil)
         let popUpVC = storyBoard.instantiateInitialViewController()! as! CalenderPopUpVC
         popUpVC.delegate = self
         self.navigationController?.pushViewController(popUpVC, animated: true)
+        self.navigationController?.tabBarController?.tabBar.isHidden = true
+    }
+    
+    @IBAction func unwindToMainVC(sender: UIStoryboardSegue) {
+        
+        self.navigationController?.tabBarController?.tabBar.isHidden = false
     }
     
     func stringTransferBack(string: String) {

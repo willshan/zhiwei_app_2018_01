@@ -19,7 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let container = CKContainer.default()
     //fileprivate var stateController : StateController?
     var mealCountNumber = [IndexPath:Int]()
-    var stateController : StateController?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
 
@@ -29,46 +28,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Set only this property
         notificationInfo.shouldSendContentAvailable = true
         
-//        // Register for remote notification.
-//        let userNotificationCenter = UNUserNotificationCenter.current()
-//        userNotificationCenter.delegate = self
-//        userNotificationCenter.requestAuthorization(options: [.alert, .badge, .sound]) { accepted, error in
-//            guard accepted == true else {
-//                print("User declined remote notifications")
-//                return
-//            }
-//        }
         application.registerForRemoteNotifications()
         
-        let stateController = StateController()
-        self.stateController = stateController
-/*
-        //
-        let rootViewController = self.window!.rootViewController as! UITabBarController
-        let stateController = StateController()
-        //tab0
-        let nav0 = rootViewController.viewControllers?[0] as! UINavigationController
-        let orderMealController = nav0.viewControllers.first as! MealListVC
-        orderMealController.stateController = stateController
-
-        //tab1
-        let nav1 = rootViewController.viewControllers?[1] as! UINavigationController
-        let shoppingCartController = nav1.viewControllers.first as! ShoppingCartVC
-        shoppingCartController.stateController = stateController
-        if stateController.selectedMeals?.count != 0 {
-            nav1.tabBarItem.badgeValue = "\(stateController.selectedMealsCount)"
-        }
+        // creat stateControlle instance
+        StateController.share.initialize()
         
-        //tab2
-        
- 
-        //tab3
-        let nav3 = rootViewController.viewControllers?[3] as! UINavigationController
-        let personalCenterController = nav3.viewControllers.first as! PersonalCenterVC
-        personalCenterController.stateController = stateController
-
-        self.stateController = stateController
-        */
         // Checking account availability. Create local cache objects if the accountStatus is available.
         checkAccountStatus(for: container) {
             ZoneLocalCache.share.initialize(container: self.container)
@@ -183,7 +147,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             if CloudKitError.share.handle(error: error, operation: .accountStatus, alert: true) == nil &&
                 status == CKAccountStatus.available {
                 
-                self.stateController!.changeAccountStatus(true)
+                StateController.share.changeAccountStatus(true)
                 
                 if let completionHandler = completionHandler {completionHandler()}
                 return
@@ -196,7 +160,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                     if CloudKitError.share.handle(error: error, operation: .accountStatus, alert: true) == nil &&
                         status == CKAccountStatus.available {
                         
-                        self.stateController!.changeAccountStatus(true)
+                        StateController.share.changeAccountStatus(true)
                         
                         if let completionHandler = completionHandler {completionHandler()}
                         return

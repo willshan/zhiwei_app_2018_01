@@ -49,3 +49,15 @@ extension UIView {
         self.layer.add(animation, forKey: nil)
     }
 }
+
+class UIButtonWithBadgeNumber : UIButton {
+    let badgeView = UILabel()
+    convenience init() {
+        self.init()
+        self.superview?.addSubview(badgeView)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}

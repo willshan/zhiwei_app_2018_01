@@ -8,30 +8,6 @@
 
 import Foundation
 
-//struct OrderListStruct {
-//    var orderTime : String
-//    var orderList : [[OrderedMeal]]
-//    var mealsIdentifiers : [String]
-//
-//    init(_ orderTime : String, _ orderList : [[OrderedMeal]], _ mealsIdentifiers : [String]){
-//        self.orderList = orderList
-//        self.orderTime = orderTime
-//        self.mealsIdentifiers = mealsIdentifiers
-//    }
-//}
-
-//struct ReservedMeals {
-//    var date : String
-//    var mealCatagory : String
-//    var mealsIdentifiers : [String]?
-//
-//    init(_ date : String, _ mealCatagory : String, _ mealsIdentifiers : [String]?){
-//        self.date = date
-//        self.mealCatagory = mealCatagory
-//        self.mealsIdentifiers = mealsIdentifiers
-//    }
-//}
-
 struct CollapsibleMeals {
     var meals : [Meal]
     var collapsed : Bool
@@ -88,18 +64,20 @@ struct StoryboardID {
 // Segue ID constants.
 //
 struct SegueID {
+    static let reserveMeals = "ReserveMeals"
+    static let confirmReservedMeals = "ConfirmReservedMeals"
+    static let checkMealsList = "CheckMealsList"
+    static let showReservedMeals = "ShowReservedMeals"
     static let addNewMeal = "AddNewMeal"
     static let showMealDetail = "ShowMealDetail"
     static let editMealDetail = "EditMeal"
     static let comfirmOrderList = "ComfirmOrderList"
-    static let orderListCenter = "OrderListCenter"
     static let showFamilyList = "ShowFamilyList"
     static let showOrderListDetail = "ShowOrderListDetail"
     static let showFamilyMember = "ShowFamilyMember"
     static let loadFamilyMealList = "LoadFamilyMealList"
     static let invitation = "Invitation"
     static let personalSet = "PersonalSet"
-    
 }
 
 struct AssetNames {

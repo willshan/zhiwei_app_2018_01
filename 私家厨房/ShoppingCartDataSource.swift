@@ -131,7 +131,6 @@ extension ShoppingCartDataSource : UITableViewDataSource, UITableViewDelegate{
                 //update meal in coredata
                 HandleCoreData.updateMealSelectionStatus(identifier: meal.identifier)
                 self.selectedMealsCount = self.selectedMealsCount - 1
-                self.updateShoppingCartIconBadgeNumber(orderedMealCount: self.selectedMealsCount)
             })
             ac.addAction(deleteAction)
             shoppingCartController?.present(ac, animated: true, completion: nil)
@@ -165,19 +164,5 @@ extension ShoppingCartDataSource{
             }
         }
         mealListBySections = [coldDishes, hotDishes, soup, drink]
-    }
-    
-    func updateShoppingCartIconBadgeNumber(orderedMealCount : Int) {
-        
-        //find shopping cart badge
-        let nav0 = shoppingCartController?.navigationController
-        let nav0TabBar = nav0?.tabBarItem
-        
-        if orderedMealCount == 0 {
-            nav0TabBar?.badgeValue = nil
-        }
-        else {
-            nav0TabBar?.badgeValue = "\(orderedMealCount)"
-        }
     }
 }
