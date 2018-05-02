@@ -11,21 +11,24 @@ import os.log
 
 class OrderListCenterVC: UITableViewController {
     
-    var reservedMealsHistory : [ReservedMeals]?
+    var reservedMealsHistory = [ReservedMeals]()
     var dataSource : OrderListCenterDataSource!
 
     override func viewDidLoad() {
         
         super.viewDidLoad()
-        navigationItem.title = "预定查看"
         //Add notificaton listener
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(type(of:self).reservedMealsDeleted(_:)),
                                                name: .reservedMealsDeleted,
                                                object: nil)
-        reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(type(of:self).reservedMealsAdded(_:)),
+                                               name: .reservedMealsAdded,
+                                               object: nil)
+//        reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()!
         
-        dataSource = OrderListCenterDataSource(reservedMealsHistory!)
+        dataSource = OrderListCenterDataSource(reservedMealsHistory)
         tableView.dataSource = dataSource
     }
 
@@ -43,10 +46,17 @@ class OrderListCenterVC: UITableViewController {
         print("The instance of OrderListCenterVC was deinited!!!")
         
         NotificationCenter.default.removeObserver(self, name: Notification.Name.reservedMealsDeleted, object: nil)
+        NotificationCenter.default.removeObserver(self, name: Notification.Name.reservedMealsAdded, object: nil)
     }
 }
 extension OrderListCenterVC {
     @objc func reservedMealsDeleted(_ notification: Notification) {
+        dataSource = OrderListCenterDataSource(StateController.share.readReservedMealsHistoryFromDisk()!)
+        tableView.dataSource = dataSource
+        tableView.reloadData()
+    }
+    
+    @objc func reservedMealsAdded(_ notification: Notification) {
         dataSource = OrderListCenterDataSource(StateController.share.readReservedMealsHistoryFromDisk()!)
         tableView.dataSource = dataSource
         tableView.reloadData()

@@ -19,13 +19,7 @@ class OrderListContainerVC: UIViewController {
         super.viewDidLoad()
        
         setSegmentedControl()
-        let storyboard = UIStoryboard(name: StoryboardID.main, bundle: nil)
-        todayVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
-        todayVC?.view.backgroundColor = UIColor.blue
-        reservedVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
-        reservedVC?.view.backgroundColor = UIColor.red
-        histroyVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
-        histroyVC?.view.backgroundColor = UIColor.gray
+        setVCs()
 
         self.addChildViewController(todayVC!)
         self.view.addSubview(todayVC!.view)
@@ -52,6 +46,49 @@ class OrderListContainerVC: UIViewController {
         self.navigationItem.titleView = segmentedControl
         
     }
+    
+    func setVCs() {
+        let reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()
+        //将订单分类
+        //用这种方法加载tableview速度很慢，下次考虑用coredata试试
+        //segmented control的切换也很慢，考虑解决方法
+        let todayDate = MainVC.dateConvertString(date: Date())
+        var todayMeals = [ReservedMeals]()
+        var reservedMeals = [ReservedMeals]()
+        var historyMeals = [ReservedMeals]()
+        for mealsList in reservedMealsHistory! {
+            if mealsList.date == todayDate {
+                todayMeals.append(mealsList)
+            }
+            else if mealsList.date > todayDate {
+                reservedMeals.append(mealsList)
+            }
+            else {
+                historyMeals.append(mealsList)
+            }
+        }
+        print(todayMeals.count)
+        print(reservedMeals.count)
+        print(historyMeals.count)
+        
+        let storyboard = UIStoryboard(name: StoryboardID.main, bundle: nil)
+        todayVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
+        todayVC?.reservedMealsHistory = todayMeals
+        //对应VC的viewdidload在这之后运行
+//        todayVC?.dataSource = OrderListCenterDataSource.init(todayMeals)
+//        todayVC?.tableView.dataSource = todayVC?.dataSource
+        
+        reservedVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
+        reservedVC?.reservedMealsHistory = reservedMeals
+//        reservedVC?.dataSource = OrderListCenterDataSource.init(reservedMeals)
+//        reservedVC?.tableView.dataSource = reservedVC?.dataSource
+        
+        histroyVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
+        histroyVC?.reservedMealsHistory = historyMeals
+//        histroyVC?.dataSource = OrderListCenterDataSource.init(historyMeals)
+//        histroyVC?.tableView.dataSource = histroyVC?.dataSource
+    }
+    
     //option 1:
     @objc func indexChanged(sender: UISegmentedControl) {
         print("func indexChanged was used")
@@ -84,14 +121,16 @@ class OrderListContainerVC: UIViewController {
     func replaceController(oldVC : OrderListCenterVC, newVC : OrderListCenterVC) {
         print("func replaceController was used")
         self.addChildViewController(newVC)
-        self.transition(from: oldVC, to: newVC, duration: 0, options: UIViewAnimationOptions.transitionCrossDissolve, animations: nil) { (success) in
+        self.transition(from: oldVC, to: newVC, duration: 0.5, options: UIViewAnimationOptions.curveLinear, animations: nil) { (success) in
             if success {
+                print("success")
                 newVC.didMove(toParentViewController: self)
                 oldVC.willMove(toParentViewController: nil)
                 oldVC.removeFromParentViewController()
                 self.currentVC = newVC
             }
             else {
+                print("fail")
                 self.currentVC = oldVC
             }
         }

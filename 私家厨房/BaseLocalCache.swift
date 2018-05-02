@@ -13,6 +13,7 @@ extension Notification.Name {
     static let zoneCacheDidChange = Notification.Name("zoneCacheDidChange")
     static let mealCacheDidChange = Notification.Name("mealCacheDidChange")
     static let reservedMealsDeleted = Notification.Name("reservedMealsDeleted")
+    static let reservedMealsAdded = Notification.Name("reservedMealsAdded")
 }
 
 enum NotificationReason {
