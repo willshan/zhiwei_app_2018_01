@@ -13,6 +13,7 @@ class OrderListCenterVC: UITableViewController {
     
     var reservedMealsHistory = [ReservedMeals]()
     var dataSource : OrderListCenterDataSource!
+	var orderListCatagory : String!
 
     override func viewDidLoad() {
         
@@ -26,6 +27,10 @@ class OrderListCenterVC: UITableViewController {
                                                selector: #selector(type(of:self).reservedMealsAdded(_:)),
                                                name: .reservedMealsAdded,
                                                object: nil)
+		NotificationCenter.default.addObserver(self,
+                                               selector: #selector(type(of:self).dateChanged(_:)),
+                                               name: .dateChanged,
+                                               object: nil)									   
 //        reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()!
         
         dataSource = OrderListCenterDataSource(reservedMealsHistory)
@@ -43,24 +48,62 @@ class OrderListCenterVC: UITableViewController {
     }
     
     deinit {
-        print("The instance of OrderListCenterVC was deinited!!!")
+        print("\(orderListCatagory)!! The instance of OrderListCenterVC was deinited!!!")
         
         NotificationCenter.default.removeObserver(self, name: Notification.Name.reservedMealsDeleted, object: nil)
         NotificationCenter.default.removeObserver(self, name: Notification.Name.reservedMealsAdded, object: nil)
+		NotificationCenter.default.removeObserver(self, name: Notification.Name.dateChanged, object: nil)
     }
 }
 extension OrderListCenterVC {
     @objc func reservedMealsDeleted(_ notification: Notification) {
-        dataSource = OrderListCenterDataSource(StateController.share.readReservedMealsHistoryFromDisk()!)
+        let mealsList = updateOrderList()
+		dataSource = OrderListCenterDataSource(mealsList)
         tableView.dataSource = dataSource
         tableView.reloadData()
     }
     
     @objc func reservedMealsAdded(_ notification: Notification) {
-        dataSource = OrderListCenterDataSource(StateController.share.readReservedMealsHistoryFromDisk()!)
+        let mealsList = updateOrderList()
+		dataSource = OrderListCenterDataSource(mealsList)
         tableView.dataSource = dataSource
         tableView.reloadData()
     }
+	
+	@objc func dateChanged(_ notification: Notification) {
+        let mealsList = updateOrderList()
+		dataSource = OrderListCenterDataSource(mealsList)
+        tableView.dataSource = dataSource
+        tableView.reloadData()
+    }
+	
+	func updateOrderList()-> [ReservedMeals] {
+	    let todayDate = MainVC.dateConvertString(date: Date())
+        let reservedMealsHistory = StateController.share.readReservedMealsHistoryFromDisk()!
+        var todayMealsList = [ReservedMeals]()
+        var reservedMealsList = [ReservedMeals]()
+        var historyMealsList = [ReservedMeals]()
+        for mealsList in reservedMealsHistory {
+            if mealsList.date == todayDate {
+                todayMealsList.append(mealsList)
+            }
+            else if mealsList.date > todayDate {
+                reservedMealsList.append(mealsList)
+            }
+            else {
+                historyMealsList.append(mealsList)
+            }
+        }
+		if self.orderListCatagory == OrderListCategroy.today {
+		return todayMealsList
+		}
+		else if self.orderListCatagory == OrderListCategroy.reserved {
+		return reservedMealsList
+		}
+		else {
+		return historyMealsList
+		}
+	}
 }
 
 extension OrderListCenterVC {

@@ -12,14 +12,14 @@ class MainVC: UIViewController {
     
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     
-    @IBOutlet weak var dateLabel: UILabel!
-    @IBOutlet weak var catagoryLabel: UILabel!
+    @IBOutlet weak var dateLabel: UIButton!
+    @IBOutlet weak var catagoryLabel: UIButton!
     @IBOutlet weak var reserveButton: UIButton!
     
     var reservedMeals : ReservedMeals?
     
     @IBAction func reserveMeals(_ sender: UIButton) {
-        reservedMeals = ReservedMeals(dateLabel.text!, catagoryLabel.text!, nil)
+        reservedMeals = ReservedMeals((dateLabel.titleLabel?.text)!, (catagoryLabel.titleLabel?.text)!, nil)
         StateController.share.saveReservedMeals(reservedMeals)
         self.navigationController?.tabBarController?.tabBar.isHidden = true
         self.loadSavedMealList()
@@ -32,6 +32,8 @@ class MainVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationController?.navigationBar.backgroundColor = UIColor.green
+        self.navigationController?.tabBarController?.tabBar.backgroundColor = UIColor.green
         updateReserveButton()
         // Do any additional setup after loading the view.
     }
@@ -65,7 +67,7 @@ extension MainVC {
     func loadSavedMealList() {
         HandleCoreData.clearAllMealSelectionStatus()
         
-        let key = self.dateLabel.text!+self.catagoryLabel.text!
+        let key = (self.dateLabel.titleLabel?.text)!+(self.catagoryLabel.titleLabel?.text!)!
         let archiveURL = DataStore.objectURLForKey(key: key)
         if let reserveMeals = NSKeyedUnarchiver.unarchiveObject(withFile: archiveURL.path) as? ReservedMeals {
             print("Loading reservedMeals from disk")
@@ -77,7 +79,7 @@ extension MainVC {
     }
     
     func updateReserveButton() {
-        if dateLabel.text == "日期" || catagoryLabel.text == "餐类" {
+        if dateLabel.titleLabel?.text == "日期" || catagoryLabel.titleLabel?.text == "餐类" {
             reserveButton.isEnabled = false
             reserveButton.backgroundColor = UIColor.lightGray
         }
@@ -107,7 +109,7 @@ extension MainVC {
 extension MainVC : DataTransferBackProtocol{
     
     //MARK: -Actions
-    @IBAction func selectMealCatagory(_ sender: UITapGestureRecognizer) {
+    @IBAction func selectMealCatagory(_ sender: UIButton) {
         
         let storyBoard = UIStoryboard(name: StoryboardID.catagoryPopUpSB, bundle: nil)
         let popUpVC = storyBoard.instantiateInitialViewController()! as! CatagoryPopUpVC
@@ -117,7 +119,7 @@ extension MainVC : DataTransferBackProtocol{
         self.present(popUpVC, animated: true)
     }
     
-    @IBAction func selectDate(_ sender: UITapGestureRecognizer) {
+    @IBAction func selectDate(_ sender: UIButton) {
         
         let storyBoard = UIStoryboard(name: StoryboardID.calenderPopUpSB, bundle: nil)
         let popUpVC = storyBoard.instantiateInitialViewController()! as! CalenderPopUpVC
@@ -127,13 +129,22 @@ extension MainVC : DataTransferBackProtocol{
     }
     
     @IBAction func unwindToMainVC(sender: UIStoryboardSegue) {
-        
         self.navigationController?.tabBarController?.tabBar.isHidden = false
+        
+        dateLabel.setTitle("日期", for: UIControlState.normal)
+        let dateImage = UIImage(named: AssetNames.calender)
+        dateLabel.setImage(dateImage, for: .normal)
+        
+        catagoryLabel.setTitle("餐类", for: UIControlState.normal)
+        let catagoryImage = UIImage(named: AssetNames.mealCategory)
+        catagoryLabel.setImage(catagoryImage, for: .normal)
+		updateReserveButton()
     }
     
     func stringTransferBack(string: String) {
-        catagoryLabel.text = string
-
+        catagoryLabel.setTitle(string, for: UIControlState.normal)
+        catagoryLabel.setImage(nil, for: .normal)
+        catagoryLabel.backgroundColor = UIColor(hex: 0x15C425)
         updateReserveButton()
     }
     
@@ -141,7 +152,9 @@ extension MainVC : DataTransferBackProtocol{
         print("dataTransferBack was running")
         
         let dateString = MainVC.dateConvertString(date: date)
-        dateLabel.text = dateString
+        dateLabel.setTitle(dateString, for: UIControlState.normal)
+        dateLabel.setImage(nil, for: .normal)
+        dateLabel.backgroundColor = UIColor(hex: 0x15C425)
         
         updateReserveButton()
     }

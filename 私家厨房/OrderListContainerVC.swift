@@ -13,11 +13,13 @@ class OrderListContainerVC: UIViewController {
     var currentVC : OrderListCenterVC!
     var todayVC : OrderListCenterVC?
     var reservedVC : OrderListCenterVC?
-    var histroyVC : OrderListCenterVC?
+    var historyVC : OrderListCenterVC?
+	var previousDate : String!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
+        self.navigationController?.navigationBar.backgroundColor = UIColor.green
         setSegmentedControl()
         setVCs()
 
@@ -25,11 +27,17 @@ class OrderListContainerVC: UIViewController {
         self.view.addSubview(todayVC!.view)
         self.currentVC = todayVC
         // Do any additional setup after loading the view.
+        //发送日期变化通知，订单中心自动更新
+        NotificationCenter.default.post(name: .dateChanged, object: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(false)
         self.navigationController?.tabBarController?.tabBar.isHidden = false
+		let todayDate = MainVC.dateConvertString(date: Date())
+		if previousDate != todayDate {
+
+		}
     }
     
     override func didReceiveMemoryWarning() {
@@ -52,7 +60,9 @@ class OrderListContainerVC: UIViewController {
         //将订单分类
         //用这种方法加载tableview速度很慢，下次考虑用coredata试试
         //segmented control的切换也很慢，考虑解决方法
+		//测试发现，速度慢是由于segmented control的动画选项未选对导致，修改后速度ok
         let todayDate = MainVC.dateConvertString(date: Date())
+		self.previousDate = todayDate
         var todayMeals = [ReservedMeals]()
         var reservedMeals = [ReservedMeals]()
         var historyMeals = [ReservedMeals]()
@@ -74,25 +84,22 @@ class OrderListContainerVC: UIViewController {
         let storyboard = UIStoryboard(name: StoryboardID.main, bundle: nil)
         todayVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
         todayVC?.reservedMealsHistory = todayMeals
+		todayVC?.orderListCatagory = OrderListCategroy.today
         //对应VC的viewdidload在这之后运行
-//        todayVC?.dataSource = OrderListCenterDataSource.init(todayMeals)
-//        todayVC?.tableView.dataSource = todayVC?.dataSource
         
         reservedVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
         reservedVC?.reservedMealsHistory = reservedMeals
-//        reservedVC?.dataSource = OrderListCenterDataSource.init(reservedMeals)
-//        reservedVC?.tableView.dataSource = reservedVC?.dataSource
+		reservedVC?.orderListCatagory = OrderListCategroy.reserved
         
-        histroyVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
-        histroyVC?.reservedMealsHistory = historyMeals
-//        histroyVC?.dataSource = OrderListCenterDataSource.init(historyMeals)
-//        histroyVC?.tableView.dataSource = histroyVC?.dataSource
+        historyVC = storyboard.instantiateViewController(withIdentifier: StoryboardID.orderListCenterVC) as? OrderListCenterVC
+        historyVC?.reservedMealsHistory = historyMeals
+		historyVC?.orderListCatagory = OrderListCategroy.history
     }
     
     //option 1:
     @objc func indexChanged(sender: UISegmentedControl) {
         print("func indexChanged was used")
-        if (self.currentVC == todayVC && sender.selectedSegmentIndex == 0) || (self.currentVC == reservedVC && sender.selectedSegmentIndex == 1) || (self.currentVC == histroyVC && sender.selectedSegmentIndex == 2) {
+        if (self.currentVC == todayVC && sender.selectedSegmentIndex == 0) || (self.currentVC == reservedVC && sender.selectedSegmentIndex == 1) || (self.currentVC == historyVC && sender.selectedSegmentIndex == 2) {
             return
         }
         else {
@@ -105,7 +112,7 @@ class OrderListContainerVC: UIViewController {
                 self.replaceController(oldVC: currentVC, newVC: reservedVC!)
                 break
             case 2:
-                self.replaceController(oldVC: currentVC, newVC: histroyVC!)
+                self.replaceController(oldVC: currentVC, newVC: historyVC!)
                 break
             default:
                 break;

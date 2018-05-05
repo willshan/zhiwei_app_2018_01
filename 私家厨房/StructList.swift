@@ -88,5 +88,13 @@ struct AssetNames {
     static let message = "message"
     static let personalCenter = "personalCenter"
     static let shoppingCart = "shoppingCart"
+    static let mealCategory = "mealCategory"
+    static let calender = "calender"
+}
+
+struct OrderListCategroy {
+    static let today = "today"
+    static let reserved = "reserved"
+    static let history = "history"
 }
 

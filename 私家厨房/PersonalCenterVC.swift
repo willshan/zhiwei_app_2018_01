@@ -35,6 +35,7 @@ class PersonalCenterVC: UIViewController {
         button3.layer.cornerRadius = buttonWidth.constant/2
         button4.layer.cornerRadius = buttonWidth.constant/2
         
+        self.navigationController?.navigationBar.backgroundColor = UIColor.green
         personalPhoto.image = DataStore().getImageForKey(key: userName) ?? UIImage(named: AssetNames.defaultPhoto)!
         // Do any additional setup after loading the view.
     }

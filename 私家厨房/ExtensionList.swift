@@ -5,8 +5,28 @@ import CloudKit
 // Use the TableView style name as the reusable ID.
 // For a custom cell, use the class name.
 
+extension Notification.Name {
+    static let zoneCacheDidChange = Notification.Name("zoneCacheDidChange")
+    static let mealCacheDidChange = Notification.Name("mealCacheDidChange")
+    static let reservedMealsDeleted = Notification.Name("reservedMealsDeleted")
+    static let reservedMealsAdded = Notification.Name("reservedMealsAdded")
+	static let dateChanged = Notification.Name("dateChanged")
+}
 
-//
+enum NotificationReason {
+    case zoneNotFound
+    case switchTopic
+}
+
+struct NotificationObjectKey {
+    static let reason = "reason"
+    static let recordIDsDeleted = "recordIDsDeleted"
+    static let recordsChanged = "recordsChanged"
+    static let sharedRecordChanged = "sharedRecordChanged"
+    static let newMeal = "newMeal"
+    static let reservedMealsDeleted = "reservedMealsDeleted"
+}
+
 extension UIViewController {
     func showErrorView(_ error: Error?) {
         guard let error = error as NSError?, let errorMessage = error.userInfo["error"] as? String else {

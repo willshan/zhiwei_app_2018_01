@@ -119,6 +119,8 @@ extension ShoppingCartVC {
                 NSKeyedArchiver.archiveRootObject([key], toFile: archiveURL0.path)
                 print("第一次保存预定到硬盘成功！！！")
             }
+			//send out notification for updating orderlistcenter
+            NotificationCenter.default.post(name: .reservedMealsAdded, object: nil)
             
             self.dateLabel.text = "选择日期"
             self.catagoryLabel.text = "选择餐类"
@@ -407,19 +409,3 @@ extension ShoppingCartVC {
     }
 }
 
-//extension ShoppingCartVC {
-//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-//        super.prepare(for: segue, sender: sender)
-//
-//        switch(segue.identifier ?? "") {
-//        case SegueID.confirmReservedMeals:
-//            guard let orderListVC = segue.destination as? OrderListVC else {
-//                fatalError("Unexpected destination: \(segue.destination)")
-//            }
-//            orderListVC.mealListBySections = dataSource.mealListBySections
-//
-//        default:
-//            fatalError("Unexpected Segue Identifier; \(String(describing: segue.identifier))")
-//        }
-//    }
-//}

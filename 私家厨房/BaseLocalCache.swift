@@ -9,27 +9,6 @@
 import Foundation
 import CloudKit
 
-extension Notification.Name {
-    static let zoneCacheDidChange = Notification.Name("zoneCacheDidChange")
-    static let mealCacheDidChange = Notification.Name("mealCacheDidChange")
-    static let reservedMealsDeleted = Notification.Name("reservedMealsDeleted")
-    static let reservedMealsAdded = Notification.Name("reservedMealsAdded")
-}
-
-enum NotificationReason {
-    case zoneNotFound
-    case switchTopic
-}
-
-struct NotificationObjectKey {
-    static let reason = "reason"
-    static let recordIDsDeleted = "recordIDsDeleted"
-    static let recordsChanged = "recordsChanged"
-    static let sharedRecordChanged = "sharedRecordChanged"
-    static let newMeal = "newMeal"
-    static let reservedMealsDeleted = "reservedMealsDeleted"
-}
-
 class BaseLocalCache {
     
     // A CloudKit task can be a single operation (CKDatabaseOperation) or multiple operations chained together.
